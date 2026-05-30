@@ -8,165 +8,108 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .stl-intro {
-      font-size: 16px;
-      font-style: italic;
-      color: var(--muted);
-      line-height: 1.75;
-      max-width: 640px;
-      margin-bottom: 3rem;
+      font-size: 16px; font-style: italic; color: var(--muted);
+      line-height: 1.75; max-width: 640px; margin-bottom: 3rem;
     }
 
     /* Source type cards */
-    .source-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-bottom: 3rem;
-    }
-    .source-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.4rem;
-      border-left-width: 3px;
-    }
-    .source-card.ok     { border-left-color: var(--green); }
-    .source-card.maybe  { border-left-color: var(--gold); }
-    .source-card.no     { border-left-color: var(--red); }
-
-    .source-badge {
-      font-family: var(--serif);
-      font-size: 8px;
-      letter-spacing: 0.18em;
-      padding: 3px 9px;
-      border-radius: var(--radius);
-      margin-bottom: 10px;
-      display: inline-block;
-    }
+    .source-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 3rem; }
+    .source-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.4rem; border-left-width: 3px; }
+    .source-card.ok    { border-left-color: var(--green); }
+    .source-card.maybe { border-left-color: var(--gold); }
+    .source-card.no    { border-left-color: var(--red); }
+    .source-badge { font-family: var(--serif); font-size: 8px; letter-spacing: 0.18em; padding: 3px 9px; border-radius: var(--radius); margin-bottom: 10px; display: inline-block; }
     .source-badge.ok    { background: rgba(74,158,107,0.12); color: var(--green); }
     .source-badge.maybe { background: rgba(201,168,76,0.1);  color: var(--gold2); }
     .source-badge.no    { background: rgba(184,64,64,0.1);   color: var(--red); }
-
-    .source-name {
-      font-family: var(--serif);
-      font-size: 13px;
-      color: var(--text);
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
-    }
-    .source-desc {
-      font-size: 13px;
-      color: var(--muted);
-      font-style: italic;
-      line-height: 1.65;
-      margin-bottom: 10px;
-    }
-    .source-tip {
-      font-size: 12px;
-      color: var(--soft);
-      line-height: 1.6;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-    }
+    .source-name { font-family: var(--serif); font-size: 13px; color: var(--text); letter-spacing: 0.06em; margin-bottom: 6px; }
+    .source-desc { font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.65; margin-bottom: 10px; }
+    .source-tip  { font-size: 12px; color: var(--soft); line-height: 1.6; padding-top: 8px; border-top: 1px solid var(--border); }
     .source-tip strong { font-style: normal; color: var(--gold2); font-weight: 400; }
 
-    /* Designer table */
-    .designer-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 3rem;
-    }
+    /* Designer cards — clickable */
+    .designer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 3rem; }
     .des-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.1rem 1.25rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.1rem 1.25rem;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      text-decoration: none;
     }
-    .des-name {
-      font-family: var(--serif);
-      font-size: 12px;
-      color: var(--gold);
-      letter-spacing: 0.08em;
-      margin-bottom: 4px;
-    }
-    .des-desc {
-      font-size: 13px;
-      color: var(--muted);
-      font-style: italic;
-      line-height: 1.55;
-    }
-    .des-badge {
-      font-family: var(--serif);
-      font-size: 8px;
-      letter-spacing: 0.1em;
-      padding: 3px 8px;
-      border: 1px solid;
-      border-radius: var(--radius);
-      white-space: nowrap;
-      align-self: flex-start;
-      flex-shrink: 0;
-    }
+    .des-card:hover { border-color: var(--border2); background: var(--surface2); }
+    .des-card-inner { flex: 1; }
+    .des-name { font-family: var(--serif); font-size: 12px; color: var(--gold); letter-spacing: 0.08em; margin-bottom: 4px; }
+    .des-card:hover .des-name { color: var(--gold2); }
+    .des-desc { font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.55; }
+    .des-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+    .des-badge { font-family: var(--serif); font-size: 8px; letter-spacing: 0.1em; padding: 3px 8px; border: 1px solid; border-radius: var(--radius); white-space: nowrap; }
     .db-merchant { border-color: rgba(74,158,107,0.4);  color: var(--green); }
     .db-tier     { border-color: rgba(201,168,76,0.35); color: var(--gold2); }
     .db-check    { border-color: rgba(122,116,103,0.3); color: var(--muted); }
+    .db-warn     { border-color: rgba(212,84,26,0.35);  color: var(--ember2); }
+    .des-visit { font-family: var(--serif); font-size: 8px; color: var(--muted); letter-spacing: 0.1em; opacity: 0; transition: opacity 0.2s; white-space: nowrap; }
+    .des-card:hover .des-visit { opacity: 1; color: var(--gold); }
 
-    /* Quick reference table */
-    .ref-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 3rem;
-      font-size: 13px;
-    }
-    .ref-table th {
-      font-family: var(--serif);
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      text-align: left;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border2);
-      background: var(--surface);
-    }
-    .ref-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
-      color: var(--soft);
-      font-style: italic;
-      vertical-align: top;
-    }
+    /* Quick ref table */
+    .ref-table { width: 100%; border-collapse: collapse; margin-bottom: 3rem; font-size: 13px; }
+    .ref-table th { font-family: var(--serif); font-size: 9px; letter-spacing: 0.15em; color: var(--muted); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border2); background: var(--surface); }
+    .ref-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--soft); font-style: italic; vertical-align: top; }
     .ref-table tr:last-child td { border-bottom: none; }
     .ref-table td:first-child { color: var(--text); font-style: normal; font-family: var(--serif); font-size: 11px; letter-spacing: 0.06em; }
 
     /* Warning box */
-    .warning-box {
-      background: rgba(212,84,26,0.06);
-      border: 1px solid rgba(212,84,26,0.25);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 3rem;
-    }
-    .warning-title {
-      font-family: var(--serif);
-      font-size: 9px;
-      color: var(--ember);
-      letter-spacing: 0.2em;
-      margin-bottom: 8px;
-    }
-    .warning-text {
-      font-size: 13px;
-      color: var(--soft);
-      font-style: italic;
-      line-height: 1.7;
-    }
+    .warning-box { background: rgba(212,84,26,0.06); border: 1px solid rgba(212,84,26,0.25); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 3rem; }
+    .warning-title { font-family: var(--serif); font-size: 9px; color: var(--ember); letter-spacing: 0.2em; margin-bottom: 8px; }
+    .warning-text { font-size: 13px; color: var(--soft); font-style: italic; line-height: 1.7; }
     .warning-text a { color: var(--gold); }
 
+    /* ── CONTACT POPUP ── */
+    .popup-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75); z-index: 200;
+      align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .popup-overlay.open { display: flex; }
+    .popup {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--radius); padding: 2rem;
+      width: 100%; max-width: 480px;
+      position: relative;
+      animation: fadeUp 0.25s ease both;
+    }
+    .popup-close {
+      position: absolute; top: 14px; right: 16px;
+      font-family: var(--serif); font-size: 11px; color: var(--muted);
+      cursor: pointer; letter-spacing: 0.1em; background: none; border: none;
+    }
+    .popup-close:hover { color: var(--gold); }
+    .popup-title { font-family: var(--serif); font-size: 14px; color: var(--gold); letter-spacing: 0.12em; margin-bottom: 6px; }
+    .popup-sub { font-size: 13px; color: var(--muted); font-style: italic; margin-bottom: 1.5rem; line-height: 1.55; }
+    .popup .form-group { margin-bottom: 1rem; }
+    .popup .form-group label { display: block; font-family: var(--serif); font-size: 9px; color: var(--soft); letter-spacing: 0.15em; margin-bottom: 4px; }
+    .popup .form-group input,
+    .popup .form-group textarea {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text); font-family: var(--body); font-size: 14px;
+      padding: 9px 11px; outline: none; border-radius: var(--radius);
+    }
+    .popup .form-group input:focus,
+    .popup .form-group textarea:focus { border-color: var(--border2); }
+    .popup .form-group textarea { min-height: 100px; resize: vertical; }
+    .popup-send {
+      width: 100%; padding: 12px; margin-top: 4px;
+      font-family: var(--serif); font-size: 10px; letter-spacing: 0.18em;
+      background: var(--gold); color: #0d0f14; border: none;
+      cursor: pointer; border-radius: var(--radius); transition: background 0.2s;
+    }
+    .popup-send:hover { background: var(--gold2); }
+    .popup-success { display: none; text-align: center; padding: 1.5rem 0; }
+    .popup-success h3 { font-family: var(--serif); font-size: 13px; color: var(--green); letter-spacing: 0.1em; margin-bottom: 8px; }
+    .popup-success p { font-size: 13px; color: var(--muted); font-style: italic; }
+
     @media (max-width: 860px) {
-      .source-grid  { grid-template-columns: 1fr; }
+      .source-grid   { grid-template-columns: 1fr; }
       .designer-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -206,7 +149,7 @@
       <p class="stl-intro">
         When you download an STL file, you're purchasing the right to use it — but the scope of that right varies enormously.
         Most free files and many paid files are licensed for personal use only, which means printing them
-        for a paying customer (even just one) technically violates the designer's terms.
+        for a paying customer technically violates the designer's terms.
         We take this seriously, which is why we require license confirmation on every order.
         The good news: there are plenty of fantastic designers who explicitly support commercial printing.
       </p>
@@ -214,100 +157,124 @@
       <div class="section-tag">Source Types</div>
       <h2 style="margin-bottom:1.5rem;">What's generally allowed</h2>
       <div class="source-grid">
-
         <div class="source-card ok">
           <span class="source-badge ok">GENERALLY OK</span>
           <div class="source-name">Designer Patreon — Merchant Tier</div>
           <div class="source-desc">Many TTRPG miniature designers offer a dedicated "Merchant," "Commercial," or "Seller" Patreon tier that grants print-for-hire rights for that month's files.</div>
           <div class="source-tip"><strong>Look for:</strong> A tier explicitly named Merchant, Commercial, or Seller. Standard subscriber tiers are personal use only — even if you're paying, the tier name matters.</div>
         </div>
-
         <div class="source-card ok">
           <span class="source-badge ok">GENERALLY OK</span>
           <div class="source-name">Direct Commercial License Purchase</div>
           <div class="source-desc">Some designers sell standalone commercial licenses alongside their STL files — a separate product that explicitly authorizes selling prints.</div>
           <div class="source-tip"><strong>Look for:</strong> A "Commercial License," "Print &amp; Sell License," or similar listing in the designer's store, purchased separately from or bundled with the STL.</div>
         </div>
-
         <div class="source-card maybe">
           <span class="source-badge maybe">CHECK FIRST</span>
           <div class="source-name">Kickstarter Backer Files</div>
           <div class="source-desc">Some TTRPG Kickstarters include commercial print rights in backer rewards — but many don't. It varies significantly by campaign and reward tier.</div>
           <div class="source-tip"><strong>Look for:</strong> Explicit "print and sell" or "print for hire" language in the campaign FAQ or backer updates. If it isn't stated, assume personal use only.</div>
         </div>
-
         <div class="source-card maybe">
           <span class="source-badge maybe">CHECK FIRST</span>
           <div class="source-name">Paid Files on MyMiniFactory</div>
-          <div class="source-desc">Paid files on MMF are most often personal-use licensed. Some designers offer a separate commercial upgrade, but it must be purchased explicitly — buying the STL alone is not enough.</div>
-          <div class="source-tip"><strong>Look for:</strong> A "Commercial License" add-on listed on the product page, or a check mark under "Can be used commercially" in the file details.</div>
+          <div class="source-desc">Paid files on MMF are most often personal-use licensed. Some designers offer a separate commercial upgrade, but it must be purchased explicitly.</div>
+          <div class="source-tip"><strong>Look for:</strong> A "Commercial License" add-on listed on the product page. Buying the STL alone is not enough.</div>
         </div>
-
         <div class="source-card no">
           <span class="source-badge no">PERSONAL USE ONLY</span>
           <div class="source-name">Free Files — Thingiverse &amp; MyMiniFactory</div>
-          <div class="source-desc">The vast majority of free STL files are licensed for personal use only. This includes most CC BY-NC licensed files. Printing them for a paying customer violates the license regardless of the print price.</div>
-          <div class="source-tip"><strong>How to check:</strong> Look for the license badge on the file page. CC BY-NC, "Personal Use Only," or no commercial terms listed should all be treated as off-limits.</div>
+          <div class="source-desc">The vast majority of free STL files are licensed for personal use only. Printing them for a paying customer violates the license regardless of the print price.</div>
+          <div class="source-tip"><strong>How to check:</strong> Look for the license badge on the file page. CC BY-NC or "Personal Use Only" should be treated as off-limits.</div>
         </div>
-
         <div class="source-card no">
           <span class="source-badge no">NEVER PERMITTED</span>
           <div class="source-name">IP-Owned Characters &amp; Designs</div>
-          <div class="source-desc">Files based on official D&amp;D monsters, Warhammer models, video game characters, or other licensed IP cannot be sold commercially — regardless of where you got the STL or what the uploader says.</div>
-          <div class="source-tip"><strong>This includes:</strong> Official D&amp;D and Pathfinder monsters, Games Workshop models, any named franchise character. Original/independent sculpts are fine.</div>
+          <div class="source-desc">Files based on official D&amp;D monsters, Warhammer models, video game characters, or other licensed IP cannot be sold commercially — regardless of where you got the STL.</div>
+          <div class="source-tip"><strong>This includes:</strong> Official D&amp;D and Pathfinder monsters, Games Workshop models, any named franchise character. Original independent sculpts are fine.</div>
         </div>
-
       </div>
     </div>
 
     <div class="section">
       <div class="section-tag">Where to Shop</div>
-      <h2 style="margin-bottom:1.5rem;">Designers with commercial options</h2>
-      <p style="font-style:italic;color:var(--muted);margin-bottom:1.5rem;font-size:14px;">These designers are known to offer commercial-friendly licensing. Always verify the current terms on their page before ordering — tiers and policies can change.</p>
+      <h2 style="margin-bottom:0.5rem;">Designers with commercial options</h2>
+      <p style="font-style:italic;color:var(--muted);margin-bottom:1.5rem;font-size:14px;">Click any card to visit their page. Always verify current license terms before ordering — tiers and policies can change.</p>
 
       <div class="designer-grid">
-        <div class="des-card">
-          <div>
-            <div class="des-name">The Printing Goes Ever On</div>
-            <div class="des-desc">Fantasy heroes &amp; wargaming minis. Wizard Tier includes print-for-hire rights for all that month's files. Huge variety, consistent quality.</div>
-          </div>
-          <div class="des-badge db-merchant">MERCHANT TIER</div>
-        </div>
-        <div class="des-card">
-          <div>
-            <div class="des-name">Titan-Forge Miniatures</div>
-            <div class="des-desc">High-detail fantasy &amp; sci-fi minis with themed monthly releases. Commercial merchant tier available for print sellers.</div>
-          </div>
-          <div class="des-badge db-merchant">MERCHANT TIER</div>
-        </div>
-        <div class="des-card">
-          <div>
-            <div class="des-name">Forest Dragon</div>
-            <div class="des-desc">Terrain and scenic pieces — bridges, ruins, scatter. Their $25 Patreon tier explicitly grants print-for-hire rights.</div>
-          </div>
-          <div class="des-badge db-tier">$25 TIER</div>
-        </div>
-        <div class="des-card">
-          <div>
-            <div class="des-name">Flesh of Gods</div>
-            <div class="des-desc">Dark fantasy minis with presupport included. 20+ minis per month. Verify current commercial tier availability on their Patreon.</div>
-          </div>
-          <div class="des-badge db-check">VERIFY TIER</div>
-        </div>
-        <div class="des-card">
-          <div>
-            <div class="des-name">Kraken 3D Studios</div>
-            <div class="des-desc">Offers standalone commercial licenses per product line. Purchase the STL and the commercial license separately from their store.</div>
-          </div>
-          <div class="des-badge db-merchant">SOLD SEPARATELY</div>
-        </div>
-        <div class="des-card">
-          <div>
+
+        <!-- mz4250 — commercial via Patreon Dragon Tiers -->
+        <a class="des-card" href="https://www.patreon.com/mz4250" target="_blank" rel="noopener">
+          <div class="des-card-inner">
             <div class="des-name">mz4250</div>
-            <div class="des-desc">6,000+ free TTRPG minis covering nearly every creature in D&amp;D. Files are personal use by default — check individual file notes as some explicitly allow commercial use.</div>
+            <div class="des-desc">6,000+ TTRPG minis covering nearly every D&amp;D creature. Commercial rights available through the Dragon Tiers on Patreon — even the $1 tier includes 400+ presupported commercial-safe models.</div>
           </div>
-          <div class="des-badge db-check">CHECK EACH FILE</div>
-        </div>
+          <div class="des-right">
+            <span class="des-badge db-merchant">DRAGON TIER</span>
+            <span class="des-visit">VISIT PATREON →</span>
+          </div>
+        </a>
+
+        <!-- SolGood Terrain — merchant tier via MMF Tribe -->
+        <a class="des-card" href="https://www.myminifactory.com/users/SolGoodTerrain?show=tribe" target="_blank" rel="noopener">
+          <div class="des-card-inner">
+            <div class="des-name">SolGood Terrain</div>
+            <div class="des-desc">Wargaming and RPG terrain for 28–32mm scale. Merchant tier available through their MyMiniFactory Tribe — grants commercial print-for-hire rights on their full catalogue.</div>
+          </div>
+          <div class="des-right">
+            <span class="des-badge db-merchant">MERCHANT TIER</span>
+            <span class="des-visit">VISIT MMF TRIBE →</span>
+          </div>
+        </a>
+
+        <!-- Titan-Forge — merchant tier on Thangs only (Patreon tier suspended) -->
+        <a class="des-card" href="https://thangs.com/designer/Titan%20Forge/memberships" target="_blank" rel="noopener">
+          <div class="des-card-inner">
+            <div class="des-name">Titan-Forge Miniatures</div>
+            <div class="des-desc">High-detail fantasy &amp; sci-fi minis, 100+ per month. Merchant tier is exclusively on Thangs — allows selling prints of models tagged FREE or MERCH. Note: their Patreon merchant tier is suspended.</div>
+          </div>
+          <div class="des-right">
+            <span class="des-badge db-merchant">MERCHANT TIER</span>
+            <span class="des-visit">VISIT THANGS →</span>
+          </div>
+        </a>
+
+        <!-- Terrain Essentials (Cast n Play) — merchant tier via Patreon -->
+        <a class="des-card" href="https://www.patreon.com/castnplay" target="_blank" rel="noopener">
+          <div class="des-card-inner">
+            <div class="des-name">Terrain Essentials (Cast n Play)</div>
+            <div class="des-desc">Fantasy terrain and scatter by Cast n Play. Their Merchant Tier Patreon allows selling printed versions of all models from the Patreon and MyMiniFactory store. Credit required on listings.</div>
+          </div>
+          <div class="des-right">
+            <span class="des-badge db-merchant">MERCHANT TIER</span>
+            <span class="des-visit">VISIT PATREON →</span>
+          </div>
+        </a>
+
+        <!-- STL Miniatures — merchant tier via MMF Tribe -->
+        <a class="des-card" href="https://www.myminifactory.com/users/STLMiniatures?show=tribe" target="_blank" rel="noopener">
+          <div class="des-card-inner">
+            <div class="des-name">STL Miniatures</div>
+            <div class="des-desc">High-detail tabletop miniatures with a large catalogue. Commercial print-for-hire rights granted through their MMF Tribe merchant tier — subscribe there, not through Patreon.</div>
+          </div>
+          <div class="des-right">
+            <span class="des-badge db-merchant">MERCHANT TIER</span>
+            <span class="des-visit">VISIT MMF TRIBE →</span>
+          </div>
+        </a>
+
+        <!-- PRIMAL Collectibles — merchant tier via MMF Tribe -->
+        <a class="des-card" href="https://www.myminifactory.com/users/primalcollectibles?show=tribe" target="_blank" rel="noopener">
+          <div class="des-card-inner">
+            <div class="des-name">PRIMAL Collectibles</div>
+            <div class="des-desc">Classic RPG fantasy miniatures with 648+ models and a huge back catalogue. Commercial print-for-hire rights granted through their MMF Tribe merchant tier.</div>
+          </div>
+          <div class="des-right">
+            <span class="des-badge db-merchant">MERCHANT TIER</span>
+            <span class="des-visit">VISIT MMF TRIBE →</span>
+          </div>
+        </a>
+
       </div>
     </div>
 
@@ -315,51 +282,15 @@
       <div class="section-tag">Quick Reference</div>
       <h2 style="margin-bottom:1.5rem;">License terms decoded</h2>
       <table class="ref-table">
-        <tr>
-          <th>LICENSE TERM</th>
-          <th>WHAT IT MEANS</th>
-          <th>CAN WE PRINT IT?</th>
-        </tr>
-        <tr>
-          <td>CC BY</td>
-          <td>Attribution required — commercial use allowed</td>
-          <td><span class="pill pill-ok">YES</span></td>
-        </tr>
-        <tr>
-          <td>CC BY-SA</td>
-          <td>Attribution + share-alike — commercial use generally allowed</td>
-          <td><span class="pill pill-ok">YES — VERIFY</span></td>
-        </tr>
-        <tr>
-          <td>CC BY-NC</td>
-          <td>Non-commercial only — personal use, no selling</td>
-          <td><span class="pill pill-warn">NO</span></td>
-        </tr>
-        <tr>
-          <td>CC BY-NC-SA</td>
-          <td>Non-commercial + share-alike — personal use only</td>
-          <td><span class="pill pill-warn">NO</span></td>
-        </tr>
-        <tr>
-          <td>Personal Use Only</td>
-          <td>Explicitly personal — cannot be printed for sale</td>
-          <td><span class="pill pill-warn">NO</span></td>
-        </tr>
-        <tr>
-          <td>Print &amp; Sell / Commercial OK</td>
-          <td>Explicitly allows third-party commercial printing</td>
-          <td><span class="pill pill-ok">YES</span></td>
-        </tr>
-        <tr>
-          <td>Merchant Tier License</td>
-          <td>Patreon tier that explicitly grants commercial rights</td>
-          <td><span class="pill pill-ok">YES</span></td>
-        </tr>
-        <tr>
-          <td>No license listed</td>
-          <td>Unknown — could be anything</td>
-          <td><span class="pill pill-warn">ASK DESIGNER</span></td>
-        </tr>
+        <tr><th>LICENSE TERM</th><th>WHAT IT MEANS</th><th>CAN WE PRINT IT?</th></tr>
+        <tr><td>CC BY</td><td>Attribution required — commercial use allowed</td><td><span class="pill pill-ok">YES</span></td></tr>
+        <tr><td>CC BY-SA</td><td>Attribution + share-alike — commercial use generally allowed</td><td><span class="pill pill-ok">YES — VERIFY</span></td></tr>
+        <tr><td>CC BY-NC</td><td>Non-commercial only — personal use, no selling</td><td><span class="pill pill-warn">NO</span></td></tr>
+        <tr><td>CC BY-NC-SA</td><td>Non-commercial + share-alike — personal use only</td><td><span class="pill pill-warn">NO</span></td></tr>
+        <tr><td>Personal Use Only</td><td>Explicitly personal — cannot be printed for sale</td><td><span class="pill pill-warn">NO</span></td></tr>
+        <tr><td>Print &amp; Sell / Commercial OK</td><td>Explicitly allows third-party commercial printing</td><td><span class="pill pill-ok">YES</span></td></tr>
+        <tr><td>Merchant Tier License</td><td>Patreon/platform tier that explicitly grants commercial rights</td><td><span class="pill pill-ok">YES</span></td></tr>
+        <tr><td>No license listed</td><td>Unknown — could be anything</td><td><span class="pill pill-warn">ASK DESIGNER</span></td></tr>
       </table>
     </div>
 
@@ -367,17 +298,18 @@
       <div class="warning-title">STILL NOT SURE?</div>
       <div class="warning-text">
         If you can't find clear commercial printing language in your file's license, assume it's personal use only.
-        We'd rather help you find the right file than print something that puts you or us at risk.
-        <a href="order.html">Send us a message</a> and we'll look at the license together before you order — no commitment required.
+        We'd rather help you find the right file than print something that creates a problem.
+        <a href="#" onclick="openPopup(); return false;">Send us a message</a> and we'll look at the license together before you order — no commitment required.
       </div>
     </div>
 
     <div style="text-align:center;padding:0 0 3rem;">
       <p style="font-style:italic;color:var(--muted);margin-bottom:1.5rem;">Found a file you're cleared to print? Let's make it.</p>
-      <a href="order.html" class="btn-primary">REQUEST A PRINT</a>
+      <a href="order.html" class="btn-primary" style="margin-right:12px;">REQUEST A PRINT</a>
+      <button class="btn-ghost" onclick="openPopup()">ASK A QUESTION</button>
     </div>
 
-  </div>
+  </div><!-- /container -->
 
   <footer class="site-footer">
     <div class="site-footer-inner">
@@ -391,9 +323,84 @@
     </div>
   </footer>
 
+  <!-- ── CONTACT POPUP ── -->
+  <div class="popup-overlay" id="popup-overlay" onclick="handleOverlayClick(event)">
+    <div class="popup" id="popup">
+      <button class="popup-close" onclick="closePopup()">✕ CLOSE</button>
+
+      <div id="popup-form-wrap">
+        <div class="popup-title">ASK US ANYTHING</div>
+        <div class="popup-sub">Not sure about a license, scale, or material? Send us a quick message — we'll get back to you within 24 hours.</div>
+
+        <!--
+          Uses the same Formspree endpoint as your order form.
+          Submissions will arrive in your inbox labeled "Quick question".
+        -->
+        <form id="popup-form" action="https://formspree.io/f/xnjryqen" method="POST">
+          <div class="form-group">
+            <label>YOUR NAME</label>
+            <input type="text" name="name" required placeholder="Aldric Stonewall">
+          </div>
+          <div class="form-group">
+            <label>EMAIL ADDRESS *</label>
+            <input type="email" name="email" required placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label>YOUR QUESTION *</label>
+            <textarea name="message" required placeholder="e.g. I have an STL from a Kickstarter and I'm not sure if the license covers print-for-hire..."></textarea>
+          </div>
+          <input type="hidden" name="_subject" value="Quick question — The Forge &amp; Fable STL Guide">
+          <input type="text"   name="_gotcha"  style="display:none">
+          <button type="submit" class="popup-send">SEND MESSAGE</button>
+        </form>
+      </div>
+
+      <div class="popup-success" id="popup-success">
+        <h3>MESSAGE SENT</h3>
+        <p>Thanks — we'll get back to you within 24 hours. In the meantime, feel free to browse our <a href="gallery.html" style="color:var(--gold);">gallery</a>.</p>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     document.getElementById('hamburger').addEventListener('click', function() {
       document.getElementById('nav-links').classList.toggle('open');
+    });
+
+    function openPopup() {
+      document.getElementById('popup-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePopup() {
+      document.getElementById('popup-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('popup-overlay')) closePopup();
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closePopup();
+    });
+
+    // Popup form — AJAX submit so it doesn't navigate away
+    document.getElementById('popup-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = this;
+      const data = new FormData(form);
+      fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      }).then(res => {
+        if (res.ok) {
+          document.getElementById('popup-form-wrap').style.display = 'none';
+          document.getElementById('popup-success').style.display = 'block';
+          setTimeout(closePopup, 3500);
+        } else {
+          alert('Something went wrong — please try again.');
+        }
+      }).catch(() => alert('Network error — please try again.'));
     });
   </script>
 </body>
