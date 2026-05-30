@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Forge & Fable — TTRPG Miniature Printing · Lima, OH</title>
+  <meta name="description" content="Custom resin and PLA miniatures for D&D, Pathfinder, and all your tabletop adventures. Printed with precision, delivered to your table.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── HERO ── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 64px);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-left {
+      padding: 5rem 3rem 5rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(201,168,76,0.04) 0%, transparent 55%);
+    }
+    .hero-left h1 { color: var(--text); margin-bottom: 1.25rem; }
+    .hero-left h1 em { font-style: normal; color: var(--gold); }
+    .hero-desc {
+      font-size: 17px;
+      font-style: italic;
+      color: var(--muted);
+      max-width: 400px;
+      margin-bottom: 2.5rem;
+      line-height: 1.75;
+    }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .hero-right {
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-art {
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Decorative concentric rings */
+    .hero-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+    }
+    .hero-ring:nth-child(1) { width: 100%; height: 100%; }
+    .hero-ring:nth-child(2) { width: 72%; height: 72%; border-color: var(--border2); }
+    .hero-ring:nth-child(3) { width: 44%; height: 44%; }
+    .hero-icon-wrap {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+    .hero-icon-svg { opacity: 0.6; margin: 0 auto 1.5rem; }
+    .hero-badge-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-badge {
+      font-family: var(--serif);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      padding: 5px 12px;
+      border: 1px solid var(--border2);
+      color: var(--gold);
+      background: rgba(201,168,76,0.06);
+    }
+
+    /* ── FEATURES STRIP ── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+    .feature {
+      padding: 2.25rem 1.75rem;
+      border-right: 1px solid var(--border);
+    }
+    .feature:last-child { border-right: none; }
+    .feature-num {
+      font-family: var(--serif);
+      font-size: 30px;
+      color: var(--border2);
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1;
+    }
+    .feature-title {
+      font-family: var(--serif);
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.14em;
+      margin-bottom: 8px;
+    }
+    .feature-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    /* ── GALLERY PREVIEW ── */
+    .gallery-preview { padding: 4rem 0; border-bottom: 1px solid var(--border); }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .section-head-title {
+      font-family: var(--serif);
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.22em;
+    }
+    .section-head-link {
+      font-family: var(--serif);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      transition: color 0.2s;
+    }
+    .section-head-link:hover { color: var(--gold); }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .preview-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      text-decoration: none;
+      display: block;
+    }
+    .preview-card:hover { border-color: var(--border2); }
+    .preview-img {
+      height: 180px;
+      background: var(--surface2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    /* When real photos are added, replace background with img tag */
+    .preview-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .preview-img-placeholder {
+      opacity: 0.2;
+      font-family: var(--serif);
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-align: center;
+      padding: 1rem;
+    }
+    .preview-badge {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      font-family: var(--serif);
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      padding: 3px 8px;
+      background: rgba(13,15,20,0.85);
+    }
+    .preview-info { padding: 0.9rem 1rem; }
+    .preview-name {
+      font-size: 14px;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 3px;
+    }
+    .preview-meta {
+      font-family: var(--serif);
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── CTA BAND ── */
+    .cta-band {
+      padding: 4rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+      background: linear-gradient(90deg, rgba(201,168,76,0.04) 0%, transparent 100%);
+    }
+    .cta-band h2 { color: var(--text); margin-bottom: 6px; }
+    .cta-band p  { font-style: italic; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 3rem 1.25rem; border-right: none; border-bottom: 1px solid var(--border); }
+      .hero-right { padding: 2.5rem 1.25rem; min-height: 280px; }
+      .features { grid-template-columns: 1fr 1fr; }
+      .feature:nth-child(2) { border-right: none; }
+      .feature:nth-child(3) { border-top: 1px solid var(--border); }
+      .preview-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .features { grid-template-columns: 1fr; }
+      .feature { border-right: none; border-top: 1px solid var(--border); }
+      .features .feature:first-child { border-top: none; }
+      .preview-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-main">THE FORGE &amp; FABLE</span>
+      <span class="nav-logo-sub">MINIATURE PRINTING · LIMA, OH</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="order.html">Order</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="stl-sources.html">STL Guide</a></li>
+    </ul>
+    <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="section-tag fade-up">TTRPG Miniature Printing</div>
+      <h1 class="fade-up fade-up-1">Where your<br>characters come<br><em>to life.</em></h1>
+      <p class="hero-desc fade-up fade-up-2">Custom resin &amp; PLA miniatures for D&amp;D, Pathfinder, and all your tabletop adventures. Printed with precision. Delivered to your table.</p>
+      <div class="hero-actions fade-up fade-up-3">
+        <a href="order.html" class="btn-primary">REQUEST A PRINT</a>
+        <a href="gallery.html" class="btn-ghost">VIEW GALLERY</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-art fade-up fade-up-2">
+        <div class="hero-ring"></div>
+        <div class="hero-ring"></div>
+        <div class="hero-ring"></div>
+        <div class="hero-icon-wrap">
+          <svg class="hero-icon-svg" width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="40,6 72,68 8,68" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+            <polygon points="40,18 62,58 18,58" stroke="#c9a84c" stroke-width="0.8" fill="none" stroke-dasharray="4,3"/>
+            <circle cx="40" cy="42" r="8" stroke="#c9a84c" stroke-width="1.2" fill="none"/>
+            <line x1="40" y1="6" x2="40" y2="34" stroke="#c9a84c" stroke-width="0.8" stroke-dasharray="3,3"/>
+          </svg>
+          <div class="hero-badge-row">
+            <span class="hero-badge">4K RESIN</span>
+            <span class="hero-badge">PLA PRINT</span>
+            <span class="hero-badge">LIMA, OH</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature">
+      <div class="feature-num">I.</div>
+      <div class="feature-title">RESIN MINIS</div>
+      <div class="feature-desc">4K LCD resin for ultra-fine detail — perfect for hero characters, faces, and intricate weapons at 28–75mm scale.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-num">II.</div>
+      <div class="feature-title">PLA TERRAIN</div>
+      <div class="feature-desc">Durable FDM printing for dungeon tiles, scatter terrain, and large-scale modular builds that take real punishment.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-num">III.</div>
+      <div class="feature-title">CUSTOM ORDERS</div>
+      <div class="feature-desc">Got an STL? Send it over. Need help finding the right file for your character? We'll point you in the right direction.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-num">IV.</div>
+      <div class="feature-title">FAST TURNAROUND</div>
+      <div class="feature-desc">Most minis ready in 3–5 business days. Rush options available before your next session night.</div>
+    </div>
+  </div>
+
+  <!-- GALLERY PREVIEW -->
+  <section class="gallery-preview">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head-title">FROM THE WORKSHOP</div>
+        <a href="gallery.html" class="section-head-link">VIEW FULL GALLERY →</a>
+      </div>
+      <div class="preview-grid">
+
+        <!-- CARD 1 — replace .preview-img-placeholder with <img src="images/gallery/your-photo.jpg" alt="..."> -->
+        <a href="gallery.html" class="preview-card">
+          <div class="preview-img">
+            <div class="preview-img-placeholder">YOUR PHOTO<br>HERE</div>
+            <span class="preview-badge pill pill-resin">RESIN</span>
+          </div>
+          <div class="preview-info">
+            <div class="preview-name">Half-orc barbarian</div>
+            <div class="preview-meta">32MM · 4K RESIN</div>
+          </div>
+        </a>
+
+        <!-- CARD 2 -->
+        <a href="gallery.html" class="preview-card">
+          <div class="preview-img">
+            <div class="preview-img-placeholder">YOUR PHOTO<br>HERE</div>
+            <span class="preview-badge pill pill-resin">RESIN</span>
+          </div>
+          <div class="preview-info">
+            <div class="preview-name">Dragon wyrmling</div>
+            <div class="preview-meta">54MM · 4K RESIN</div>
+          </div>
+        </a>
+
+        <!-- CARD 3 -->
+        <a href="gallery.html" class="preview-card">
+          <div class="preview-img">
+            <div class="preview-img-placeholder">YOUR PHOTO<br>HERE</div>
+            <span class="preview-badge pill pill-pla">PLA</span>
+          </div>
+          <div class="preview-info">
+            <div class="preview-name">Dungeon entrance</div>
+            <div class="preview-meta">TERRAIN · PLA BASIC</div>
+          </div>
+        </a>
+
+        <!-- CARD 4 -->
+        <a href="gallery.html" class="preview-card">
+          <div class="preview-img">
+            <div class="preview-img-placeholder">YOUR PHOTO<br>HERE</div>
+            <span class="preview-badge pill pill-resin">RESIN</span>
+          </div>
+          <div class="preview-info">
+            <div class="preview-name">Tiefling warlock, 75mm</div>
+            <div class="preview-meta">DISPLAY · ULTRA FINE</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section>
+    <div class="container">
+      <div class="cta-band">
+        <div>
+          <h2>Ready to bring your<br>character to the table?</h2>
+          <p>Send your STL or describe your vision — we'll handle the rest.</p>
+        </div>
+        <a href="order.html" class="btn-primary">START YOUR ORDER</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-brand">THE FORGE &amp; FABLE · LIMA, OHIO · EST. 2025</div>
+      <ul class="footer-links">
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="stl-sources.html">STL Guide</a></li>
+        <li><a href="order.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    document.getElementById('hamburger').addEventListener('click', function() {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+    // Mark active nav link
+    const links = document.querySelectorAll('.nav-links a');
+    links.forEach(l => { if (l.href === window.location.href) l.classList.add('active'); });
+  </script>
+</body>
+</html>
