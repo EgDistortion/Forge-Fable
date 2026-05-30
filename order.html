@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request a Print — The Forge &amp; Fable</title>
+  <meta name="description" content="Commission a custom 3D printed miniature or terrain piece from The Forge & Fable in Lima, OH.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .order-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2.5rem;
+      padding: 3rem 0 4rem;
+      align-items: start;
+    }
+
+    .order-section { margin-bottom: 2rem; }
+    .order-section-title {
+      font-family: var(--serif);
+      font-size: 9px;
+      color: var(--gold);
+      letter-spacing: 0.22em;
+      margin-bottom: 1.1rem;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Upload box */
+    .upload-box {
+      border: 1px dashed var(--border2);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      background: var(--surface2);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .upload-box:hover { border-color: var(--gold); background: var(--surface3); }
+    .upload-icon {
+      font-family: var(--serif);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      margin-bottom: 6px;
+    }
+    .upload-sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .upload-link { color: var(--gold); cursor: pointer; font-style: normal; }
+    #file-input { display: none; }
+    #file-name {
+      font-family: var(--serif);
+      font-size: 10px;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      margin-top: 8px;
+      min-height: 16px;
+    }
+
+    /* License box */
+    .license-box {
+      background: rgba(201,168,76,0.05);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+    }
+    .license-title {
+      font-family: var(--serif);
+      font-size: 9px;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      margin-bottom: 1rem;
+    }
+    .license-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .license-check input[type="checkbox"] {
+      margin-top: 4px;
+      accent-color: var(--gold);
+      flex-shrink: 0;
+      width: 15px;
+      height: 15px;
+    }
+    .license-check span {
+      font-size: 13px;
+      color: var(--soft);
+      line-height: 1.55;
+    }
+    .license-note {
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+    .license-note a { color: var(--gold); }
+
+    /* Sidebar summary */
+    .order-summary {
+      position: sticky;
+      top: 80px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .summary-title {
+      font-family: var(--serif);
+      font-size: 9px;
+      color: var(--gold);
+      letter-spacing: 0.22em;
+      margin-bottom: 1.1rem;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-row:last-of-type { border-bottom: none; }
+    .summary-label { font-size: 12px; color: var(--muted); font-style: italic; }
+    .summary-val { font-family: var(--serif); font-size: 12px; color: var(--text); letter-spacing: 0.05em; }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.1rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--border2);
+      align-items: baseline;
+    }
+    .summary-total .lbl { font-family: var(--serif); font-size: 9px; color: var(--gold); letter-spacing: 0.15em; }
+    .summary-total .val { font-family: var(--serif); font-size: 20px; color: var(--gold2); }
+    .summary-note {
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+      text-align: center;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      margin-top: 1.25rem;
+      padding: 14px;
+      font-family: var(--serif);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      background: var(--gold);
+      color: #0d0f14;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius);
+      transition: background 0.2s;
+    }
+    .btn-submit:hover:not(:disabled) { background: var(--gold2); }
+    .btn-submit:disabled {
+      background: var(--surface3);
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+
+    /* What to expect */
+    .expect-list { list-style: none; }
+    .expect-list li {
+      display: flex;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--soft);
+      font-style: italic;
+      align-items: flex-start;
+    }
+    .expect-list li:last-child { border-bottom: none; }
+    .expect-list li::before {
+      content: '—';
+      color: var(--gold);
+      font-family: var(--serif);
+      font-style: normal;
+      flex-shrink: 0;
+    }
+
+    /* Success message */
+    .success-msg {
+      display: none;
+      background: rgba(74,158,107,0.08);
+      border: 1px solid rgba(74,158,107,0.3);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .success-msg h3 {
+      font-family: var(--serif);
+      font-size: 14px;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .success-msg p { font-style: italic; color: var(--muted); }
+
+    @media (max-width: 860px) {
+      .order-layout { grid-template-columns: 1fr; }
+      .order-summary { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-main">THE FORGE &amp; FABLE</span>
+      <span class="nav-logo-sub">MINIATURE PRINTING · LIMA, OH</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="order.html" class="active">Order</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="stl-sources.html">STL Guide</a></li>
+    </ul>
+    <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="section-tag">Commission a Print</div>
+      <h1>Request a Print</h1>
+      <p>Fill out the details below and we'll confirm availability and pricing within 24 hours. No payment until you approve the quote.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="order-layout">
+
+      <!-- ── FORM ── -->
+      <div>
+
+        <!--
+          ╔══════════════════════════════════════════════════════╗
+          ║  FORMSPREE SETUP — do this before going live:       ║
+          ║  1. Go to formspree.io and create a free account    ║
+          ║  2. Create a new form, copy your form endpoint      ║
+          ║  3. Replace YOUR_FORMSPREE_ID below with your ID    ║
+          ║     e.g. https://formspree.io/f/xpznkwvj           ║
+          ╚══════════════════════════════════════════════════════╝
+        -->
+        <form id="order-form" action="https://formspree.io/f/xnjryqen" method="POST">
+
+          <div class="order-section">
+            <div class="order-section-title">YOUR DETAILS</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="first-name">FIRST NAME *</label>
+                <input type="text" id="first-name" name="first_name" required placeholder="Aldric">
+              </div>
+              <div class="form-group">
+                <label for="last-name">LAST NAME *</label>
+                <input type="text" id="last-name" name="last_name" required placeholder="Stonewall">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">EMAIL ADDRESS *</label>
+              <input type="email" id="email" name="email" required placeholder="you@example.com">
+            </div>
+          </div>
+
+          <div class="order-section">
+            <div class="order-section-title">PRINT DETAILS</div>
+            <div class="form-group">
+              <label for="material">MATERIAL *</label>
+              <select id="material" name="material" required onchange="updateSummary()">
+                <option value="">— Select material —</option>
+                <option value="Resin — 4K LCD (high detail minis)">Resin — 4K LCD (high detail minis)</option>
+                <option value="PLA Basic — FDM (terrain, large pieces)">PLA Basic — FDM (terrain, large pieces)</option>
+                <option value="PLA Matte — FDM (terrain, large pieces)">PLA Matte — FDM (terrain, large pieces)</option>
+                <option value="Unsure — please advise">Unsure — please advise</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="scale">SCALE / SIZE *</label>
+                <select id="scale" name="scale" required onchange="updateSummary()">
+                  <option value="">— Select scale —</option>
+                  <option value="28mm heroic">28mm heroic</option>
+                  <option value="32mm standard">32mm standard</option>
+                  <option value="54mm character">54mm character</option>
+                  <option value="75mm display">75mm display</option>
+                  <option value="Terrain / other">Terrain / other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="quantity">QUANTITY *</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required onchange="updateSummary()">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="turnaround">TURNAROUND</label>
+              <select id="turnaround" name="turnaround" onchange="updateSummary()">
+                <option value="Standard (3–5 business days)">Standard (3–5 business days)</option>
+                <option value="Rush (1–2 business days, +50%)">Rush (1–2 business days, +50%)</option>
+                <option value="Flexible — no rush">Flexible — no rush</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="notes">NOTES / SPECIAL REQUESTS</label>
+              <textarea id="notes" name="notes" placeholder="Describe your character, base preferences, finish requests, painting notes, or anything else useful..."></textarea>
+            </div>
+          </div>
+
+          <div class="order-section">
+            <div class="order-section-title">YOUR STL FILE</div>
+            <div class="upload-box" onclick="document.getElementById('file-input').click()">
+              <div class="upload-icon">DRAG &amp; DROP YOUR STL FILE</div>
+              <div class="upload-sub">or <span class="upload-link">click to browse</span> — .stl or .obj, max 50MB</div>
+              <div id="file-name"></div>
+            </div>
+            <input type="file" id="file-input" name="stl_file" accept=".stl,.obj">
+            <div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic;">
+              No file yet? <a href="stl-sources.html" style="color:var(--gold);">Browse our recommended STL sources →</a>
+            </div>
+            <p style="font-size:12px;color:var(--muted);font-style:italic;margin-top:6px;line-height:1.5;">
+              Note: Formspree free tier doesn't support file uploads — if your file is large, you can email it to us after submitting, or share a link (Google Drive, MyMiniFactory, etc.) in the notes field above.
+            </p>
+          </div>
+
+          <!-- LICENSE CONFIRMATION -->
+          <div class="license-box">
+            <div class="license-title">STL LICENSE CONFIRMATION</div>
+            <label class="license-check">
+              <input type="checkbox" id="lic1" name="license_confirmed_1" value="yes" onchange="checkLicense()">
+              <span>I confirm that my STL file permits third-party commercial printing (print-for-hire). I have verified this in the file's license terms.</span>
+            </label>
+            <label class="license-check">
+              <input type="checkbox" id="lic2" name="license_confirmed_2" value="yes" onchange="checkLicense()">
+              <span>I understand that files licensed for personal use only cannot be printed commercially, and that The Forge &amp; Fable cannot accept orders for unlicensed files.</span>
+            </label>
+            <div class="license-note">
+              Not sure about your license? <a href="stl-sources.html">Read our STL licensing guide →</a>
+              Free files from Thingiverse and MyMiniFactory are often personal use only.
+              Designer Patreon merchant tiers and Kickstarter backer files usually include commercial rights.
+            </div>
+          </div>
+
+          <!-- Hidden spam protection -->
+          <input type="text" name="_gotcha" style="display:none">
+          <input type="hidden" name="_subject" value="New print request — The Forge &amp; Fable">
+          <!-- Redirects back to your site after submission. Update once live. -->
+          <input type="hidden" name="_next" value="https://theforgeandfable.com/order.html?submitted=true">
+
+        </form><!-- /form -->
+
+        <div class="success-msg" id="success-msg">
+          <h3>ORDER REQUEST RECEIVED</h3>
+          <p>Thank you — we'll review your request and get back to you within 24 hours with a quote. No payment is due until you approve.</p>
+        </div>
+
+      </div>
+
+      <!-- ── SIDEBAR ── -->
+      <div>
+        <div class="order-summary">
+          <div class="summary-title">ORDER SUMMARY</div>
+          <div class="summary-row"><span class="summary-label">Material</span><span class="summary-val" id="sum-material">—</span></div>
+          <div class="summary-row"><span class="summary-label">Scale</span><span class="summary-val" id="sum-scale">—</span></div>
+          <div class="summary-row"><span class="summary-label">Quantity</span><span class="summary-val" id="sum-qty">1</span></div>
+          <div class="summary-row"><span class="summary-label">Turnaround</span><span class="summary-val" id="sum-turn">Standard</span></div>
+          <div class="summary-total">
+            <span class="lbl">EST. TOTAL</span>
+            <span class="val">TBD</span>
+          </div>
+          <div class="summary-note">Final price confirmed after file review. No charge until you approve the quote.</div>
+          <button type="submit" class="btn-submit" id="submit-btn" disabled>CONFIRM LICENSE TO CONTINUE</button>
+        </div>
+
+        <div style="margin-top:1.5rem;">
+          <div class="order-section-title">WHAT HAPPENS NEXT</div>
+          <ul class="expect-list">
+            <li>We review your request and STL file within 24 hours</li>
+            <li>You receive a quote by email — no obligation</li>
+            <li>Approve the quote and send payment to start the print</li>
+            <li>We notify you when your order is complete and ready</li>
+            <li>Pick up in Lima, OH or ship via USPS with foam packaging</li>
+          </ul>
+        </div>
+
+        <div style="margin-top:1.5rem;">
+          <div class="order-section-title">QUESTIONS?</div>
+          <p style="font-size:13px;font-style:italic;color:var(--muted);line-height:1.65;">
+            Not sure about your file, scale, or license? Fill in what you know and leave a note — we'll sort out the details together before quoting.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-brand">THE FORGE &amp; FABLE · LIMA, OHIO · EST. 2025</div>
+      <ul class="footer-links">
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="stl-sources.html">STL Guide</a></li>
+        <li><a href="order.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('hamburger').addEventListener('click', function() {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+
+    // File input label
+    document.getElementById('file-input').addEventListener('change', function() {
+      const name = this.files[0] ? this.files[0].name : '';
+      document.getElementById('file-name').textContent = name ? '✓ ' + name : '';
+    });
+
+    // License gate
+    function checkLicense() {
+      const c1 = document.getElementById('lic1').checked;
+      const c2 = document.getElementById('lic2').checked;
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = !(c1 && c2);
+      btn.textContent = (c1 && c2) ? 'SUBMIT ORDER REQUEST' : 'CONFIRM LICENSE TO CONTINUE';
+    }
+
+    // Live summary update
+    function updateSummary() {
+      const mat = document.getElementById('material').value;
+      const scale = document.getElementById('scale').value;
+      const qty = document.getElementById('quantity').value;
+      const turn = document.getElementById('turnaround').value;
+      document.getElementById('sum-material').textContent = mat ? mat.split('—')[0].trim() : '—';
+      document.getElementById('sum-scale').textContent = scale || '—';
+      document.getElementById('sum-qty').textContent = qty || '1';
+      document.getElementById('sum-turn').textContent = turn ? turn.split('(')[0].trim() : 'Standard';
+    }
+
+    // Show success message if redirected back after submission
+    if (window.location.search.includes('submitted=true')) {
+      document.getElementById('order-form').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

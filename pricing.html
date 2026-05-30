@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — The Forge &amp; Fable</title>
+  <meta name="description" content="Pricing and policies for custom 3D printed miniatures and terrain from The Forge & Fable.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .pricing-intro {
+      font-size: 16px;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 620px;
+      margin-bottom: 3rem;
+    }
+
+    /* Pricing cards */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 3rem;
+    }
+    .p-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem 1.5rem;
+      position: relative;
+    }
+    .p-card.featured {
+      border-color: var(--border2);
+    }
+    .p-card.featured::before {
+      content: 'MOST POPULAR';
+      position: absolute;
+      top: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--serif);
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      color: #0d0f14;
+      background: var(--gold);
+      padding: 3px 14px;
+      border-radius: 0 0 var(--radius) var(--radius);
+      white-space: nowrap;
+    }
+    .p-name {
+      font-family: var(--serif);
+      font-size: 12px;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      margin-bottom: 4px;
+    }
+    .p-sub {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 1.25rem;
+    }
+    .p-price {
+      font-family: var(--serif);
+      font-size: 30px;
+      color: var(--text);
+      letter-spacing: 0.02em;
+      margin-bottom: 3px;
+    }
+    .p-unit {
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 1.25rem;
+    }
+    .p-features { list-style: none; }
+    .p-features li {
+      font-size: 13px;
+      color: var(--soft);
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.5;
+    }
+    .p-features li:last-child { border-bottom: none; }
+    .p-features li::before {
+      content: '—';
+      color: var(--gold);
+      font-family: var(--serif);
+      font-size: 10px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Pricing note */
+    .pricing-note {
+      background: rgba(201,168,76,0.05);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 3rem;
+      font-size: 14px;
+      color: var(--soft);
+      font-style: italic;
+      line-height: 1.7;
+    }
+    .pricing-note strong { font-style: normal; color: var(--gold2); font-weight: 400; }
+
+    /* Policies */
+    .policy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 3rem;
+    }
+    .policy-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+    }
+    .policy-title {
+      font-family: var(--serif);
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      margin-bottom: 8px;
+    }
+    .policy-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-style: italic;
+    }
+
+    /* FAQ */
+    .faq-list { margin-bottom: 3rem; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 0;
+      cursor: pointer;
+    }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+    .faq-q {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--serif);
+      font-size: 12px;
+      color: var(--text);
+      letter-spacing: 0.06em;
+      gap: 1rem;
+    }
+    .faq-arrow {
+      font-size: 10px;
+      color: var(--gold);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    .faq-arrow.open { transform: rotate(180deg); }
+    .faq-a {
+      font-size: 14px;
+      color: var(--muted);
+      font-style: italic;
+      line-height: 1.7;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.2s;
+    }
+    .faq-a.open { max-height: 400px; padding-top: 10px; }
+
+    @media (max-width: 760px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .policy-grid  { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-main">THE FORGE &amp; FABLE</span>
+      <span class="nav-logo-sub">MINIATURE PRINTING · LIMA, OH</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="order.html">Order</a></li>
+      <li><a href="pricing.html" class="active">Pricing</a></li>
+      <li><a href="stl-sources.html">STL Guide</a></li>
+    </ul>
+    <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="section-tag">Rates &amp; Policies</div>
+      <h1>Pricing</h1>
+      <p>Transparent estimates upfront — final quotes after file review. No surprises, no payment until you say go.</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="section">
+      <p class="pricing-intro">
+        All prices below are estimates based on typical print jobs. Every order starts as a free quote —
+        we review your STL, assess print time and material use, then confirm pricing within 24 hours.
+        You only pay once you approve the quote.
+      </p>
+
+      <div class="pricing-grid">
+
+        <div class="p-card">
+          <div class="p-name">RESIN — STANDARD</div>
+          <div class="p-sub">Hero minis, 28–32mm</div>
+          <div class="p-price">$8–15</div>
+          <div class="p-unit">per miniature</div>
+          <ul class="p-features">
+            <li>4K LCD resin printer</li>
+            <li>0.05mm layer height</li>
+            <li>Washed &amp; UV cured included</li>
+            <li>28mm heroic or 32mm standard scale</li>
+            <li>Standard 3–5 day turnaround</li>
+          </ul>
+        </div>
+
+        <div class="p-card featured">
+          <div class="p-name">RESIN — DISPLAY</div>
+          <div class="p-sub">Character pieces, 54–75mm</div>
+          <div class="p-price">$22–45</div>
+          <div class="p-unit">per piece</div>
+          <ul class="p-features">
+            <li>4K LCD resin printer</li>
+            <li>0.03mm ultra-fine layer height</li>
+            <li>Washed &amp; UV cured included</li>
+            <li>54mm or 75mm display scale</li>
+            <li>Custom base options available</li>
+          </ul>
+        </div>
+
+        <div class="p-card">
+          <div class="p-name">PLA — TERRAIN</div>
+          <div class="p-sub">Tiles, scatter, large builds</div>
+          <div class="p-price">$5–40</div>
+          <div class="p-unit">per piece or set</div>
+          <ul class="p-features">
+            <li>FDM PLA Basic or PLA Matte</li>
+            <li>0.15–0.2mm layer height</li>
+            <li>Multiple color options</li>
+            <li>Modular tile sets welcome</li>
+            <li>Priced by print time &amp; material</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pricing-note">
+        <strong>Rush orders</strong> (1–2 business day turnaround) are available at a +50% surcharge when the print schedule allows.
+        Contact us before placing a rush order to confirm availability.
+        <br><br>
+        <strong>Multi-piece orders</strong> (5+ of the same mini) may qualify for a small volume discount — mention it in your order notes.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-tag">How We Work</div>
+      <h2 style="margin-bottom:2rem;">Policies</h2>
+
+      <div class="policy-grid">
+        <div class="policy-card">
+          <div class="policy-title">STL LICENSING</div>
+          <div class="policy-text">We only print files that explicitly permit third-party commercial printing. Customers confirm license eligibility at checkout. If you're unsure, ask us — we'd rather check together than print something that creates a problem for either of us. See our <a href="stl-sources.html" style="color:var(--gold);">STL guide</a> for more detail.</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-title">PAYMENT</div>
+          <div class="policy-text">All orders begin as a free quote confirmed within 24 hours. Payment is due before printing begins. We accept PayPal, Venmo, and cash for local pickup. We do not charge until you've approved the final quote.</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-title">PRINT FAILURES &amp; REPRINTS</div>
+          <div class="policy-text">If a print fails due to our equipment or process, we reprint at no cost to you. Customer-supplied STL files that cause print failures may require file adjustments. We'll always communicate before charging anything extra.</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-title">SHIPPING &amp; PICKUP</div>
+          <div class="policy-text">Local pickup is available in Lima, OH — preferred for fragile resin minis. Shipping is available via USPS with foam packaging to protect your minis in transit. Shipping costs are quoted at the time of order.</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-title">TURNAROUND TIMES</div>
+          <div class="policy-text">Standard orders are typically ready in 3–5 business days depending on print queue. Rush orders (1–2 days) are available at +50% when schedule allows. We'll always confirm your estimated completion date before you pay.</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-title">SUPPORTED FILES</div>
+          <div class="policy-text">We accept .STL and .OBJ files. Files should be manifold (watertight) and ideally pre-supported for resin prints. If your file has issues, we'll let you know before quoting rather than printing something that won't come out right.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-tag">Common Questions</div>
+      <h2 style="margin-bottom:2rem;">FAQ</h2>
+      <div class="faq-list">
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Do I need to provide a pre-supported file for resin prints? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">Pre-supported files are helpful but not required. If you have one, great — send it along. If not, we can add supports on our end as part of the print prep, which is factored into the quote. Just let us know in your order notes.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Can I order a mini if I don't have an STL file? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">Yes — describe your character in the notes field and we can point you toward suitable STL sources that have commercial printing rights. We don't design original sculpts, but we know where to find great files for almost any character concept.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">What scale should I order for D&amp;D or Pathfinder? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">28mm heroic and 32mm are both widely used and fit standard 1-inch grid squares. 32mm tends to have slightly more detail due to the larger size. 28mm is better if you're mixing with an existing collection of commercial minis. When in doubt, go 32mm.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Do you paint miniatures? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">Not currently — we print and deliver unpainted minis ready for priming. The surface quality from our 4K resin printer holds paint very well. We can recommend a primer before you start.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">My file's license says "personal use only" — can you still print it? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">Unfortunately no. We can't print files restricted to personal use, even for a one-off order. It would violate the designer's license regardless of how the print is used. Check out our <a href="stl-sources.html" style="color:var(--gold);">STL sources guide</a> for designers who offer commercial-friendly licenses.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:2rem 0 3rem;">
+      <p style="font-style:italic;color:var(--muted);margin-bottom:1.5rem;">Still have questions? Just ask — we're happy to talk through your project before you commit to anything.</p>
+      <a href="order.html" class="btn-primary">REQUEST A QUOTE</a>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-brand">THE FORGE &amp; FABLE · LIMA, OHIO · EST. 2025</div>
+      <ul class="footer-links">
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="stl-sources.html">STL Guide</a></li>
+        <li><a href="order.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('hamburger').addEventListener('click', function() {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+    function toggleFaq(el) {
+      const a = el.querySelector('.faq-a');
+      const arrow = el.querySelector('.faq-arrow');
+      a.classList.toggle('open');
+      arrow.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
