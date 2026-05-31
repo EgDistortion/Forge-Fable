@@ -18,7 +18,7 @@
     .order-section { margin-bottom: 2rem; }
     .order-section-title {
       font-family: var(--serif);
-      font-size: 13px;
+      font-size: 14px;
       color: var(--gold);
       letter-spacing: 0.22em;
       margin-bottom: 1.1rem;
@@ -39,13 +39,13 @@
     .upload-box:hover { border-color: var(--gold); background: var(--surface3); }
     .upload-icon {
       font-family: var(--serif);
-      font-size: 14px;
+      font-size: 15px;
       color: var(--muted);
       letter-spacing: 0.15em;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .upload-sub {
-      font-size: 12px;
+      font-size: 15px;
       color: var(--muted);
       font-style: italic;
     }
@@ -53,7 +53,7 @@
     #file-input { display: none; }
     #file-name {
       font-family: var(--serif);
-      font-size: 13px;
+      font-size: 14px;
       color: var(--green);
       letter-spacing: 0.1em;
       margin-top: 8px;
@@ -70,7 +70,7 @@
     }
     .license-title {
       font-family: var(--serif);
-      font-size: 13px;
+      font-size: 14px;
       color: var(--gold);
       letter-spacing: 0.2em;
       margin-bottom: 1rem;
@@ -86,19 +86,19 @@
       margin-top: 4px;
       accent-color: var(--gold);
       flex-shrink: 0;
-      width: 15px;
-      height: 15px;
+      width: 17px;
+      height: 17px;
     }
     .license-check span {
-      font-size: 13px;
+      font-size: 16px;
       color: var(--soft);
-      line-height: 1.55;
+      line-height: 1.6;
     }
     .license-note {
-      font-size: 12px;
+      font-size: 15px;
       color: var(--muted);
       font-style: italic;
-      line-height: 1.6;
+      line-height: 1.65;
       border-top: 1px solid var(--border);
       padding-top: 10px;
       margin-top: 10px;
@@ -107,8 +107,6 @@
 
     /* Sidebar summary */
     .order-summary {
-      position: sticky;
-      top: 80px;
       background: var(--surface);
       border: 1px solid var(--border2);
       border-radius: var(--radius);
@@ -143,12 +141,12 @@
     .summary-total .lbl { font-family: var(--serif); font-size: 13px; color: var(--gold); letter-spacing: 0.15em; }
     .summary-total .val { font-family: var(--serif); font-size: 20px; color: var(--gold2); }
     .summary-note {
-      font-size: 11px;
+      font-size: 14px;
       color: var(--muted);
       font-style: italic;
       text-align: center;
       margin-top: 10px;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     /* Color picker */
@@ -297,21 +295,13 @@
       margin-bottom: 0.9rem;
     }
 
-    /* Scale up order form section titles and labels */
-    .order-section-title {
-      font-family: var(--serif);
-      font-size: 14px !important;
-    }
-    .color-picker-label { font-size: 11px !important; }
-    .color-note { font-size: 14px !important; }
-    .color-opt-name { font-size: 13px !important; }
-    .license-check span { font-size: 15px !important; }
-    .license-note { font-size: 14px !important; }
-    .license-title { font-size: 11px !important; }
-    .summary-label { font-size: 14px !important; }
-    .summary-val { font-size: 14px !important; }
-    .summary-title { font-size: 11px !important; }
-    .expect-list li { font-size: 15px !important; }
+    /* Order form readable sizes */
+    .color-picker-label { font-size: 14px; }
+    .color-note { font-size: 15px; }
+    .color-opt-name { font-size: 14px; }
+    .summary-label { font-size: 15px; }
+    .summary-val { font-size: 15px; }
+    .summary-title { font-family: var(--serif); font-size: 14px; letter-spacing: 0.2em; color: var(--gold); }
 
     /* Submit button */
     .btn-submit {
@@ -340,12 +330,13 @@
     .expect-list li {
       display: flex;
       gap: 10px;
-      padding: 8px 0;
+      padding: 10px 0;
       border-bottom: 1px solid var(--border);
-      font-size: 13px;
+      font-size: 16px;
       color: var(--soft);
       font-style: italic;
       align-items: flex-start;
+      line-height: 1.6;
     }
     .expect-list li:last-child { border-bottom: none; }
     .expect-list li::before {
@@ -354,6 +345,7 @@
       font-family: var(--serif);
       font-style: normal;
       flex-shrink: 0;
+      margin-top: 2px;
     }
 
     /* Success message */
@@ -528,10 +520,10 @@
               <div id="file-name"></div>
             </div>
             <input type="file" id="file-input" name="stl_file" accept=".stl,.obj">
-            <div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic;">
+            <div style="margin-top:10px;font-size:15px;color:var(--muted);font-style:italic;">
               No file yet? <a href="stl-sources.html" style="color:var(--gold);">Browse our recommended STL sources →</a>
             </div>
-            <p style="font-size:12px;color:var(--muted);font-style:italic;margin-top:6px;line-height:1.5;">
+            <p style="font-size:15px;color:var(--muted);font-style:italic;margin-top:6px;line-height:1.6;">
               Note: Formspree free tier doesn't support file uploads — if your file is large, you can email it to us after submitting, or share a link (Google Drive, MyMiniFactory, etc.) in the notes field above.
             </p>
           </div>
@@ -586,7 +578,7 @@
           <button type="submit" class="btn-submit" id="submit-btn" disabled>CONFIRM LICENSE TO CONTINUE</button>
         </div>
 
-        <div style="margin-top:1.5rem;">
+        <div style="margin-top:2rem;">
           <div class="order-section-title">WHAT HAPPENS NEXT</div>
           <ul class="expect-list">
             <li>We review your request and STL file within 24 hours</li>
@@ -597,9 +589,9 @@
           </ul>
         </div>
 
-        <div style="margin-top:1.5rem;">
+        <div style="margin-top:2rem;">
           <div class="order-section-title">QUESTIONS?</div>
-          <p style="font-size:13px;font-style:italic;color:var(--muted);line-height:1.65;">
+          <p style="font-size:17px;font-style:italic;color:var(--muted);line-height:1.75;">
             Not sure about your file, scale, or license? Fill in what you know and leave a note — we'll sort out the details together before quoting.
           </p>
         </div>
