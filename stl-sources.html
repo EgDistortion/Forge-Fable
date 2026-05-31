@@ -113,36 +113,18 @@
       .designer-grid { grid-template-columns: 1fr; }
     }
   </style>
-  <style id="map-z">
-    body > *:not(#page-map) { position: relative; z-index: 1; }
+  <style id="page-map">
+    html {
+      background-color: #0d0f14;
+      background-image: url('maps/map-stl-sources.svg');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
   </style>
 </head>
 <body>
-  <!-- PAGE MAP BACKGROUND -->
-  <svg id="page-map" xmlns="http://www.w3.org/2000/svg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;margin:0;padding:0;overflow:hidden;" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1400 900">
-
-<defs><style>path,circle,line,ellipse,polygon{fill:none;stroke:#c9a84c;stroke-opacity:0.06}</style></defs>
-<path stroke-width="1.8" d="M280 160 Q340 120 420 130 Q500 140 565 115 Q630 90 700 105 Q770 120 835 100 Q900 80 965 108 Q1025 135 1065 175 Q1100 212 1108 265 Q1115 318 1100 368 Q1085 418 1095 468 Q1105 518 1085 565 Q1065 612 1030 648 Q995 684 950 708 Q905 732 852 745 Q799 758 742 760 Q685 762 628 752 Q571 742 518 728 Q465 714 420 690 Q375 666 340 632 Q305 598 286 556 Q267 514 268 468 Q269 422 255 376 Q241 330 252 284 Q263 238 280 160Z"/>
-<path stroke-width="1" d="M320 195 Q372 158 442 166 Q512 174 568 152 Q624 130 688 143 Q752 156 810 138 Q868 120 922 145 Q972 168 1006 204 Q1036 238 1042 284 Q1048 330 1035 374 Q1022 418 1030 462 Q1038 506 1020 548 Q1002 590 970 622 Q938 654 896 676 Q854 698 806 710 Q758 722 708 724 Q658 726 608 716 Q558 706 512 692 Q466 678 428 656 Q390 634 362 602 Q334 570 318 532 Q302 494 304 452 Q306 410 294 368 Q282 326 294 284 Q306 242 320 195Z"/>
-<circle cx="380" cy="280" r="30" stroke-width="1"/><circle cx="420" cy="260" r="25" stroke-width="1"/><circle cx="355" cy="310" r="22" stroke-width="0.8"/><circle cx="445" cy="295" r="28" stroke-width="1"/><circle cx="400" cy="330" r="24" stroke-width="0.8"/>
-<circle cx="650" cy="210" r="32" stroke-width="1"/><circle cx="690" cy="195" r="26" stroke-width="1"/><circle cx="625" cy="238" r="24" stroke-width="0.8"/><circle cx="715" cy="225" r="28" stroke-width="1"/><circle cx="668" cy="248" r="22" stroke-width="0.8"/>
-<circle cx="950" cy="265" r="30" stroke-width="1"/><circle cx="988" cy="248" r="24" stroke-width="1"/><circle cx="925" cy="292" r="26" stroke-width="0.8"/><circle cx="1010" cy="278" r="22" stroke-width="0.8"/>
-<circle cx="320" cy="490" r="28" stroke-width="1"/><circle cx="348" cy="468" r="24" stroke-width="0.8"/><circle cx="298" cy="518" r="22" stroke-width="0.8"/><circle cx="360" cy="505" r="26" stroke-width="1"/>
-<circle cx="1058" cy="460" r="30" stroke-width="1"/><circle cx="1082" cy="440" r="24" stroke-width="0.8"/><circle cx="1040" cy="488" r="26" stroke-width="1"/><circle cx="1072" cy="492" r="22" stroke-width="0.8"/>
-<circle cx="390" cy="660" r="28" stroke-width="1"/><circle cx="425" cy="642" r="24" stroke-width="0.8"/><circle cx="368" cy="685" r="22" stroke-width="0.8"/><circle cx="448" cy="672" r="26" stroke-width="1"/>
-<circle cx="695" cy="700" r="30" stroke-width="1"/><circle cx="730" cy="682" r="25" stroke-width="1"/><circle cx="668" cy="724" r="24" stroke-width="0.8"/><circle cx="755" cy="712" r="22" stroke-width="0.8"/>
-<circle cx="970" cy="655" r="28" stroke-width="1"/><circle cx="1005" cy="638" r="24" stroke-width="0.8"/><circle cx="948" cy="680" r="22" stroke-width="0.8"/><circle cx="1020" cy="668" r="26" stroke-width="1"/>
-<path stroke-width="0.8" stroke-dasharray="5,7" d="M480 310 Q560 330 630 320 Q700 310 770 328 Q840 346 910 330"/>
-<path stroke-width="0.8" stroke-dasharray="5,7" d="M420 450 Q500 435 580 445 Q660 455 740 440 Q820 425 900 442 Q960 455 1010 440"/>
-<path stroke-width="0.8" stroke-dasharray="5,7" d="M550 580 Q620 565 695 572 Q770 579 840 562"/>
-<path stroke-width="1" d="M700 105 Q688 180 695 250 Q702 320 688 390 Q674 460 680 530 Q686 600 670 670 Q655 735 648 800"/>
-<rect x="648" y="418" width="60" height="48" stroke-width="1" rx="1"/>
-<line x1="648" y1="442" x2="708" y2="442" stroke-width="0.7"/><line x1="678" y1="418" x2="678" y2="466" stroke-width="0.7"/>
-<circle cx="1240" cy="780" r="38" stroke-width="0.8"/><circle cx="1240" cy="780" r="26" stroke-width="0.6"/>
-<line x1="1240" y1="742" x2="1240" y2="818" stroke-width="1"/><line x1="1202" y1="780" x2="1278" y2="780" stroke-width="1"/>
-<rect x="30" y="30" width="1340" height="840" stroke-width="0.7" rx="4"/><rect x="44" y="44" width="1312" height="812" stroke-width="0.4" rx="2"/>
-
-  </svg>
 
   <nav class="site-nav">
     <a href="index.html" class="nav-logo">

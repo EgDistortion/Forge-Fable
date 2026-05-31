@@ -142,35 +142,18 @@
     @media (max-width: 900px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 540px) { .gallery-grid { grid-template-columns: 1fr; } }
   </style>
-  <style id="map-z">
-    body > *:not(#page-map) { position: relative; z-index: 1; }
+  <style id="page-map">
+    html {
+      background-color: #0d0f14;
+      background-image: url('maps/map-gallery.svg');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
   </style>
 </head>
 <body>
-  <!-- PAGE MAP BACKGROUND -->
-  <svg id="page-map" xmlns="http://www.w3.org/2000/svg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;margin:0;padding:0;overflow:hidden;" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1400 900">
-
-<defs><style>path,circle,line,ellipse,polygon{fill:none;stroke:#c9a84c;stroke-opacity:0.06}</style></defs>
-<path stroke-width="1.8" d="M580 320 Q630 285 690 295 Q750 305 800 285 Q845 268 880 295 Q910 320 915 360 Q920 400 900 435 Q880 470 855 495 Q830 520 795 535 Q760 550 720 548 Q680 546 645 530 Q610 514 588 488 Q566 462 560 428 Q554 394 565 360 Q576 326 580 320Z"/>
-<path stroke-width="1" d="M600 338 Q642 308 692 317 Q742 326 785 308 Q822 292 852 316 Q878 338 882 372 Q886 406 868 437 Q850 468 827 490 Q804 512 772 526 Q740 540 708 538 Q676 536 648 522 Q620 508 603 484 Q586 460 582 430 Q578 400 588 368Z"/>
-<path stroke-width="1.5" d="M200 200 Q235 175 275 185 Q315 195 335 220 Q355 245 348 278 Q341 310 315 328 Q289 346 258 342 Q227 338 208 315 Q189 292 188 262 Q187 232 200 200Z"/>
-<path stroke-width="1.5" d="M1050 150 Q1090 128 1130 140 Q1168 152 1185 182 Q1202 212 1192 244 Q1182 276 1155 292 Q1128 308 1096 302 Q1064 296 1045 272 Q1026 248 1028 218 Q1030 188 1050 150Z"/>
-<path stroke-width="1.5" d="M980 620 Q1015 598 1055 608 Q1092 618 1108 645 Q1124 672 1112 700 Q1100 728 1072 740 Q1044 752 1015 744 Q986 736 970 712 Q954 688 958 660 Q962 632 980 620Z"/>
-<path stroke-width="1.5" d="M240 640 Q275 618 312 628 Q348 638 362 665 Q376 690 364 718 Q352 745 325 756 Q298 767 270 758 Q242 749 228 725 Q214 701 218 674 Q222 647 240 640Z"/>
-<ellipse cx="480" cy="560" rx="45" ry="28" stroke-width="1.2"/><ellipse cx="900" cy="250" rx="38" ry="22" stroke-width="1.2"/>
-<ellipse cx="1160" cy="520" rx="42" ry="25" stroke-width="1.2"/><ellipse cx="350" cy="440" rx="32" ry="18" stroke-width="1.2"/>
-<ellipse cx="750" cy="660" rx="50" ry="28" stroke-width="1.2"/><ellipse cx="150" cy="480" rx="28" ry="16" stroke-width="1"/>
-<ellipse cx="1250" cy="360" rx="30" ry="17" stroke-width="1"/><ellipse cx="600" cy="160" rx="35" ry="20" stroke-width="1"/>
-<path stroke-width="0.8" stroke-dasharray="6,8" d="M335 258 Q420 300 560 338"/>
-<path stroke-width="0.8" stroke-dasharray="6,8" d="M880 380 Q960 350 1045 240"/>
-<path stroke-width="0.8" stroke-dasharray="6,8" d="M750 548 Q865 590 970 638"/>
-<path stroke-width="0.8" stroke-dasharray="6,8" d="M580 490 Q430 540 362 670"/>
-<path stroke-width="0.8" stroke-dasharray="6,8" d="M258 342 Q240 420 240 618"/>
-<circle cx="1260" cy="760" r="38" stroke-width="0.8"/><circle cx="1260" cy="760" r="26" stroke-width="0.6"/>
-<line x1="1260" y1="722" x2="1260" y2="798" stroke-width="1"/><line x1="1222" y1="760" x2="1298" y2="760" stroke-width="1"/>
-<rect x="30" y="30" width="1340" height="840" stroke-width="0.7" rx="4"/><rect x="44" y="44" width="1312" height="812" stroke-width="0.4" rx="2"/>
-
-  </svg>
 
   <nav class="site-nav">
     <a href="index.html" class="nav-logo">
