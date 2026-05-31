@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
-<defs><style>path,circle,line,ellipse,polygon,rect{fill:none;stroke:#c9a84c;stroke-opacity:0.07;stroke-linecap:round}</style></defs>
+<defs><style>path,circle,line,ellipse,polygon,rect{fill:none;stroke:#c9a84c;stroke-opacity:0.18;stroke-linecap:round}</style></defs>
 <path stroke-width="2" d="M480 150 L760 130 L960 160 L1040 240 L1050 440 L1020 620 L880 720 L640 740 L440 700 L340 600 L330 400 L360 240Z"/>
 <path stroke-width="1.4" d="M520 210 L740 192 L900 218 L968 288 L975 450 L948 598 L832 678 L648 694 L482 660 L400 568 L392 408 L418 292Z"/>
 <rect x="560" y="280" width="120" height="90" stroke-width="1" rx="2"/><rect x="700" y="280" width="110" height="90" stroke-width="1" rx="2"/>
