@@ -249,6 +249,70 @@
     }
     .resin-note.visible { display: block; }
 
+    /* Multicolor option */
+    .multicolor-wrap {
+      display: none;
+      margin-top: 1.1rem;
+      background: rgba(201,168,76,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+    }
+    .multicolor-wrap.visible { display: block; }
+    .multicolor-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .multicolor-check input[type="checkbox"] {
+      margin-top: 4px;
+      accent-color: var(--gold);
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+    }
+    .multicolor-check-text {
+      font-size: 15px;
+      color: var(--soft);
+      line-height: 1.5;
+    }
+    .multicolor-check-text strong {
+      color: var(--gold2);
+      font-weight: 600;
+      font-style: normal;
+    }
+    .multicolor-detail {
+      display: none;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .multicolor-detail.open { display: block; }
+    .multicolor-note {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      line-height: 1.6;
+      margin-bottom: 0.9rem;
+    }
+
+    /* Scale up order form section titles and labels */
+    .order-section-title {
+      font-family: var(--serif);
+      font-size: 11px !important;
+    }
+    .color-picker-label { font-size: 11px !important; }
+    .color-note { font-size: 14px !important; }
+    .color-opt-name { font-size: 13px !important; }
+    .license-check span { font-size: 15px !important; }
+    .license-note { font-size: 14px !important; }
+    .license-title { font-size: 11px !important; }
+    .summary-label { font-size: 14px !important; }
+    .summary-val { font-size: 14px !important; }
+    .summary-title { font-size: 11px !important; }
+    .expect-list li { font-size: 15px !important; }
+
     /* Submit button */
     .btn-submit {
       width: 100%;
@@ -406,6 +470,23 @@
             <!-- RESIN NOTE — appears when Resin is selected -->
             <div class="resin-note" id="resin-note">
               Resin prints are available in grey, clear, and off-white depending on current stock. Color is applied through painting after printing — mention any paint scheme preferences in the notes below.
+            </div>
+
+            <!-- MULTICOLOR OPTION — shown for PLA materials only -->
+            <div class="multicolor-wrap" id="multicolor-wrap">
+              <label class="multicolor-check">
+                <input type="checkbox" id="multicolor-cb" name="multicolor" value="yes" onchange="toggleMulticolor()">
+                <span class="multicolor-check-text">
+                  <strong>Multicolor print</strong> — I'd like this printed in multiple colors using the AMS system
+                </span>
+              </label>
+              <div class="multicolor-detail" id="multicolor-detail">
+                <p class="multicolor-note">Great! Describe what you're envisioning — which parts should be which colors, or any reference images you can share. We'll reach out before printing to confirm the color layout with you.</p>
+                <div class="form-group">
+                  <label for="multicolor-notes">MULTICOLOR DETAILS</label>
+                  <textarea id="multicolor-notes" name="multicolor_details" placeholder="e.g. Stone grey walls with brown wooden doors and a dark grey floor. Happy to send a reference image over email."></textarea>
+                </div>
+              </div>
             </div>
 
             <div class="form-row">
@@ -611,15 +692,19 @@
       const wrap = document.getElementById('color-picker-wrap');
       const grid = document.getElementById('color-grid');
       const resinNote = document.getElementById('resin-note');
+      const multicolorWrap = document.getElementById('multicolor-wrap');
       const colorInput = document.getElementById('color-input');
       const display = document.getElementById('color-selected-display');
 
       // Reset
       wrap.classList.remove('visible');
       resinNote.classList.remove('visible');
+      multicolorWrap.classList.remove('visible');
       colorInput.value = '';
       display.textContent = '';
       document.getElementById('sum-color').textContent = '—';
+      document.getElementById('multicolor-cb').checked = false;
+      document.getElementById('multicolor-detail').classList.remove('open');
 
       if (material === 'Resin — 4K LCD (high detail minis)') {
         resinNote.classList.add('visible');
@@ -645,6 +730,13 @@
       });
 
       wrap.classList.add('visible');
+      multicolorWrap.classList.add('visible');
+    }
+
+    function toggleMulticolor() {
+      const cb = document.getElementById('multicolor-cb');
+      const detail = document.getElementById('multicolor-detail');
+      detail.classList.toggle('open', cb.checked);
     }
 
     function selectColor(name, el) {

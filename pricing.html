@@ -19,7 +19,7 @@
     /* Pricing cards */
     .pricing-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 16px;
       margin-bottom: 3rem;
     }
@@ -173,8 +173,11 @@
     .faq-a.open { max-height: 400px; padding-top: 10px; }
 
     @media (max-width: 760px) {
-      .pricing-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr 1fr; }
       .policy-grid  { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .pricing-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -258,9 +261,25 @@
           </ul>
         </div>
 
+        <div class="p-card">
+          <div class="p-name">MULTICOLOR TERRAIN</div>
+          <div class="p-sub">AMS multicolor FDM builds</div>
+          <div class="p-price">$8–50</div>
+          <div class="p-unit">per piece or set</div>
+          <ul class="p-features">
+            <li>Up to 4 colors in one print</li>
+            <li>Bambu AMS system</li>
+            <li>PLA Basic or PLA Matte</li>
+            <li>Dungeon tiles, terrain, scatter</li>
+            <li>Color layout discussed before printing</li>
+          </ul>
+        </div>
+
       </div>
 
       <div class="pricing-note">
+        <strong>Multicolor terrain</strong> uses our Bambu AMS system to print up to 4 filament colors in a single build — no painting required for base colors. We'll reach out after your order to discuss exactly which colors go where before we start printing.
+        <br><br>
         <strong>Rush orders</strong> (1–2 business day turnaround) are available at a +50% surcharge when the print schedule allows.
         Contact us before placing a rush order to confirm availability.
         <br><br>
