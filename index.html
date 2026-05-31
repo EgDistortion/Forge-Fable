@@ -86,7 +86,7 @@
     /* ── FEATURES STRIP ── */
     .features {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       border-bottom: 1px solid var(--border);
     }
     .feature {
@@ -220,25 +220,25 @@
       .hero { grid-template-columns: 1fr; min-height: auto; }
       .hero-left { padding: 3rem 1.25rem; border-right: none; border-bottom: 1px solid var(--border); }
       .hero-right { padding: 2.5rem 1.25rem; min-height: 280px; }
-      .features { grid-template-columns: 1fr 1fr; }
-      .feature:nth-child(2) { border-right: none; }
-      .feature:nth-child(3),
-      .feature:nth-child(4) { border-top: 1px solid var(--border); }
-      .feature:nth-child(4) { border-right: none; }
-      .feature:nth-child(5) { border-top: 1px solid var(--border); border-right: none; }
+      .features { grid-template-columns: 1fr 1fr 1fr; }
+      .feature:nth-child(3) { border-right: none; }
+      .feature:nth-child(4),
+      .feature:nth-child(5),
+      .feature:nth-child(6) { border-top: 1px solid var(--border); }
+      .feature:nth-child(6) { border-right: none; }
       .preview-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 520px) {
-      .features { grid-template-columns: 1fr; }
-      .feature { border-right: none; border-top: 1px solid var(--border); }
-      .features .feature:first-child { border-top: none; }
+      .features { grid-template-columns: 1fr 1fr; }
+      .feature:nth-child(2n) { border-right: none; }
+      .feature:nth-child(n+3) { border-top: 1px solid var(--border); }
       .preview-grid { grid-template-columns: 1fr; }
     }
   </style>
   <style id="page-map">
     html {
       background-color: #0d0f14;
-      background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAwIiBoZWlnaHQ9IjkwMCIgdmlld0JveD0iMCAwIDE0MDAgOTAwIj4KPGRlZnM+PHN0eWxlPnBhdGgsY2lyY2xlLGxpbmUsZWxsaXBzZSxwb2x5Z29uLHJlY3R7ZmlsbDpub25lO3N0cm9rZTojYzlhODRjO3N0cm9rZS1vcGFjaXR5OjAuMTI7c3Ryb2tlLWxpbmVjYXA6cm91bmR9PC9zdHlsZT48L2RlZnM+CjxwYXRoIHN0cm9rZS13aWR0aD0iMS44IiBkPSJNMzIwIDE4MCBRMzgwIDE0MCA0NjAgMTU1IFE1NDAgMTcwIDYxMCAxNDggUTY5MCAxMjUgNzYwIDE0MiBRODMwIDE1OCA4OTAgMTM1IFE5NTAgMTEyIDEwMTAgMTQwIFExMDYwIDE2NSAxMDgwIDIxMCBRMTEwMCAyNTUgMTA5MCAzMTAgUTEwODAgMzY1IDEwNjAgNDEwIFExMDQwIDQ1NSAxMDUwIDUwMCBRMTA2MCA1NDUgMTA0MCA1ODggUTEwMjAgNjMwIDk4MCA2NTggUTk0MCA2ODYgODk1IDcwMCBRODUwIDcxNCA4MDAgNzIwIFE3NTAgNzI2IDcwMCA3MTggUTY1MCA3MTAgNjAwIDcyMCBRNTUwIDczMCA1MDAgNzE1IFE0NTAgNzAwIDQxMCA2NzggUTM3MCA2NTYgMzQwIDYyNSBRMzEwIDU5NCAyOTUgNTU1IFEyODAgNTE2IDI4NSA0NzUgUTI5MCA0MzQgMjc1IDM5MyBRMjYwIDM1MiAyNzAgMzA4IFEyODAgMjY0IDMyMCAxODBaIi8+CjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgZD0iTTM1NSAyMTAgUTQxMCAxNzUgNDc1IDE4OCBRNTQ1IDIwMiA2MDUgMTgyIFE2NjggMTYyIDcyNSAxNzUgUTc4NSAxOTAgODQ1IDE3MCBROTAwIDE1MiA5NTAgMTc1IFE5OTUgMTk2IDEwMTIgMjM1IFExMDI4IDI3MiAxMDE4IDMxOCBRMTAwOCAzNjIgMTAyMCA0MDUgUTEwMzIgNDQ3IDEwMTQgNDg2IFE5OTYgNTI0IDk2NSA1NDggUTkzNCA1NzIgODkyIDU4NCBRODUwIDU5NiA4MDggNjAwIFE3NjUgNjA0IDcyMiA1OTggUTY3OCA1OTIgNjM0IDYwMCBRNTkwIDYwOCA1NTAgNTk2IFE1MTAgNTg0IDQ3OCA1NjQgUTQ0NiA1NDQgNDI1IDUxNSBRNDA0IDQ4NiA0MDggNDUwIFE0MTIgNDE0IDM5OCAzNzYgUTM4NCAzMzggMzkyIDI5OCBRNDAwIDI1OCAzNTUgMjEwWiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjAuOCIgZD0iTTM5MCAyNDAgUTQ0MCAyMDggNDkwIDIxOCBRNTQ1IDIyOCA1ODggMjEyIFE2MzUgMTk2IDY3OCAyMDYgUTcyMCAyMTYgNzYyIDIwMiBRODAwIDE5MCA4MzggMjA2IFE4NzAgMjIwIDg4MiAyNDggUTg5MyAyNzUgODg2IDMwOCBRODc4IDM0MCA4ODggMzcyIFE4OTcgNDAyIDg4MiA0MzAgUTg2NyA0NTggODQ1IDQ3NiBRODIwIDQ5NCA3OTAgNTAyIFE3NTggNTEwIDcyNiA1MDYgUTY5MyA1MDIgNjYwIDUwOCBRNjI2IDUxNCA1OTYgNTA0IFE1NjYgNDk0IDU0OCA0NzQgUTUzMCA0NTQgNTMyIDQyNiBRNTM0IDM5NyA1MjIgMzY2IFE1MTAgMzM1IDUxNiAzMDIgUTUyMiAyNjggMzkwIDI0MFoiLz4KPHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBkPSJNNjIwIDYwMCBRNjMwIDU2MCA2MTggNTIwIFE2MDYgNDgwIDYxNSA0NDAgUTYyNCA0MDAgNjEwIDM2NSBRNTk1IDM0MCA1ODAgMzIwIFE1NjUgMzAwIDU1MCAyNzUiLz4KPHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBkPSJNNzgwIDU5OCBRNzkwIDU1OCA3NzggNTE4IFE3NjYgNDc4IDc3NSA0NDAgUTc4MiA0MTUgNzk1IDM5MCBRODA4IDM2NSA4MjAgMzM4Ii8+CjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgZD0iTTQ4MCAzMjAgTDUwMCAyNzAgTDUyMCAzMjBaIE01MzAgMzMwIEw1NTUgMjc1IEw1ODAgMzMwWiBNNTc1IDMxNSBMNjAwIDI1OCBMNjI1IDMxNVogTTYyMCAzMjUgTDY0OCAyNjggTDY3NiAzMjVaIi8+CjxwYXRoIHN0cm9rZS13aWR0aD0iMC45IiBkPSJNNzAwIDI5MCBMNzIwIDI0NSBMNzQwIDI5MFogTTc0NSAzMDAgTDc2OCAyNTIgTDc5MSAzMDBaIi8+CjxjaXJjbGUgY3g9IjQwMCIgY3k9IjQ1MiIgcj0iOCIvPjxjaXJjbGUgY3g9IjQyMiIgY3k9IjQ2NSIgcj0iNiIvPjxjaXJjbGUgY3g9IjQxMCIgY3k9IjQ4MCIgcj0iOCIvPjxjaXJjbGUgY3g9IjM4OCIgY3k9IjQ3MCIgcj0iNiIvPjxjaXJjbGUgY3g9IjQxNSIgY3k9IjQ0NSIgcj0iNSIvPgo8Y2lyY2xlIGN4PSI5MjAiIGN5PSI0ODIiIHI9IjgiLz48Y2lyY2xlIGN4PSI5NDIiIGN5PSI0OTUiIHI9IjYiLz48Y2lyY2xlIGN4PSI5MzAiIGN5PSI1MTAiIHI9IjgiLz48Y2lyY2xlIGN4PSI5MDgiIGN5PSI1MDAiIHI9IjYiLz4KPHBhdGggc3Ryb2tlLXdpZHRoPSIxLjIiIGQ9Ik00ODAgNzAwIFE1MTAgNzIyIDU0MCA3MTYgUTU2OCA3MTAgNTkwIDcyMiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEuMiIgZD0iTTg1OCA2OTAgUTg4MiA3MDggOTA4IDcwMCBROTI4IDY5NCA5NDggNzA2Ii8+CjxjaXJjbGUgY3g9IjExODAiIGN5PSIxNDAiIHI9IjQyIiBzdHJva2Utd2lkdGg9IjAuOSIvPjxjaXJjbGUgY3g9IjExODAiIGN5PSIxNDAiIHI9IjMwIiBzdHJva2Utd2lkdGg9IjAuNiIvPgo8bGluZSB4MT0iMTE4MCIgeTE9Ijk4IiB4Mj0iMTE4MCIgeTI9IjE4MiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48bGluZSB4MT0iMTEzOCIgeTE9IjE0MCIgeDI9IjEyMjIiIHkyPSIxNDAiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxsaW5lIHgxPSIxMTUwIiB5MT0iMTEwIiB4Mj0iMTIxMCIgeTI9IjE3MCIgc3Ryb2tlLXdpZHRoPSIwLjYiLz48bGluZSB4MT0iMTIxMCIgeTE9IjExMCIgeDI9IjExNTAiIHkyPSIxNzAiIHN0cm9rZS13aWR0aD0iMC42Ii8+CjxyZWN0IHg9IjMwIiB5PSIzMCIgd2lkdGg9IjEzNDAiIGhlaWdodD0iODQwIiBzdHJva2Utd2lkdGg9IjAuOCIgcng9IjQiLz4KPHJlY3QgeD0iNDYiIHk9IjQ2IiB3aWR0aD0iMTMwOCIgaGVpZ2h0PSI4MDgiIHN0cm9rZS13aWR0aD0iMC40IiByeD0iMiIvPgo8L3N2Zz4=');
+      background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAwIiBoZWlnaHQ9IjkwMCIgdmlld0JveD0iMCAwIDE0MDAgOTAwIj4KPGRlZnM+PHN0eWxlPnBhdGgsY2lyY2xlLGxpbmUsZWxsaXBzZSxwb2x5Z29uLHJlY3R7ZmlsbDpub25lO3N0cm9rZTojYzlhODRjO3N0cm9rZS1vcGFjaXR5OjAuMTg7c3Ryb2tlLWxpbmVjYXA6cm91bmR9PC9zdHlsZT48L2RlZnM+CjxwYXRoIHN0cm9rZS13aWR0aD0iMS44IiBkPSJNMzIwIDE4MCBRMzgwIDE0MCA0NjAgMTU1IFE1NDAgMTcwIDYxMCAxNDggUTY5MCAxMjUgNzYwIDE0MiBRODMwIDE1OCA4OTAgMTM1IFE5NTAgMTEyIDEwMTAgMTQwIFExMDYwIDE2NSAxMDgwIDIxMCBRMTEwMCAyNTUgMTA5MCAzMTAgUTEwODAgMzY1IDEwNjAgNDEwIFExMDQwIDQ1NSAxMDUwIDUwMCBRMTA2MCA1NDUgMTA0MCA1ODggUTEwMjAgNjMwIDk4MCA2NTggUTk0MCA2ODYgODk1IDcwMCBRODUwIDcxNCA4MDAgNzIwIFE3NTAgNzI2IDcwMCA3MTggUTY1MCA3MTAgNjAwIDcyMCBRNTUwIDczMCA1MDAgNzE1IFE0NTAgNzAwIDQxMCA2NzggUTM3MCA2NTYgMzQwIDYyNSBRMzEwIDU5NCAyOTUgNTU1IFEyODAgNTE2IDI4NSA0NzUgUTI5MCA0MzQgMjc1IDM5MyBRMjYwIDM1MiAyNzAgMzA4IFEyODAgMjY0IDMyMCAxODBaIi8+CjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgZD0iTTM1NSAyMTAgUTQxMCAxNzUgNDc1IDE4OCBRNTQ1IDIwMiA2MDUgMTgyIFE2NjggMTYyIDcyNSAxNzUgUTc4NSAxOTAgODQ1IDE3MCBROTAwIDE1MiA5NTAgMTc1IFE5OTUgMTk2IDEwMTIgMjM1IFExMDI4IDI3MiAxMDE4IDMxOCBRMTAwOCAzNjIgMTAyMCA0MDUgUTEwMzIgNDQ3IDEwMTQgNDg2IFE5OTYgNTI0IDk2NSA1NDggUTkzNCA1NzIgODkyIDU4NCBRODUwIDU5NiA4MDggNjAwIFE3NjUgNjA0IDcyMiA1OTggUTY3OCA1OTIgNjM0IDYwMCBRNTkwIDYwOCA1NTAgNTk2IFE1MTAgNTg0IDQ3OCA1NjQgUTQ0NiA1NDQgNDI1IDUxNSBRNDA0IDQ4NiA0MDggNDUwIFE0MTIgNDE0IDM5OCAzNzYgUTM4NCAzMzggMzkyIDI5OCBRNDAwIDI1OCAzNTUgMjEwWiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjAuOCIgZD0iTTM5MCAyNDAgUTQ0MCAyMDggNDkwIDIxOCBRNTQ1IDIyOCA1ODggMjEyIFE2MzUgMTk2IDY3OCAyMDYgUTcyMCAyMTYgNzYyIDIwMiBRODAwIDE5MCA4MzggMjA2IFE4NzAgMjIwIDg4MiAyNDggUTg5MyAyNzUgODg2IDMwOCBRODc4IDM0MCA4ODggMzcyIFE4OTcgNDAyIDg4MiA0MzAgUTg2NyA0NTggODQ1IDQ3NiBRODIwIDQ5NCA3OTAgNTAyIFE3NTggNTEwIDcyNiA1MDYgUTY5MyA1MDIgNjYwIDUwOCBRNjI2IDUxNCA1OTYgNTA0IFE1NjYgNDk0IDU0OCA0NzQgUTUzMCA0NTQgNTMyIDQyNiBRNTM0IDM5NyA1MjIgMzY2IFE1MTAgMzM1IDUxNiAzMDIgUTUyMiAyNjggMzkwIDI0MFoiLz4KPHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBkPSJNNjIwIDYwMCBRNjMwIDU2MCA2MTggNTIwIFE2MDYgNDgwIDYxNSA0NDAgUTYyNCA0MDAgNjEwIDM2NSBRNTk1IDM0MCA1ODAgMzIwIFE1NjUgMzAwIDU1MCAyNzUiLz4KPHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBkPSJNNzgwIDU5OCBRNzkwIDU1OCA3NzggNTE4IFE3NjYgNDc4IDc3NSA0NDAgUTc4MiA0MTUgNzk1IDM5MCBRODA4IDM2NSA4MjAgMzM4Ii8+CjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgZD0iTTQ4MCAzMjAgTDUwMCAyNzAgTDUyMCAzMjBaIE01MzAgMzMwIEw1NTUgMjc1IEw1ODAgMzMwWiBNNTc1IDMxNSBMNjAwIDI1OCBMNjI1IDMxNVogTTYyMCAzMjUgTDY0OCAyNjggTDY3NiAzMjVaIi8+CjxwYXRoIHN0cm9rZS13aWR0aD0iMC45IiBkPSJNNzAwIDI5MCBMNzIwIDI0NSBMNzQwIDI5MFogTTc0NSAzMDAgTDc2OCAyNTIgTDc5MSAzMDBaIi8+CjxjaXJjbGUgY3g9IjQwMCIgY3k9IjQ1MiIgcj0iOCIvPjxjaXJjbGUgY3g9IjQyMiIgY3k9IjQ2NSIgcj0iNiIvPjxjaXJjbGUgY3g9IjQxMCIgY3k9IjQ4MCIgcj0iOCIvPjxjaXJjbGUgY3g9IjM4OCIgY3k9IjQ3MCIgcj0iNiIvPjxjaXJjbGUgY3g9IjQxNSIgY3k9IjQ0NSIgcj0iNSIvPgo8Y2lyY2xlIGN4PSI5MjAiIGN5PSI0ODIiIHI9IjgiLz48Y2lyY2xlIGN4PSI5NDIiIGN5PSI0OTUiIHI9IjYiLz48Y2lyY2xlIGN4PSI5MzAiIGN5PSI1MTAiIHI9IjgiLz48Y2lyY2xlIGN4PSI5MDgiIGN5PSI1MDAiIHI9IjYiLz4KPHBhdGggc3Ryb2tlLXdpZHRoPSIxLjIiIGQ9Ik00ODAgNzAwIFE1MTAgNzIyIDU0MCA3MTYgUTU2OCA3MTAgNTkwIDcyMiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEuMiIgZD0iTTg1OCA2OTAgUTg4MiA3MDggOTA4IDcwMCBROTI4IDY5NCA5NDggNzA2Ii8+CjxjaXJjbGUgY3g9IjExODAiIGN5PSIxNDAiIHI9IjQyIiBzdHJva2Utd2lkdGg9IjAuOSIvPjxjaXJjbGUgY3g9IjExODAiIGN5PSIxNDAiIHI9IjMwIiBzdHJva2Utd2lkdGg9IjAuNiIvPgo8bGluZSB4MT0iMTE4MCIgeTE9Ijk4IiB4Mj0iMTE4MCIgeTI9IjE4MiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48bGluZSB4MT0iMTEzOCIgeTE9IjE0MCIgeDI9IjEyMjIiIHkyPSIxNDAiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxsaW5lIHgxPSIxMTUwIiB5MT0iMTEwIiB4Mj0iMTIxMCIgeTI9IjE3MCIgc3Ryb2tlLXdpZHRoPSIwLjYiLz48bGluZSB4MT0iMTIxMCIgeTE9IjExMCIgeDI9IjExNTAiIHkyPSIxNzAiIHN0cm9rZS13aWR0aD0iMC42Ii8+CjxyZWN0IHg9IjMwIiB5PSIzMCIgd2lkdGg9IjEzNDAiIGhlaWdodD0iODQwIiBzdHJva2Utd2lkdGg9IjAuOCIgcng9IjQiLz4KPHJlY3QgeD0iNDYiIHk9IjQ2IiB3aWR0aD0iMTMwOCIgaGVpZ2h0PSI4MDgiIHN0cm9rZS13aWR0aD0iMC40IiByeD0iMiIvPgo8L3N2Zz4=');
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
@@ -313,18 +313,23 @@
     </div>
     <div class="feature">
       <div class="feature-num">III.</div>
-      <div class="feature-title">CUSTOM ORDERS</div>
-      <div class="feature-desc">Got an STL? Send it over. Need help finding the right file for your character? We'll point you in the right direction.</div>
+      <div class="feature-title">PRINT ANYTHING</div>
+      <div class="feature-desc">No printer? No problem. Send us any STL — props, prototypes, cosplay pieces, functional parts, display models — we'll print it.</div>
     </div>
     <div class="feature">
       <div class="feature-num">IV.</div>
-      <div class="feature-title">MULTICOLOR TERRAIN</div>
-      <div class="feature-desc">AMS multicolor FDM printing for terrain — dungeon tiles, scatter pieces, and modular builds printed in up to 4 colors at once.</div>
+      <div class="feature-title">CUSTOM ORDERS</div>
+      <div class="feature-desc">Got an STL? Send it over. Need help finding the right file? We'll point you in the right direction.</div>
     </div>
     <div class="feature">
       <div class="feature-num">V.</div>
+      <div class="feature-title">MULTICOLOR TERRAIN</div>
+      <div class="feature-desc">AMS multicolor FDM printing — dungeon tiles, scatter pieces, and modular builds printed in up to 4 colors at once.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-num">VI.</div>
       <div class="feature-title">FAST TURNAROUND</div>
-      <div class="feature-desc">Most minis ready in 3–5 business days. Rush options available before your next session night.</div>
+      <div class="feature-desc">Most prints ready in 3–5 business days. Rush options available when you need it fast.</div>
     </div>
   </div>
 
