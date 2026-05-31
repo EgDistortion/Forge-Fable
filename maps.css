@@ -1,0 +1,34 @@
+/* ============================================================
+   THE FORGE & FABLE — maps.css
+   Unique fantasy map background for each page
+   ============================================================ */
+
+/* ── SHARED MAP BASE ── */
+/* Each page's <body> gets a data-page attribute via a small inline script,
+   OR we target by the unique class added to each page's body tag.
+   Since our pages don't have body classes, we use the background-image
+   directly on each page via a <style> block that overrides style.css.
+   This file defines the SVG map data as custom properties for easy use.   */
+
+/* Remove the tiled topo pattern from style.css — maps replace it */
+body {
+  background-image: none;
+  background-color: var(--bg);
+  position: relative;
+}
+
+/* The map sits behind everything as a fixed pseudo-element on html */
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 1;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+/* Everything above the map */
+body > * { position: relative; z-index: 1; }
