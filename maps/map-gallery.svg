@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
-<defs><style>path,circle,line,ellipse,polygon,rect{fill:none;stroke:#c9a84c;stroke-opacity:0.07;stroke-linecap:round}</style></defs>
+<defs><style>path,circle,line,ellipse,polygon,rect{fill:none;stroke:#c9a84c;stroke-opacity:0.18;stroke-linecap:round}</style></defs>
 <path stroke-width="1.8" d="M580 320 Q630 285 690 295 Q750 305 800 285 Q845 268 880 295 Q910 320 915 360 Q920 400 900 435 Q880 470 855 495 Q830 520 795 535 Q760 550 720 548 Q680 546 645 530 Q610 514 588 488 Q566 462 560 428 Q554 394 565 360 Q576 326 580 320Z"/>
 <path stroke-width="1" d="M600 338 Q642 308 692 317 Q742 326 785 308 Q822 292 852 316 Q878 338 882 372 Q886 406 868 437 Q850 468 827 490 Q804 512 772 526 Q740 540 708 538 Q676 536 648 522 Q620 508 603 484 Q586 460 582 430 Q578 400 588 368Z"/>
 <path stroke-width="1.5" d="M195 195 Q232 172 272 182 Q312 192 332 218 Q352 244 345 278 Q338 312 312 330 Q286 348 255 344 Q224 340 205 316 Q186 292 186 262 Q186 230 195 195Z"/>
