@@ -1,28 +1,394 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
-<defs><style>path,circle,line,ellipse,polygon,rect{fill:none;stroke:#c9a84c;stroke-opacity:0.30;stroke-linecap:round}</style></defs>
-<path stroke-width="1.8" d="M580 320 Q630 285 690 295 Q750 305 800 285 Q845 268 880 295 Q910 320 915 360 Q920 400 900 435 Q880 470 855 495 Q830 520 795 535 Q760 550 720 548 Q680 546 645 530 Q610 514 588 488 Q566 462 560 428 Q554 394 565 360 Q576 326 580 320Z"/>
-<path stroke-width="1" d="M600 338 Q642 308 692 317 Q742 326 785 308 Q822 292 852 316 Q878 338 882 372 Q886 406 868 437 Q850 468 827 490 Q804 512 772 526 Q740 540 708 538 Q676 536 648 522 Q620 508 603 484 Q586 460 582 430 Q578 400 588 368Z"/>
-<path stroke-width="1.5" d="M195 195 Q232 172 272 182 Q312 192 332 218 Q352 244 345 278 Q338 312 312 330 Q286 348 255 344 Q224 340 205 316 Q186 292 186 262 Q186 230 195 195Z"/>
-<path stroke-width="0.9" d="M210 212 Q240 192 272 200 Q304 208 318 230 Q332 252 326 280 Q320 308 298 322 Q276 336 250 332 Q224 328 210 308 Q196 288 198 260 Q200 232 210 212Z"/>
-<path stroke-width="1.5" d="M1048 148 Q1088 126 1128 138 Q1166 150 1183 180 Q1200 210 1190 243 Q1180 276 1153 292 Q1126 308 1094 302 Q1062 296 1043 272 Q1024 248 1026 218 Q1028 186 1048 148Z"/>
-<path stroke-width="1.5" d="M978 618 Q1013 596 1053 606 Q1090 616 1106 644 Q1122 672 1110 700 Q1098 728 1070 740 Q1042 752 1013 744 Q984 736 968 712 Q952 688 956 659 Q960 630 978 618Z"/>
-<path stroke-width="1.5" d="M238 638 Q273 616 310 626 Q346 636 360 663 Q374 690 362 718 Q350 745 323 756 Q296 767 268 758 Q240 749 226 725 Q212 701 216 673 Q220 645 238 638Z"/>
-<ellipse cx="480" cy="560" rx="46" ry="29" stroke-width="1.2"/>
-<ellipse cx="900" cy="250" rx="39" ry="23" stroke-width="1.2"/>
-<ellipse cx="1160" cy="520" rx="43" ry="26" stroke-width="1.2"/>
-<ellipse cx="350" cy="440" rx="33" ry="19" stroke-width="1.2"/>
-<ellipse cx="750" cy="662" rx="51" ry="29" stroke-width="1.2"/>
-<ellipse cx="148" cy="480" rx="29" ry="17" stroke-width="1"/>
-<ellipse cx="1250" cy="358" rx="31" ry="18" stroke-width="1"/>
-<ellipse cx="598" cy="158" rx="36" ry="21" stroke-width="1"/>
-<path stroke-width="0.9" stroke-dasharray="7,9" d="M332 256 Q418 298 558 336"/>
-<path stroke-width="0.9" stroke-dasharray="7,9" d="M878 378 Q958 348 1043 238"/>
-<path stroke-width="0.9" stroke-dasharray="7,9" d="M748 546 Q863 588 968 636"/>
-<path stroke-width="0.9" stroke-dasharray="7,9" d="M578 488 Q428 538 360 668"/>
-<path stroke-width="0.9" stroke-dasharray="7,9" d="M256 340 Q238 418 238 616"/>
-<circle cx="1260" cy="760" r="42" stroke-width="0.9"/><circle cx="1260" cy="760" r="28" stroke-width="0.6"/>
-<line x1="1260" y1="718" x2="1260" y2="802" stroke-width="1.2"/><line x1="1218" y1="760" x2="1302" y2="760" stroke-width="1.2"/>
-<rect x="30" y="30" width="1340" height="840" stroke-width="0.8" rx="4"/>
-<rect x="46" y="46" width="1308" height="808" stroke-width="0.4" rx="2"/>
-</svg>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — The Forge &amp; Fable</title>
+  <meta name="description" content="Browse our gallery of custom resin and PLA miniatures — heroes, monsters, terrain, and display pieces.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .filter-bar {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .filter-label {
+      font-family: var(--serif);
+      font-size: 17px;
+      color: var(--muted);
+      letter-spacing: 0.18em;
+      margin-right: 4px;
+    }
+    .filter-btn {
+      font-family: var(--serif);
+      font-size: 17px;
+      letter-spacing: 0.12em;
+      padding: 6px 14px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      border-radius: var(--radius);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .filter-btn:hover,
+    .filter-btn.active { color: var(--gold); border-color: var(--border2); }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding: 2.5rem 0;
+    }
+
+    .g-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+      text-decoration: none;
+      display: block;
+    }
+    .g-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+
+    .g-img {
+      height: 220px;
+      background: var(--surface2);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .g-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .g-card:hover .g-img img { transform: scale(1.03); }
+    .g-img-placeholder {
+      opacity: 0.18;
+      font-family: var(--serif);
+      font-size: 17px;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-align: center;
+      padding: 1rem;
+    }
+    .g-badge-wrap {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 5px;
+    }
+
+    .g-info { padding: 1rem 1.1rem; }
+    .g-name {
+      font-size: 17px;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 4px;
+    }
+    .g-meta {
+      font-family: var(--serif);
+      font-size: 17px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .g-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .g-tag {
+      font-family: var(--serif);
+      font-size: 17px;
+      letter-spacing: 0.08em;
+      padding: 2px 7px;
+      background: var(--surface2);
+      color: var(--muted);
+      border-radius: 2px;
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 0;
+      font-style: italic;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* ── HOW TO ADD PHOTOS note (remove when real photos added) ── */
+    .photo-note {
+      background: rgba(201,168,76,0.05);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .photo-note-icon { font-family: var(--serif); font-size: 17px; color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+    .photo-note-text { font-size: 17px; color: var(--muted); font-style: italic; line-height: 1.65; }
+    .photo-note-text strong { font-style: normal; color: var(--gold2); font-weight: 400; }
+
+    @media (max-width: 900px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .gallery-grid { grid-template-columns: 1fr; } }
+  </style>
+  <style id="page-map">
+    html {
+      background-color: #0d0f14;
+      background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAwIiBoZWlnaHQ9IjkwMCIgdmlld0JveD0iMCAwIDE0MDAgOTAwIj4KPGRlZnM+PHN0eWxlPnBhdGgsY2lyY2xlLGxpbmUsZWxsaXBzZSxwb2x5Z29uLHJlY3R7ZmlsbDpub25lO3N0cm9rZTojYzlhODRjO3N0cm9rZS1vcGFjaXR5OjAuMTI7c3Ryb2tlLWxpbmVjYXA6cm91bmR9PC9zdHlsZT48L2RlZnM+CjxwYXRoIHN0cm9rZS13aWR0aD0iMS44IiBkPSJNNTgwIDMyMCBRNjMwIDI4NSA2OTAgMjk1IFE3NTAgMzA1IDgwMCAyODUgUTg0NSAyNjggODgwIDI5NSBROTEwIDMyMCA5MTUgMzYwIFE5MjAgNDAwIDkwMCA0MzUgUTg4MCA0NzAgODU1IDQ5NSBRODMwIDUyMCA3OTUgNTM1IFE3NjAgNTUwIDcyMCA1NDggUTY4MCA1NDYgNjQ1IDUzMCBRNjEwIDUxNCA1ODggNDg4IFE1NjYgNDYyIDU2MCA0MjggUTU1NCAzOTQgNTY1IDM2MCBRNTc2IDMyNiA1ODAgMzIwWiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEiIGQ9Ik02MDAgMzM4IFE2NDIgMzA4IDY5MiAzMTcgUTc0MiAzMjYgNzg1IDMwOCBRODIyIDI5MiA4NTIgMzE2IFE4NzggMzM4IDg4MiAzNzIgUTg4NiA0MDYgODY4IDQzNyBRODUwIDQ2OCA4MjcgNDkwIFE4MDQgNTEyIDc3MiA1MjYgUTc0MCA1NDAgNzA4IDUzOCBRNjc2IDUzNiA2NDggNTIyIFE2MjAgNTA4IDYwMyA0ODQgUTU4NiA0NjAgNTgyIDQzMCBRNTc4IDQwMCA1ODggMzY4WiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEuNSIgZD0iTTE5NSAxOTUgUTIzMiAxNzIgMjcyIDE4MiBRMzEyIDE5MiAzMzIgMjE4IFEzNTIgMjQ0IDM0NSAyNzggUTMzOCAzMTIgMzEyIDMzMCBRMjg2IDM0OCAyNTUgMzQ0IFEyMjQgMzQwIDIwNSAzMTYgUTE4NiAyOTIgMTg2IDI2MiBRMTg2IDIzMCAxOTUgMTk1WiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjAuOSIgZD0iTTIxMCAyMTIgUTI0MCAxOTIgMjcyIDIwMCBRMzA0IDIwOCAzMTggMjMwIFEzMzIgMjUyIDMyNiAyODAgUTMyMCAzMDggMjk4IDMyMiBRMjc2IDMzNiAyNTAgMzMyIFEyMjQgMzI4IDIxMCAzMDggUTE5NiAyODggMTk4IDI2MCBRMjAwIDIzMiAyMTAgMjEyWiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEuNSIgZD0iTTEwNDggMTQ4IFExMDg4IDEyNiAxMTI4IDEzOCBRMTE2NiAxNTAgMTE4MyAxODAgUTEyMDAgMjEwIDExOTAgMjQzIFExMTgwIDI3NiAxMTUzIDI5MiBRMTEyNiAzMDggMTA5NCAzMDIgUTEwNjIgMjk2IDEwNDMgMjcyIFExMDI0IDI0OCAxMDI2IDIxOCBRMTAyOCAxODYgMTA0OCAxNDhaIi8+CjxwYXRoIHN0cm9rZS13aWR0aD0iMS41IiBkPSJNOTc4IDYxOCBRMTAxMyA1OTYgMTA1MyA2MDYgUTEwOTAgNjE2IDExMDYgNjQ0IFExMTIyIDY3MiAxMTEwIDcwMCBRMTA5OCA3MjggMTA3MCA3NDAgUTEwNDIgNzUyIDEwMTMgNzQ0IFE5ODQgNzM2IDk2OCA3MTIgUTk1MiA2ODggOTU2IDY1OSBROTYwIDYzMCA5NzggNjE4WiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEuNSIgZD0iTTIzOCA2MzggUTI3MyA2MTYgMzEwIDYyNiBRMzQ2IDYzNiAzNjAgNjYzIFEzNzQgNjkwIDM2MiA3MTggUTM1MCA3NDUgMzIzIDc1NiBRMjk2IDc2NyAyNjggNzU4IFEyNDAgNzQ5IDIyNiA3MjUgUTIxMiA3MDEgMjE2IDY3MyBRMjIwIDY0NSAyMzggNjM4WiIvPgo8ZWxsaXBzZSBjeD0iNDgwIiBjeT0iNTYwIiByeD0iNDYiIHJ5PSIyOSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPGVsbGlwc2UgY3g9IjkwMCIgY3k9IjI1MCIgcng9IjM5IiByeT0iMjMiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxlbGxpcHNlIGN4PSIxMTYwIiBjeT0iNTIwIiByeD0iNDMiIHJ5PSIyNiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPGVsbGlwc2UgY3g9IjM1MCIgY3k9IjQ0MCIgcng9IjMzIiByeT0iMTkiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxlbGxpcHNlIGN4PSI3NTAiIGN5PSI2NjIiIHJ4PSI1MSIgcnk9IjI5IiBzdHJva2Utd2lkdGg9IjEuMiIvPgo8ZWxsaXBzZSBjeD0iMTQ4IiBjeT0iNDgwIiByeD0iMjkiIHJ5PSIxNyIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxlbGxpcHNlIGN4PSIxMjUwIiBjeT0iMzU4IiByeD0iMzEiIHJ5PSIxOCIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxlbGxpcHNlIGN4PSI1OTgiIGN5PSIxNTgiIHJ4PSIzNiIgcnk9IjIxIiBzdHJva2Utd2lkdGg9IjEiLz4KPHBhdGggc3Ryb2tlLXdpZHRoPSIwLjkiIHN0cm9rZS1kYXNoYXJyYXk9IjcsOSIgZD0iTTMzMiAyNTYgUTQxOCAyOTggNTU4IDMzNiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjAuOSIgc3Ryb2tlLWRhc2hhcnJheT0iNyw5IiBkPSJNODc4IDM3OCBROTU4IDM0OCAxMDQzIDIzOCIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjAuOSIgc3Ryb2tlLWRhc2hhcnJheT0iNyw5IiBkPSJNNzQ4IDU0NiBRODYzIDU4OCA5NjggNjM2Ii8+CjxwYXRoIHN0cm9rZS13aWR0aD0iMC45IiBzdHJva2UtZGFzaGFycmF5PSI3LDkiIGQ9Ik01NzggNDg4IFE0MjggNTM4IDM2MCA2NjgiLz4KPHBhdGggc3Ryb2tlLXdpZHRoPSIwLjkiIHN0cm9rZS1kYXNoYXJyYXk9IjcsOSIgZD0iTTI1NiAzNDAgUTIzOCA0MTggMjM4IDYxNiIvPgo8Y2lyY2xlIGN4PSIxMjYwIiBjeT0iNzYwIiByPSI0MiIgc3Ryb2tlLXdpZHRoPSIwLjkiLz48Y2lyY2xlIGN4PSIxMjYwIiBjeT0iNzYwIiByPSIyOCIgc3Ryb2tlLXdpZHRoPSIwLjYiLz4KPGxpbmUgeDE9IjEyNjAiIHkxPSI3MTgiIHgyPSIxMjYwIiB5Mj0iODAyIiBzdHJva2Utd2lkdGg9IjEuMiIvPjxsaW5lIHgxPSIxMjE4IiB5MT0iNzYwIiB4Mj0iMTMwMiIgeTI9Ijc2MCIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPHJlY3QgeD0iMzAiIHk9IjMwIiB3aWR0aD0iMTM0MCIgaGVpZ2h0PSI4NDAiIHN0cm9rZS13aWR0aD0iMC44IiByeD0iNCIvPgo8cmVjdCB4PSI0NiIgeT0iNDYiIHdpZHRoPSIxMzA4IiBoZWlnaHQ9IjgwOCIgc3Ryb2tlLXdpZHRoPSIwLjQiIHJ4PSIyIi8+Cjwvc3ZnPg==');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-main">THE FORGE &amp; FABLE</span>
+      <span class="nav-logo-sub">MINIATURE PRINTING · LIMA, OH</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="gallery.html" class="active">Gallery</a></li>
+      <li><a href="order.html">Order</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="stl-sources.html">STL Guide</a></li>
+    </ul>
+    <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="section-tag">Workshop</div>
+      <h1>The Gallery</h1>
+      <p>A selection of recent prints — heroes, monsters, terrain, and display pieces. Each one built layer by layer.</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- HOW TO ADD PHOTOS — delete this block once real photos are added -->
+    <div class="photo-note" id="photo-note">
+      <div class="photo-note-icon">📷</div>
+      <div class="photo-note-text">
+        <strong>Adding your photos:</strong> For each card below, replace the placeholder div with
+        <code style="font-style:normal;color:var(--gold2);">&lt;img src="images/gallery/your-photo.jpg" alt="Mini description"&gt;</code>.
+        Save your photos into the <code style="font-style:normal;color:var(--gold2);">images/gallery/</code> folder.
+        Delete this note box once you're done. Recommended photo size: 800×800px or larger, square crop looks best.
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <span class="filter-label">FILTER:</span>
+      <button class="filter-btn active" data-filter="all">ALL WORK</button>
+      <button class="filter-btn" data-filter="hero">HEROES</button>
+      <button class="filter-btn" data-filter="monster">MONSTERS</button>
+      <button class="filter-btn" data-filter="terrain">TERRAIN</button>
+      <button class="filter-btn" data-filter="display">DISPLAY</button>
+      <button class="filter-btn" data-filter="resin">RESIN</button>
+      <button class="filter-btn" data-filter="pla">PLA</button>
+    </div>
+
+    <div class="gallery-grid" id="gallery-grid">
+
+      <!-- ══════════════════════════════════════════════
+           HOW TO ADD A NEW CARD:
+           1. Copy one of the cards below
+           2. Replace the .g-img-placeholder div with:
+              <img src="images/gallery/filename.jpg" alt="description">
+           3. Update the name, meta, tags, and data-tags
+           4. data-tags controls which filter buttons show it
+              Options: hero | monster | terrain | display | resin | pla
+      ══════════════════════════════════════════════ -->
+
+      <div class="g-card" data-tags="hero resin">
+        <div class="g-img">
+          <!-- <img src="images/gallery/halforc-barbarian.jpg" alt="Half-orc barbarian miniature"> -->
+          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
+          <div class="g-badge-wrap">
+            <span class="pill pill-resin">RESIN</span>
+          </div>
+        </div>
+        <div class="g-info">
+          <div class="g-name">Half-orc barbarian</div>
+          <div class="g-meta">32MM · 4K RESIN · 0.05MM LAYER</div>
+          <div class="g-tags">
+            <span class="g-tag">HERO</span>
+            <span class="g-tag">D&amp;D 5E</span>
+            <span class="g-tag">32MM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-card" data-tags="monster resin">
+        <div class="g-img">
+          <!-- <img src="images/gallery/dragon-wyrmling.jpg" alt="Dragon wyrmling miniature"> -->
+          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
+          <div class="g-badge-wrap">
+            <span class="pill pill-resin">RESIN</span>
+          </div>
+        </div>
+        <div class="g-info">
+          <div class="g-name">Dragon wyrmling</div>
+          <div class="g-meta">54MM · 4K RESIN · 0.05MM LAYER</div>
+          <div class="g-tags">
+            <span class="g-tag">MONSTER</span>
+            <span class="g-tag">PATHFINDER</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-card" data-tags="terrain pla">
+        <div class="g-img">
+          <!-- <img src="images/gallery/dungeon-entrance.jpg" alt="Dungeon entrance terrain piece"> -->
+          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
+          <div class="g-badge-wrap">
+            <span class="pill pill-pla">PLA</span>
+          </div>
+        </div>
+        <div class="g-info">
+          <div class="g-name">Dungeon entrance, modular</div>
+          <div class="g-meta">TERRAIN · PLA BASIC · 0.2MM LAYER</div>
+          <div class="g-tags">
+            <span class="g-tag">TERRAIN</span>
+            <span class="g-tag">MODULAR</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-card" data-tags="display hero resin">
+        <div class="g-img">
+          <!-- <img src="images/gallery/tiefling-warlock.jpg" alt="Tiefling warlock display piece"> -->
+          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
+          <div class="g-badge-wrap">
+            <span class="pill pill-resin">RESIN</span>
+            <span class="pill" style="border-color:rgba(212,84,26,0.4);color:var(--ember2);">DISPLAY</span>
+          </div>
+        </div>
+        <div class="g-info">
+          <div class="g-name">Tiefling warlock, 75mm</div>
+          <div class="g-meta">75MM DISPLAY · 4K RESIN · 0.03MM LAYER</div>
+          <div class="g-tags">
+            <span class="g-tag">DISPLAY</span>
+            <span class="g-tag">75MM</span>
+            <span class="g-tag">HERO</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-card" data-tags="terrain pla">
+        <div class="g-img">
+          <!-- <img src="images/gallery/stone-archway.jpg" alt="Stone archway scatter terrain"> -->
+          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
+          <div class="g-badge-wrap">
+            <span class="pill pill-pla">PLA</span>
+          </div>
+        </div>
+        <div class="g-info">
+          <div class="g-name">Stone archway, scatter</div>
+          <div class="g-meta">TERRAIN · PLA MATTE · 0.15MM LAYER</div>
+          <div class="g-tags">
+            <span class="g-tag">TERRAIN</span>
+            <span class="g-tag">SCATTER</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-card" data-tags="display resin">
+        <div class="g-img">
+          <!-- <img src="images/gallery/spellbook-prop.jpg" alt="Spellbook prop display piece"> -->
+          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
+          <div class="g-badge-wrap">
+            <span class="pill pill-resin">RESIN</span>
+          </div>
+        </div>
+        <div class="g-info">
+          <div class="g-name">Spellbook prop, 1:1 scale</div>
+          <div class="g-meta">PROP · 4K RESIN · 0.05MM LAYER</div>
+          <div class="g-tags">
+            <span class="g-tag">PROP</span>
+            <span class="g-tag">DISPLAY</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /gallery-grid -->
+
+    <div class="rune-divider">
+      <div class="rune-divider-line"></div>
+      <div class="rune-divider-text">COMMISSION YOUR OWN</div>
+      <div class="rune-divider-line"></div>
+    </div>
+
+    <div style="text-align:center; padding: 2rem 0 3rem;">
+      <p style="font-style:italic;margin-bottom:1.5rem;">Like what you see? Send your STL and let's make something.</p>
+      <a href="order.html" class="btn-primary">REQUEST A PRINT</a>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-brand">THE FORGE &amp; FABLE · LIMA, OHIO · EST. 2025</div>
+      <ul class="footer-links">
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="stl-sources.html">STL Guide</a></li>
+        <li><a href="order.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('hamburger').addEventListener('click', function() {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+
+    // Gallery filter
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.g-card');
+    const grid = document.getElementById('gallery-grid');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        let visible = 0;
+        cards.forEach(card => {
+          const tags = card.dataset.tags || '';
+          const show = filter === 'all' || tags.includes(filter);
+          card.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        // Show no-results message if needed
+        let noRes = document.getElementById('no-results');
+        if (visible === 0) {
+          if (!noRes) {
+            noRes = document.createElement('div');
+            noRes.id = 'no-results';
+            noRes.className = 'no-results';
+            noRes.textContent = 'No pieces in this category yet — check back soon.';
+            grid.appendChild(noRes);
+          }
+        } else if (noRes) { noRes.remove(); }
+      });
+    });
+  </script>
+</body>
+</html>
