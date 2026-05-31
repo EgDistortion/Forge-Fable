@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+<defs><style>path,circle,line,ellipse,polygon,rect{fill:none;stroke:#c9a84c;stroke-opacity:0.07;stroke-linecap:round}</style></defs>
+<path stroke-width="1.8" d="M580 320 Q630 285 690 295 Q750 305 800 285 Q845 268 880 295 Q910 320 915 360 Q920 400 900 435 Q880 470 855 495 Q830 520 795 535 Q760 550 720 548 Q680 546 645 530 Q610 514 588 488 Q566 462 560 428 Q554 394 565 360 Q576 326 580 320Z"/>
+<path stroke-width="1" d="M600 338 Q642 308 692 317 Q742 326 785 308 Q822 292 852 316 Q878 338 882 372 Q886 406 868 437 Q850 468 827 490 Q804 512 772 526 Q740 540 708 538 Q676 536 648 522 Q620 508 603 484 Q586 460 582 430 Q578 400 588 368Z"/>
+<path stroke-width="1.5" d="M195 195 Q232 172 272 182 Q312 192 332 218 Q352 244 345 278 Q338 312 312 330 Q286 348 255 344 Q224 340 205 316 Q186 292 186 262 Q186 230 195 195Z"/>
+<path stroke-width="0.9" d="M210 212 Q240 192 272 200 Q304 208 318 230 Q332 252 326 280 Q320 308 298 322 Q276 336 250 332 Q224 328 210 308 Q196 288 198 260 Q200 232 210 212Z"/>
+<path stroke-width="1.5" d="M1048 148 Q1088 126 1128 138 Q1166 150 1183 180 Q1200 210 1190 243 Q1180 276 1153 292 Q1126 308 1094 302 Q1062 296 1043 272 Q1024 248 1026 218 Q1028 186 1048 148Z"/>
+<path stroke-width="1.5" d="M978 618 Q1013 596 1053 606 Q1090 616 1106 644 Q1122 672 1110 700 Q1098 728 1070 740 Q1042 752 1013 744 Q984 736 968 712 Q952 688 956 659 Q960 630 978 618Z"/>
+<path stroke-width="1.5" d="M238 638 Q273 616 310 626 Q346 636 360 663 Q374 690 362 718 Q350 745 323 756 Q296 767 268 758 Q240 749 226 725 Q212 701 216 673 Q220 645 238 638Z"/>
+<ellipse cx="480" cy="560" rx="46" ry="29" stroke-width="1.2"/>
+<ellipse cx="900" cy="250" rx="39" ry="23" stroke-width="1.2"/>
+<ellipse cx="1160" cy="520" rx="43" ry="26" stroke-width="1.2"/>
+<ellipse cx="350" cy="440" rx="33" ry="19" stroke-width="1.2"/>
+<ellipse cx="750" cy="662" rx="51" ry="29" stroke-width="1.2"/>
+<ellipse cx="148" cy="480" rx="29" ry="17" stroke-width="1"/>
+<ellipse cx="1250" cy="358" rx="31" ry="18" stroke-width="1"/>
+<ellipse cx="598" cy="158" rx="36" ry="21" stroke-width="1"/>
+<path stroke-width="0.9" stroke-dasharray="7,9" d="M332 256 Q418 298 558 336"/>
+<path stroke-width="0.9" stroke-dasharray="7,9" d="M878 378 Q958 348 1043 238"/>
+<path stroke-width="0.9" stroke-dasharray="7,9" d="M748 546 Q863 588 968 636"/>
+<path stroke-width="0.9" stroke-dasharray="7,9" d="M578 488 Q428 538 360 668"/>
+<path stroke-width="0.9" stroke-dasharray="7,9" d="M256 340 Q238 418 238 616"/>
+<circle cx="1260" cy="760" r="42" stroke-width="0.9"/><circle cx="1260" cy="760" r="28" stroke-width="0.6"/>
+<line x1="1260" y1="718" x2="1260" y2="802" stroke-width="1.2"/><line x1="1218" y1="760" x2="1302" y2="760" stroke-width="1.2"/>
+<rect x="30" y="30" width="1340" height="840" stroke-width="0.8" rx="4"/>
+<rect x="46" y="46" width="1308" height="808" stroke-width="0.4" rx="2"/>
+</svg>
