@@ -559,9 +559,35 @@
         <div class="modal-price" id="modal-price"></div>
         <div class="modal-price-note">Final price confirmed after review. No payment until you approve.</div>
 
-        <div class="modal-actions" style="margin-top:1.25rem;">
-          <a href="order.html" class="product-btn" id="modal-order-link">ORDER THIS</a>
-          <button class="product-btn ghost" onclick="closeModal()">KEEP BROWSING</button>
+        <div id="modal-order-wrap" style="margin-top:1.25rem;">
+          <!-- Inline quick order form — sends direct to Formspree -->
+          <form id="shop-order-form" action="https://formspree.io/f/xnjryqen" method="POST">
+            <input type="hidden" name="_subject" value="Shop Order — The Forge &amp; Fable">
+            <input type="hidden" id="shop-item-name" name="item">
+            <input type="hidden" id="shop-material-hidden" name="material">
+            <input type="hidden" id="shop-qty-hidden" name="quantity">
+            <input type="hidden" name="_next" value="https://theforgeandfable.com/shop.html?ordered=true">
+            <div style="margin-bottom:1rem;">
+              <label style="display:block;font-family:var(--serif);font-size:11px;color:var(--soft);letter-spacing:0.15em;margin-bottom:5px;">YOUR EMAIL *</label>
+              <input type="email" name="email" required placeholder="you@example.com"
+                style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:var(--body);font-size:15px;padding:9px 12px;outline:none;border-radius:4px;">
+            </div>
+            <div style="margin-bottom:1rem;">
+              <label style="display:block;font-family:var(--serif);font-size:11px;color:var(--soft);letter-spacing:0.15em;margin-bottom:5px;">NOTES (optional)</label>
+              <textarea name="notes" placeholder="Any special requests, color preferences, or questions..."
+                style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:var(--body);font-size:15px;padding:9px 12px;outline:none;border-radius:4px;height:70px;resize:vertical;"></textarea>
+            </div>
+            <p style="font-size:13px;color:var(--muted);font-style:italic;margin-bottom:1rem;line-height:1.5;">We'll confirm your order and total by email within 24 hours. No payment until you approve.</p>
+            <input type="text" name="_gotcha" style="display:none">
+            <div class="modal-actions">
+              <button type="submit" class="product-btn">SEND ORDER REQUEST</button>
+              <button type="button" class="product-btn ghost" onclick="closeModal()">KEEP BROWSING</button>
+            </div>
+          </form>
+          <div id="shop-order-success" style="display:none;text-align:center;padding:1.5rem 0;">
+            <div style="font-family:var(--serif);font-size:14px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">ORDER REQUEST SENT</div>
+            <p style="font-size:14px;color:var(--muted);font-style:italic;">We'll be in touch within 24 hours to confirm your order and total.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -635,9 +661,12 @@
       document.getElementById('modal-desc').textContent  = p.desc;
       document.getElementById('modal-price').textContent = p.price;
       document.getElementById('modal-qty-wrap').style.display = p.isSet ? 'none' : 'block';
-      // Pre-fill order link with item name
-      document.getElementById('modal-order-link').href =
-        `order.html?item=${encodeURIComponent(p.name)}`;
+      document.getElementById('shop-item-name').value = p.name;
+      document.getElementById('shop-material-hidden').value = 'Resin'; // default
+      document.getElementById('shop-qty-hidden').value = p.isSet ? 'Set' : '1';
+      // Reset form state
+      document.getElementById('shop-order-form').style.display = 'block';
+      document.getElementById('shop-order-success').style.display = 'none';
       document.getElementById('modal-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -656,7 +685,32 @@
     function selectOpt(el, group){
       el.closest('.opt-row').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
       el.classList.add('selected');
+      if(group === 'material'){
+        document.getElementById('shop-material-hidden').value = el.textContent.split('—')[0].trim();
+      }
+      if(group === 'qty'){
+        document.getElementById('shop-qty-hidden').value = el.textContent.trim();
+      }
     }
+
+    // Handle shop order form via AJAX so page doesn't navigate away
+    document.getElementById('shop-order-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      const data = new FormData(this);
+      fetch(this.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      }).then(res => {
+        if(res.ok){
+          document.getElementById('shop-order-form').style.display = 'none';
+          document.getElementById('shop-order-success').style.display = 'block';
+          setTimeout(closeModal, 3500);
+        } else {
+          alert('Something went wrong — please try again.');
+        }
+      }).catch(() => alert('Network error — please try again.'));
+    });
   </script>
 </body>
 </html>

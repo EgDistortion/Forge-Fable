@@ -764,12 +764,16 @@
     });
 
     // ── LICENSE GATE ──
+    // Checkboxes are required by default but become optional for non-STL orders
+    let licenseRequired = true;
+
     function checkLicense() {
       const c1 = document.getElementById('lic1').checked;
       const c2 = document.getElementById('lic2').checked;
       const btn = document.getElementById('submit-btn');
-      btn.disabled = !(c1 && c2);
-      btn.textContent = (c1 && c2) ? 'SUBMIT ORDER REQUEST' : 'CONFIRM LICENSE TO CONTINUE';
+      const passed = !licenseRequired || (c1 && c2);
+      btn.disabled = !passed;
+      btn.textContent = passed ? 'SUBMIT ORDER REQUEST' : 'CONFIRM LICENSE TO CONTINUE';
     }
 
     // ── LIVE SUMMARY ──
@@ -783,6 +787,28 @@
       document.getElementById('sum-qty').textContent = qty || '1';
       document.getElementById('sum-turn').textContent = turn ? turn.split('(')[0].trim() : 'Standard';
       renderColors(mat);
+    }
+
+    // ── PRE-FILL FROM SHOP ──
+    // If customer came from shop page, pre-fill the item name in notes
+    const urlParams = new URLSearchParams(window.location.search);
+    const shopItem = urlParams.get('item');
+    if (shopItem) {
+      const notesField = document.getElementById('notes');
+      if (notesField && !notesField.value) {
+        notesField.value = `Shop item: ${shopItem}`;
+      }
+      // Shop items don't need STL license confirmation
+      licenseRequired = false;
+      checkLicense();
+      // Show a helpful note
+      const licBox = document.getElementById('license-box');
+      if (licBox) {
+        const note = document.createElement('div');
+        note.style.cssText = 'font-size:15px;color:var(--green);font-style:italic;margin-bottom:1rem;padding:8px 12px;background:rgba(74,158,107,0.08);border-radius:4px;border:1px solid rgba(74,158,107,0.25);';
+        note.textContent = `Ordering: ${shopItem} — no STL required, license checkboxes optional.`;
+        licBox.insertBefore(note, licBox.firstChild);
+      }
     }
 
     // ── SUCCESS REDIRECT ──
