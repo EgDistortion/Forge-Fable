@@ -86,7 +86,7 @@
     /* ── FEATURES STRIP ── */
     .features {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       border-bottom: 1px solid var(--border);
     }
     .feature {
@@ -220,18 +220,18 @@
       .hero { grid-template-columns: 1fr; min-height: auto; }
       .hero-left { padding: 3rem 1.25rem; border-right: none; border-bottom: 1px solid var(--border); }
       .hero-right { padding: 2.5rem 1.25rem; min-height: 280px; }
-      .features { grid-template-columns: 1fr 1fr 1fr; }
-      .feature:nth-child(3) { border-right: none; }
-      .feature:nth-child(4),
-      .feature:nth-child(5),
-      .feature:nth-child(6) { border-top: 1px solid var(--border); }
-      .feature:nth-child(6) { border-right: none; }
+      .features { grid-template-columns: 1fr 1fr; }
+      .feature:nth-child(2) { border-right: none; }
+      .feature:nth-child(3),
+      .feature:nth-child(4) { border-top: 1px solid var(--border); }
+      .feature:nth-child(4) { border-right: none; }
+      .feature:nth-child(5) { border-top: 1px solid var(--border); border-right: none; }
       .preview-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 520px) {
-      .features { grid-template-columns: 1fr 1fr; }
-      .feature:nth-child(2n) { border-right: none; }
-      .feature:nth-child(n+3) { border-top: 1px solid var(--border); }
+      .features { grid-template-columns: 1fr; }
+      .feature { border-right: none; border-top: 1px solid var(--border); }
+      .features .feature:first-child { border-top: none; }
       .preview-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -252,9 +252,10 @@
   <nav class="site-nav">
     <a href="index.html" class="nav-logo">
       <span class="nav-logo-main">THE FORGE &amp; FABLE</span>
-      <span class="nav-logo-sub">MINIATURE PRINTING</span>
+      <span class="nav-logo-sub">MINIATURE PRINTING · LIMA, OH</span>
     </a>
     <ul class="nav-links" id="nav-links">
+      <li><a href="shop.html">Shop</a></li>
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="order.html">Order</a></li>
       <li><a href="pricing.html">Pricing</a></li>
@@ -313,25 +314,51 @@
     </div>
     <div class="feature">
       <div class="feature-num">III.</div>
-      <div class="feature-title">PRINT ANYTHING</div>
-      <div class="feature-desc">No printer? No problem. Send us any STL — props, prototypes, cosplay pieces, functional parts, display models — we'll print it.</div>
+      <div class="feature-title">CUSTOM ORDERS</div>
+      <div class="feature-desc">Got an STL? Send it over. Need help finding the right file for your character? We'll point you in the right direction.</div>
     </div>
     <div class="feature">
       <div class="feature-num">IV.</div>
-      <div class="feature-title">CUSTOM ORDERS</div>
-      <div class="feature-desc">Got an STL? Send it over. Need help finding the right file? We'll point you in the right direction.</div>
+      <div class="feature-title">MULTICOLOR TERRAIN</div>
+      <div class="feature-desc">AMS multicolor FDM printing for terrain — dungeon tiles, scatter pieces, and modular builds printed in up to 4 colors at once.</div>
     </div>
     <div class="feature">
       <div class="feature-num">V.</div>
-      <div class="feature-title">MULTICOLOR TERRAIN</div>
-      <div class="feature-desc">AMS multicolor FDM printing — dungeon tiles, scatter pieces, and modular builds printed in up to 4 colors at once.</div>
-    </div>
-    <div class="feature">
-      <div class="feature-num">VI.</div>
       <div class="feature-title">FAST TURNAROUND</div>
-      <div class="feature-desc">Most prints ready in 3–5 business days. Rush options available when you need it fast.</div>
+      <div class="feature-desc">Most minis ready in 3–5 business days. Rush options available before your next session night.</div>
     </div>
   </div>
+
+  <!-- SHOP PREVIEW -->
+  <section style="padding:4rem 0;border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head-title">READY TO ORDER</div>
+        <a href="shop.html" class="section-head-link">VIEW FULL SHOP →</a>
+      </div>
+      <p style="font-size:17px;font-style:italic;color:var(--muted);margin-bottom:2rem;line-height:1.75;max-width:600px;">No STL needed — these are prints we have commercial rights to offer. Pick your theme, pick your material, order.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:2rem;">
+        <a href="shop.html" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;display:block;" onmouseover="this.style.borderColor='var(--border2)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+          <div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.2em;margin-bottom:6px;">COIN PROPS</div>
+          <div style="font-size:16px;color:var(--text);font-style:italic;margin-bottom:6px;">7 Themes Available</div>
+          <div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;">Mythical creatures, dragons, elemental forces, skulls, weapons &amp; more.</div>
+          <div style="font-family:var(--serif);font-size:11px;color:var(--gold2);margin-top:10px;letter-spacing:0.1em;">FROM $3 / COIN →</div>
+        </a>
+        <a href="shop.html?filter=set" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;display:block;" onmouseover="this.style.borderColor='var(--border2)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+          <div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.2em;margin-bottom:6px;">COIN SETS</div>
+          <div style="font-size:16px;color:var(--text);font-style:italic;margin-bottom:6px;">Full Theme Collections</div>
+          <div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;">Get the complete set for any theme — better value, great for gifts or campaign props.</div>
+          <div style="font-family:var(--serif);font-size:11px;color:var(--gold2);margin-top:10px;letter-spacing:0.1em;">FROM $20 / SET →</div>
+        </a>
+        <a href="shop.html" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;display:block;" onmouseover="this.style.borderColor='var(--border2)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+          <div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.2em;margin-bottom:6px;">MORE COMING SOON</div>
+          <div style="font-size:16px;color:var(--text);font-style:italic;margin-bottom:6px;">Expanding Catalogue</div>
+          <div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;">More ready-to-order items being added regularly. Check back or reach out to ask.</div>
+          <div style="font-family:var(--serif);font-size:11px;color:var(--gold2);margin-top:10px;letter-spacing:0.1em;">VIEW SHOP →</div>
+        </a>
+      </div>
+    </div>
+  </section>
 
   <!-- GALLERY PREVIEW -->
   <section class="gallery-preview">
@@ -412,6 +439,8 @@
     <div class="site-footer-inner">
       <div class="footer-brand">THE FORGE &amp; FABLE · LIMA, OHIO · EST. 2025</div>
       <ul class="footer-links">
+        <li><a href="shop.html">Shop</a></li>
+      <li><a href="shop.html">Shop</a></li>
         <li><a href="gallery.html">Gallery</a></li>
         <li><a href="pricing.html">Pricing</a></li>
         <li><a href="stl-sources.html">STL Guide</a></li>
