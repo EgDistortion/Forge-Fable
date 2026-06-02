@@ -234,6 +234,25 @@
       .features .feature:first-child { border-top: none; }
       .preview-grid { grid-template-columns: 1fr; }
     }
+
+    /* ── CART NAV ICON ── */
+    .cart-icon-wrap {
+      position: relative; cursor: pointer; background: none;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 7px 14px; display: flex; align-items: center; gap: 8px;
+      font-family: var(--serif); font-size: 11px; color: var(--muted);
+      letter-spacing: 0.12em; transition: color 0.2s, border-color 0.2s;
+      flex-shrink: 0; text-decoration: none;
+    }
+    .cart-icon-wrap:hover { color: var(--gold); border-color: var(--border2); }
+    .cart-badge {
+      display: none; background: var(--ember); color: #fff;
+      font-family: var(--serif); font-size: 9px; font-weight: 700;
+      border-radius: 50%; width: 18px; height: 18px;
+      align-items: center; justify-content: center;
+      position: absolute; top: -7px; right: -7px;
+    }
+    .cart-badge.show { display: flex; }
   </style>
   <style id="page-map">
     html {
@@ -262,7 +281,11 @@
       <li><a href="stl-sources.html">STL Guide</a></li>
     </ul>
     <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
-    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <a href="shop.html" class="cart-icon-wrap" id="cart-nav-icon" aria-label="Cart">
+      🛒 CART
+      <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+        <button class="nav-hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
@@ -328,37 +351,6 @@
       <div class="feature-desc">Most minis ready in 3–5 business days. Rush options available before your next session night.</div>
     </div>
   </div>
-
-  <!-- SHOP PREVIEW -->
-  <section style="padding:4rem 0;border-bottom:1px solid var(--border);">
-    <div class="container">
-      <div class="section-head">
-        <div class="section-head-title">READY TO ORDER</div>
-        <a href="shop.html" class="section-head-link">VIEW FULL SHOP →</a>
-      </div>
-      <p style="font-size:17px;font-style:italic;color:var(--muted);margin-bottom:2rem;line-height:1.75;max-width:600px;">No STL needed — these are prints we have commercial rights to offer. Pick your theme, pick your material, order.</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:2rem;">
-        <a href="shop.html" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;display:block;" onmouseover="this.style.borderColor='var(--border2)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
-          <div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.2em;margin-bottom:6px;">COIN PROPS</div>
-          <div style="font-size:16px;color:var(--text);font-style:italic;margin-bottom:6px;">7 Themes Available</div>
-          <div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;">Mythical creatures, dragons, elemental forces, skulls, weapons &amp; more.</div>
-          <div style="font-family:var(--serif);font-size:11px;color:var(--gold2);margin-top:10px;letter-spacing:0.1em;">FROM $3 / COIN →</div>
-        </a>
-        <a href="shop.html?filter=set" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;display:block;" onmouseover="this.style.borderColor='var(--border2)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
-          <div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.2em;margin-bottom:6px;">COIN SETS</div>
-          <div style="font-size:16px;color:var(--text);font-style:italic;margin-bottom:6px;">Full Theme Collections</div>
-          <div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;">Get the complete set for any theme — better value, great for gifts or campaign props.</div>
-          <div style="font-family:var(--serif);font-size:11px;color:var(--gold2);margin-top:10px;letter-spacing:0.1em;">FROM $20 / SET →</div>
-        </a>
-        <a href="shop.html" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;display:block;" onmouseover="this.style.borderColor='var(--border2)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
-          <div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.2em;margin-bottom:6px;">MORE COMING SOON</div>
-          <div style="font-size:16px;color:var(--text);font-style:italic;margin-bottom:6px;">Expanding Catalogue</div>
-          <div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;">More ready-to-order items being added regularly. Check back or reach out to ask.</div>
-          <div style="font-family:var(--serif);font-size:11px;color:var(--gold2);margin-top:10px;letter-spacing:0.1em;">VIEW SHOP →</div>
-        </a>
-      </div>
-    </div>
-  </section>
 
   <!-- GALLERY PREVIEW -->
   <section class="gallery-preview">
@@ -439,8 +431,6 @@
     <div class="site-footer-inner">
       <div class="footer-brand">THE FORGE &amp; FABLE · LIMA, OHIO · EST. 2025</div>
       <ul class="footer-links">
-        <li><a href="shop.html">Shop</a></li>
-      <li><a href="shop.html">Shop</a></li>
         <li><a href="gallery.html">Gallery</a></li>
         <li><a href="pricing.html">Pricing</a></li>
         <li><a href="stl-sources.html">STL Guide</a></li>
@@ -457,6 +447,20 @@
     // Mark active nav link
     const links = document.querySelectorAll('.nav-links a');
     links.forEach(l => { if (l.href === window.location.href) l.classList.add('active'); });
+  </script>
+  <script>
+    // ── CART BADGE UPDATE (all pages) ──
+    (function() {
+      try {
+        const cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
+        const total = cart.reduce((s, i) => s + (i.qty || 0), 0);
+        const badge = document.getElementById('cart-badge');
+        if (badge && total > 0) {
+          badge.textContent = total;
+          badge.classList.add('show');
+        }
+      } catch(e) {}
+    })();
   </script>
 </body>
 </html>
