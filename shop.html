@@ -420,6 +420,8 @@
       background-attachment: fixed;
     }
   </style>
+  <!-- PayPal Cart Integration -->
+  <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="ALZJ6EDJLKNUL"></script>
 </head>
 <body>
 
@@ -475,7 +477,7 @@
         ║  Replace # below with your PayPal.me link or button     ║
         ╚══════════════════════════════════════════════════════════╝
       -->
-      <button class="checkout-paypal" onclick="checkoutPayPal()">PayPal CHECKOUT</button>
+      <div id="paypal-cart-button-container" style="margin-top:8px;"></div>
     </div>
   </div>
 
@@ -1073,7 +1075,7 @@
 
     function removeFromCart(id){
       cart = cart.filter(i => i.id !== id);
-      saveCart(); renderCart(); updateBadge();
+      saveCart(); renderCart(); updateBadge(); renderPayPalButton();
     }
 
     function changeQty(id, delta){
@@ -1081,7 +1083,7 @@
       if(!item) return;
       item.qty = Math.max(0, item.qty + delta);
       if(item.qty === 0) cart = cart.filter(i => i.id !== id);
-      saveCart(); renderCart(); updateBadge();
+      saveCart(); renderCart(); updateBadge(); renderPayPalButton();
     }
 
     function updateBadge(){
@@ -1142,22 +1144,74 @@
       // ══════════════════════════════════════════════════
       // Replace this URL with your Stripe Payment Link
       // once you have your prices set up in Stripe.
-      // For now it sends them to the order form with cart details.
       // ══════════════════════════════════════════════════
       const summary = cart.map(i => `${i.qty}x ${i.name}`).join(', ');
       const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
       window.location.href = `order.html?item=${encodeURIComponent('Cart: ' + summary + ' — Total: $' + total.toFixed(2))}`;
     }
 
-    function checkoutPayPal(){
-      // ══════════════════════════════════════════════════
-      // Replace this with your PayPal.me link or button.
-      // e.g. window.open('https://paypal.me/YourName/' + total, '_blank');
-      // For now sends to order form.
-      // ══════════════════════════════════════════════════
+    // ── PAYPAL CART INTEGRATION ──
+    function renderPayPalButton() {
+      const container = document.getElementById('paypal-cart-button-container');
+      if (!container) return;
+      container.innerHTML = '';
+      if (cart.length === 0) return;
+
+      // Build PayPal cart items from our cart state
+      const paypalItems = cart.map(item => ({
+        name: item.name,
+        quantity: item.qty,
+        unitPrice: item.price.toFixed(2),
+        currency: 'USD'
+      }));
+
+      const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+      try {
+        // Use PayPal NCP Cart API
+        if (window.paypal && window.paypal.CartButton) {
+          window.paypal.CartButton({
+            items: paypalItems,
+            currency: 'USD',
+            amount: total.toFixed(2),
+            onApprove: function() {
+              // Payment approved — clear cart and show success
+              cart = [];
+              saveCart();
+              renderCart();
+              updateBadge();
+              renderPayPalButton();
+              document.getElementById('cart-foot').innerHTML = `
+                <div style="text-align:center;padding:2rem;font-family:var(--serif);color:var(--green);letter-spacing:0.1em;">
+                  <div style="font-size:16px;margin-bottom:8px;">PAYMENT COMPLETE</div>
+                  <p style="font-size:14px;color:var(--muted);font-style:italic;">Thank you! We'll be in touch within 24 hours to confirm your order details.</p>
+                </div>`;
+            },
+            onError: function(err) {
+              console.error('PayPal error:', err);
+              alert('Something went wrong with PayPal — please try again.');
+            }
+          }).render('#paypal-cart-button-container');
+        } else {
+          // Fallback if PayPal SDK not loaded yet
+          container.innerHTML = `
+            <button class="checkout-paypal" onclick="checkoutPayPalFallback()">
+              PayPal CHECKOUT
+            </button>`;
+        }
+      } catch(e) {
+        container.innerHTML = `
+          <button class="checkout-paypal" onclick="checkoutPayPalFallback()">
+            PayPal CHECKOUT
+          </button>`;
+      }
+    }
+
+    function checkoutPayPalFallback(){
+      // Fallback — opens PayPal with cart summary
       const summary = cart.map(i => `${i.qty}x ${i.name}`).join(', ');
       const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
-      window.location.href = `order.html?item=${encodeURIComponent('Cart: ' + summary + ' — Total: $' + total.toFixed(2))}`;
+      window.location.href = `order.html?item=${encodeURIComponent('PayPal Cart: ' + summary + ' — Total: $' + total.toFixed(2))}`;
     }
 
     // Also add to cart from the modal
@@ -1176,6 +1230,8 @@
     renderCart();
     updateBadge();
     renderCardPrices();
+    // Render PayPal button after SDK loads
+    window.addEventListener('load', renderPayPalButton);
 
   </script>
 </body>
