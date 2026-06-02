@@ -179,6 +179,25 @@
     @media (max-width: 480px) {
       .pricing-grid { grid-template-columns: 1fr; }
     }
+
+    /* ── CART NAV ICON ── */
+    .cart-icon-wrap {
+      position: relative; cursor: pointer; background: none;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 7px 14px; display: flex; align-items: center; gap: 8px;
+      font-family: var(--serif); font-size: 11px; color: var(--muted);
+      letter-spacing: 0.12em; transition: color 0.2s, border-color 0.2s;
+      flex-shrink: 0; text-decoration: none;
+    }
+    .cart-icon-wrap:hover { color: var(--gold); border-color: var(--border2); }
+    .cart-badge {
+      display: none; background: var(--ember); color: #fff;
+      font-family: var(--serif); font-size: 9px; font-weight: 700;
+      border-radius: 50%; width: 18px; height: 18px;
+      align-items: center; justify-content: center;
+      position: absolute; top: -7px; right: -7px;
+    }
+    .cart-badge.show { display: flex; }
   </style>
   <style id="page-map">
     html {
@@ -199,14 +218,17 @@
       <span class="nav-logo-sub">MINIATURE PRINTING · LIMA, OH</span>
     </a>
     <ul class="nav-links" id="nav-links">
-      <li><a href="shop.html">Shop</a></li>
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="order.html">Order</a></li>
       <li><a href="pricing.html" class="active">Pricing</a></li>
       <li><a href="stl-sources.html">STL Guide</a></li>
     </ul>
     <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
-    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <a href="shop.html" class="cart-icon-wrap" id="cart-nav-icon" aria-label="Cart">
+      🛒 CART
+      <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+        <button class="nav-hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
@@ -374,8 +396,6 @@
     <div class="site-footer-inner">
       <div class="footer-brand">THE FORGE &amp; FABLE · LIMA, OHIO · EST. 2025</div>
       <ul class="footer-links">
-        <li><a href="shop.html">Shop</a></li>
-      <li><a href="shop.html">Shop</a></li>
         <li><a href="gallery.html">Gallery</a></li>
         <li><a href="pricing.html">Pricing</a></li>
         <li><a href="stl-sources.html">STL Guide</a></li>
@@ -394,6 +414,20 @@
       a.classList.toggle('open');
       arrow.classList.toggle('open');
     }
+  </script>
+  <script>
+    // ── CART BADGE UPDATE (all pages) ──
+    (function() {
+      try {
+        const cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
+        const total = cart.reduce((s, i) => s + (i.qty || 0), 0);
+        const badge = document.getElementById('cart-badge');
+        if (badge && total > 0) {
+          badge.textContent = total;
+          badge.classList.add('show');
+        }
+      } catch(e) {}
+    })();
   </script>
 </body>
 </html>
