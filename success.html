@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — The Forge &amp; Fable</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .success-wrap {
+      display: flex; align-items: center; justify-content: center;
+      min-height: calc(100vh - 64px); padding: 3rem;
+    }
+    .success-box {
+      background: var(--surface); border: 1px solid rgba(74,158,107,0.35);
+      border-radius: var(--radius); padding: 3rem; max-width: 540px;
+      width: 100%; text-align: center;
+    }
+    .success-icon { font-size: 48px; margin-bottom: 1.5rem; }
+    .success-title {
+      font-family: var(--serif); font-size: 22px; color: var(--green);
+      letter-spacing: 0.12em; margin-bottom: 10px;
+    }
+    .success-sub {
+      font-size: 17px; color: var(--muted); font-style: italic;
+      line-height: 1.75; margin-bottom: 2rem;
+    }
+    .success-details {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem; margin-bottom: 2rem;
+      text-align: left;
+    }
+    .success-details p {
+      font-size: 15px; color: var(--soft); line-height: 1.7;
+      font-style: italic;
+    }
+    .success-details strong { font-style: normal; color: var(--gold2); font-weight: 400; }
+    .success-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-main">THE FORGE &amp; FABLE</span>
+      <span class="nav-logo-sub">MINIATURE PRINTING</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="order.html">Order</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="stl-sources.html">STL Guide</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="success-wrap">
+    <div class="success-box">
+      <div class="success-icon">⚔️</div>
+      <div class="success-title">ORDER CONFIRMED</div>
+      <p class="success-sub">
+        Your payment was successful. Your order has been received and is now in the queue.
+      </p>
+      <div class="success-details">
+        <p>
+          <strong>What happens next:</strong> We'll review your order and get your prints on the build plate.
+          Most orders are ready in <strong>3–5 business days</strong>.
+          You'll receive an email when your order is complete and ready for pickup or shipment.
+        </p>
+        <p style="margin-top:10px;">
+          Check your email for a receipt from Stripe. If you have any questions about your order,
+          <strong>reply to that receipt email</strong> or use the contact form on our site.
+        </p>
+      </div>
+      <div class="success-actions">
+        <a href="shop.html" class="btn-primary">BACK TO SHOP</a>
+        <a href="index.html" class="btn-ghost">HOME</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-brand">THE FORGE &amp; FABLE · EST. 2025</div>
+      <ul class="footer-links">
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="order.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('hamburger').addEventListener('click', function(){
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+    // Clear cart on successful payment
+    localStorage.removeItem('ff_cart');
+  </script>
+</body>
+</html>

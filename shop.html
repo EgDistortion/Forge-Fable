@@ -463,13 +463,6 @@
         <span class="cart-subtotal-val" id="cart-total">$0.00</span>
       </div>
       <p class="cart-note">Prices are estimates — we'll confirm your final total by email within 24 hours before any payment is taken.</p>
-      <!--
-        ╔══════════════════════════════════════════════════════════╗
-        ║  STRIPE CHECKOUT LINK                                   ║
-        ║  Once you have Stripe set up, replace # below with      ║
-        ║  your Stripe Payment Link URL                           ║
-        ╚══════════════════════════════════════════════════════════╝
-      -->
       <button class="checkout-stripe" onclick="checkoutStripe()">💳 CHECKOUT WITH CARD (STRIPE)</button>
       <!--
         ╔══════════════════════════════════════════════════════════╗
@@ -1140,14 +1133,37 @@
       document.body.style.overflow = '';
     }
 
-    function checkoutStripe(){
-      // ══════════════════════════════════════════════════
-      // Replace this URL with your Stripe Payment Link
-      // once you have your prices set up in Stripe.
-      // ══════════════════════════════════════════════════
-      const summary = cart.map(i => `${i.qty}x ${i.name}`).join(', ');
-      const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
-      window.location.href = `order.html?item=${encodeURIComponent('Cart: ' + summary + ' — Total: $' + total.toFixed(2))}`;
+    // ── STRIPE CHECKOUT ──
+    const STRIPE_PUBLISHABLE_KEY = 'pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
+
+    async function checkoutStripe(){
+      if(cart.length === 0) return;
+
+      const btn = document.querySelector('.checkout-stripe');
+      btn.textContent = 'PREPARING CHECKOUT...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: cart })
+        });
+
+        const data = await res.json();
+
+        if(data.url) {
+          // Redirect to Stripe hosted checkout page
+          window.location.href = data.url;
+        } else {
+          throw new Error(data.error || 'No checkout URL returned');
+        }
+      } catch(err) {
+        console.error('Stripe checkout error:', err);
+        btn.textContent = '💳 CHECKOUT WITH CARD (STRIPE)';
+        btn.disabled = false;
+        alert('Checkout failed — please try again or use PayPal.');
+      }
     }
 
     // ── PAYPAL CART INTEGRATION ──

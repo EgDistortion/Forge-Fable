@@ -1,0 +1,8 @@
+{
+  "name": "theforgeandfable",
+  "version": "1.0.0",
+  "description": "The Forge & Fable — 3D Printing Shop",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}
