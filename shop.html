@@ -291,8 +291,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG — same as inventory.html
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -429,6 +429,81 @@
       console.warn('Could not load coin stock — using defaults');
     }
     renderShop();
+    subscribeToStock(); // start real-time updates
+  }
+
+  // ── REAL-TIME STOCK UPDATES ──
+  // Listens for any change to coin_inventory in Supabase
+  // and updates the shop instantly without a page refresh
+  function subscribeToStock() {
+    try {
+      const ws = new WebSocket(
+        `${SUPABASE_URL.replace('https','wss')}/realtime/v1/websocket?apikey=${SUPABASE_KEY}&vsn=1.0.0`
+      );
+
+      ws.onopen = () => {
+        // Join the realtime channel for coin_inventory table
+        ws.send(JSON.stringify({
+          topic: 'realtime:public:coin_inventory',
+          event: 'phx_join',
+          payload: {},
+          ref: '1'
+        }));
+      };
+
+      ws.onmessage = (e) => {
+        try {
+          const msg = JSON.parse(e.data);
+          // Listen for UPDATE events on coin_inventory
+          if (msg.event === 'UPDATE' && msg.payload?.record) {
+            const { coin_id, stock } = msg.payload.record;
+            if (coin_id !== undefined && stock !== undefined) {
+              coinStock[coin_id] = stock;
+              // Update just that coin card without re-rendering everything
+              updateCoinCardLive(coin_id, stock);
+            }
+          }
+        } catch(err) { /* ignore parse errors */ }
+      };
+
+      ws.onerror = () => console.warn('Realtime connection failed — stock updates require refresh');
+
+      // Reconnect if connection drops
+      ws.onclose = () => setTimeout(subscribeToStock, 5000);
+
+    } catch(e) {
+      console.warn('Realtime not available');
+    }
+  }
+
+  // Update a single coin card live without re-rendering the whole shop
+  function updateCoinCardLive(coinId, stock) {
+    const card = document.getElementById(`card-${coinId}`);
+    if (!card) return;
+
+    const status = stock === 0 ? 'out' : stock <= 3 ? 'low' : 'in-stock';
+    const label  = stock === 0 ? 'OUT OF STOCK' : stock <= 3 ? `LOW — ${stock} LEFT` : `${stock} IN STOCK`;
+    const isOut  = status === 'out';
+    const isLow  = status === 'low';
+
+    // Update card classes
+    card.classList.toggle('out-of-stock', isOut);
+    card.classList.toggle('low-stock', isLow);
+
+    // Update stock badge
+    const badge = card.querySelector('.stock-badge');
+    if (badge) {
+      badge.className = `stock-badge ${status === 'in-stock' ? 'in-stock' : status === 'low' ? 'low' : 'out'}`;
+      badge.textContent = label;
+    }
+
+    // Update add to cart button
+    const btn = document.getElementById(`btn-${coinId}`);
+    if (btn) {
+      btn.disabled = isOut;
+      if (isOut) btn.textContent = 'OUT OF STOCK';
+      else if (btn.textContent === 'OUT OF STOCK') btn.textContent = '+ CART';
+    }
   }
 
   function getStock(coinId) {
