@@ -193,8 +193,8 @@
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
 const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -487,7 +487,7 @@ function renderCoinSections(){
   COIN_THEMES.forEach(theme => {
     const coins = theme.coins.filter(c => {
       const stock = coinStock[c.id] !== undefined ? coinStock[c.id] : 10;
-      if(coinFilter === 'low' && stock > 3) return false;
+      if(coinFilter === 'low' && !(stock > 0 && stock <= 3)) return false;
       if(coinFilter === 'out' && stock !== 0) return false;
       if(coinSearch && !c.name.toLowerCase().includes(coinSearch)) return false;
       return true;
@@ -530,8 +530,8 @@ function renderCoinSections(){
 function updateCoinStats(){
   const allCoins = COIN_THEMES.flatMap(t => t.coins);
   const total = allCoins.length;
-  const out   = allCoins.filter(c => (coinStock[c.id]||10) === 0).length;
-  const low   = allCoins.filter(c => { const s=coinStock[c.id]||10; return s>0&&s<=3; }).length;
+  const out   = allCoins.filter(c => coinStock[c.id] === 0).length;
+  const low   = allCoins.filter(c => { const s = coinStock[c.id]; return s !== undefined && s > 0 && s <= 3; }).length;
   const inStock = total - out;
   document.getElementById('cs-total').textContent = total;
   document.getElementById('cs-in').textContent    = inStock;
