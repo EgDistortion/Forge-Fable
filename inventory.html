@@ -193,8 +193,8 @@
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
 const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -449,6 +449,8 @@ async function loadCoinStock(){
 async function saveCoinStock(coinId, newStock){
   coinStock[coinId] = newStock;
   updateCoinStats();
+  // Update the card appearance immediately
+  updateCoinCardAppearance(coinId, newStock);
   showInd('saving','SAVING...');
   try {
     await sb(`${COIN_TABLE}?coin_id=eq.${encodeURIComponent(coinId)}`, {
@@ -456,6 +458,18 @@ async function saveCoinStock(coinId, newStock){
     });
     showInd('ok','SAVED');
   } catch(e) { showInd('error','SAVE FAILED'); }
+}
+
+function updateCoinCardAppearance(coinId, stock) {
+  const card = document.querySelector(`.coin-stock-card[data-id="${coinId}"]`);
+  if (!card) return;
+  const status = stock === 0 ? 'out' : stock <= 3 ? 'low' : 'ok';
+  card.className = `coin-stock-card${stock === 0 ? ' out' : stock <= 3 ? ' low' : ''}`;
+  const badge = card.querySelector('.coin-stock-badge');
+  if (badge) {
+    badge.className = `coin-stock-badge ${status}`;
+    badge.textContent = stock === 0 ? 'OUT' : stock <= 3 ? 'LOW' : 'OK';
+  }
 }
 
 async function setAllCoinStock(val){
@@ -505,7 +519,7 @@ function renderCoinSections(){
           const stock = coinStock[c.id] !== undefined ? coinStock[c.id] : 10;
           const status = stock === 0 ? 'out' : stock <= 3 ? 'low' : 'ok';
           const statusLabel = stock === 0 ? 'OUT' : stock <= 3 ? 'LOW' : 'OK';
-          return `<div class="coin-stock-card ${status === 'out' ? 'out' : status === 'low' ? 'low' : ''}">
+          return `<div class="coin-stock-card ${status === 'out' ? 'out' : status === 'low' ? 'low' : ''}" data-id="${c.id}">
             <div class="coin-stock-name">${c.name}</div>
             <div class="coin-stock-controls">
               <input type="number" class="coin-stock-input" id="ci-${c.id}"
