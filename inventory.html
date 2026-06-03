@@ -48,7 +48,42 @@
     .fbtn.active{color:var(--gold);border-color:var(--border2);}
     .mark-all-btn{font-family:var(--serif);font-size:10px;letter-spacing:0.1em;padding:6px 13px;background:transparent;color:var(--muted);border:1px solid var(--border);cursor:pointer;border-radius:4px;margin-left:auto;}
     .mark-all-btn:hover{color:var(--gold);border-color:var(--border2);}
-    .inv-section{margin-bottom:2.5rem;}
+    /* ── TABS ── */
+    .inv-tabs{display:flex;background:var(--surface2);border-bottom:1px solid var(--border2);margin-bottom:1.5rem;}
+    .inv-tab{font-family:var(--serif);font-size:11px;letter-spacing:0.15em;padding:0.85rem 1.5rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;}
+    .inv-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+    .inv-pane{display:none;}
+    .inv-pane.active{display:block;}
+
+    /* ── COIN STOCK ── */
+    .coin-theme-block{margin-bottom:2rem;}
+    .coin-theme-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;padding-bottom:6px;border-bottom:1px solid var(--border2);}
+    .coin-theme-title{font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;}
+    .coin-theme-count{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.1em;}
+    .coin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;}
+    .coin-stock-card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.7rem 0.9rem;display:flex;align-items:center;gap:10px;}
+    .coin-stock-card.low{border-left:2px solid var(--ember);}
+    .coin-stock-card.out{border-left:2px solid var(--red);opacity:0.6;}
+    .coin-stock-name{font-size:13px;color:var(--text);flex:1;font-style:italic;}
+    .coin-stock-controls{display:flex;align-items:center;gap:5px;flex-shrink:0;}
+    .coin-stock-input{
+      width:52px;background:var(--surface3);border:1px solid var(--border);
+      color:var(--text);font-family:var(--serif);font-size:14px;
+      padding:4px 6px;text-align:center;outline:none;border-radius:3px;
+    }
+    .coin-stock-input:focus{border-color:var(--border2);}
+    .coin-stock-save{
+      font-family:var(--serif);font-size:9px;letter-spacing:0.1em;
+      padding:5px 10px;background:var(--gold);color:#0d0f14;
+      border:none;cursor:pointer;border-radius:3px;white-space:nowrap;
+    }
+    .coin-stock-save:hover{background:var(--gold2);}
+    .coin-stock-badge{font-family:var(--serif);font-size:8px;letter-spacing:0.08em;flex-shrink:0;}
+    .coin-stock-badge.ok{color:var(--green);}
+    .coin-stock-badge.low{color:var(--ember);}
+    .coin-stock-badge.out{color:var(--red);}
+    .coin-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem;}
+
     .inv-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--border2);}
     .inv-section-title{font-family:var(--serif);font-size:13px;color:var(--ember);letter-spacing:0.2em;}
     .inv-section-count{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.12em;}
@@ -92,30 +127,61 @@
   <div class="dash-body">
     <div id="loading-msg" class="loading">LOADING INVENTORY...</div>
     <div id="inv-content" style="display:none;">
-      <div class="stats-row">
-        <div class="stat"><div class="stat-label">PLA BASIC IN STOCK</div><div class="stat-value ok" id="s-bi">—</div></div>
-        <div class="stat"><div class="stat-label">PLA BASIC OUT</div><div class="stat-value warn" id="s-bo">—</div></div>
-        <div class="stat"><div class="stat-label">PLA MATTE IN STOCK</div><div class="stat-value ok" id="s-mi">—</div></div>
-        <div class="stat"><div class="stat-label">PLA MATTE OUT</div><div class="stat-value warn" id="s-mo">—</div></div>
+
+      <!-- TABS -->
+      <div class="inv-tabs">
+        <button class="inv-tab active" onclick="switchInvTab('filament',this)">FILAMENT</button>
+        <button class="inv-tab" onclick="switchInvTab('coins',this)">COIN STOCK</button>
       </div>
-      <div class="toolbar">
-        <input class="inv-search" type="text" placeholder="Search colors..." oninput="filterColors(this.value)">
-        <div class="filter-btns">
-          <button class="fbtn active" onclick="setFilter('all',this)">ALL</button>
-          <button class="fbtn" onclick="setFilter('basic',this)">PLA BASIC</button>
-          <button class="fbtn" onclick="setFilter('matte',this)">PLA MATTE</button>
-          <button class="fbtn" onclick="setFilter('out',this)">OUT OF STOCK</button>
+
+      <!-- FILAMENT PANE -->
+      <div class="inv-pane active" id="pane-filament">
+        <div class="stats-row">
+          <div class="stat"><div class="stat-label">PLA BASIC IN STOCK</div><div class="stat-value ok" id="s-bi">—</div></div>
+          <div class="stat"><div class="stat-label">PLA BASIC OUT</div><div class="stat-value warn" id="s-bo">—</div></div>
+          <div class="stat"><div class="stat-label">PLA MATTE IN STOCK</div><div class="stat-value ok" id="s-mi">—</div></div>
+          <div class="stat"><div class="stat-label">PLA MATTE OUT</div><div class="stat-value warn" id="s-mo">—</div></div>
         </div>
-        <button class="mark-all-btn" onclick="markAllInStock()">MARK ALL IN STOCK</button>
+        <div class="toolbar">
+          <input class="inv-search" type="text" placeholder="Search colors..." oninput="filterColors(this.value)">
+          <div class="filter-btns">
+            <button class="fbtn active" onclick="setFilter('all',this)">ALL</button>
+            <button class="fbtn" onclick="setFilter('basic',this)">PLA BASIC</button>
+            <button class="fbtn" onclick="setFilter('matte',this)">PLA MATTE</button>
+            <button class="fbtn" onclick="setFilter('out',this)">OUT OF STOCK</button>
+          </div>
+          <button class="mark-all-btn" onclick="markAllInStock()">MARK ALL IN STOCK</button>
+        </div>
+        <div class="inv-section" id="sec-basic">
+          <div class="inv-section-head"><div class="inv-section-title">PLA BASIC — 30 COLORS</div><div class="inv-section-count" id="cnt-basic"></div></div>
+          <div class="color-grid" id="grid-basic"></div>
+        </div>
+        <div class="inv-section" id="sec-matte">
+          <div class="inv-section-head"><div class="inv-section-title">PLA MATTE — 26 COLORS</div><div class="inv-section-count" id="cnt-matte"></div></div>
+          <div class="color-grid" id="grid-matte"></div>
+        </div>
       </div>
-      <div class="inv-section" id="sec-basic">
-        <div class="inv-section-head"><div class="inv-section-title">PLA BASIC — 30 COLORS</div><div class="inv-section-count" id="cnt-basic"></div></div>
-        <div class="color-grid" id="grid-basic"></div>
+
+      <!-- COIN STOCK PANE -->
+      <div class="inv-pane" id="pane-coins">
+        <div class="coin-stats-row">
+          <div class="stat"><div class="stat-label">TOTAL COIN DESIGNS</div><div class="stat-value ok" id="cs-total">—</div></div>
+          <div class="stat"><div class="stat-label">IN STOCK</div><div class="stat-value ok" id="cs-in">—</div></div>
+          <div class="stat"><div class="stat-label">LOW STOCK (≤3)</div><div class="stat-value warn" id="cs-low">—</div></div>
+          <div class="stat"><div class="stat-label">OUT OF STOCK</div><div class="stat-value warn" id="cs-out">—</div></div>
+        </div>
+        <div class="toolbar" style="margin-bottom:1.25rem;">
+          <input class="inv-search" type="text" placeholder="Search coins..." oninput="filterCoins(this.value)" id="coin-search">
+          <div class="filter-btns">
+            <button class="fbtn active" onclick="setCoinFilter('all',this)">ALL</button>
+            <button class="fbtn" onclick="setCoinFilter('low',this)">LOW</button>
+            <button class="fbtn" onclick="setCoinFilter('out',this)">OUT</button>
+          </div>
+          <button class="mark-all-btn" onclick="setAllCoinStock(10)">SET ALL TO 10</button>
+        </div>
+        <div id="coin-sections"></div>
       </div>
-      <div class="inv-section" id="sec-matte">
-        <div class="inv-section-head"><div class="inv-section-title">PLA MATTE — 26 COLORS</div><div class="inv-section-count" id="cnt-matte"></div></div>
-        <div class="color-grid" id="grid-matte"></div>
-      </div>
+
     </div>
   </div>
 </div>
@@ -127,8 +193,8 @@
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
 const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -286,6 +352,191 @@ function showInd(type,msg){
   const el=document.getElementById('save-ind');
   el.textContent=msg; el.className=`save-ind ${type} show`;
   if(type!=='saving') setTimeout(()=>el.classList.remove('show'),2000);
+}
+
+// ── TAB SWITCHING ──
+function switchInvTab(tab, el){
+  document.querySelectorAll('.inv-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.inv-pane').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pane-'+tab).classList.add('active');
+  if(tab==='coins' && Object.keys(coinStock).length===0) loadCoinStock();
+}
+
+// ── COIN THEMES (same as shop.html) ──
+const COIN_THEMES = [
+  { id:'mythical', label:'MYTHICAL CREATURES', coins:[
+    {id:'myth-001',name:'Dragon Hoard Coin'},{id:'myth-002',name:'Phoenix Rise Coin'},
+    {id:'myth-003',name:'Griffin Crest Coin'},{id:'myth-004',name:'Kraken Deep Coin'},
+    {id:'myth-005',name:'Unicorn Grace Coin'},{id:'myth-006',name:'Basilisk Gaze Coin'},
+    {id:'myth-007',name:'Manticore Fury Coin'},{id:'myth-008',name:'Wyvern Wing Coin'},
+    {id:'myth-009',name:'Chimera Coin'},{id:'myth-010',name:'Hydra Coin'},
+  ]},
+  { id:'elemental', label:'ELEMENTAL FORCES', coins:[
+    {id:'elem-001',name:'Ember Core Coin'},{id:'elem-002',name:'Tide Pull Coin'},
+    {id:'elem-003',name:'Stone Heart Coin'},{id:'elem-004',name:'Storm Breath Coin'},
+    {id:'elem-005',name:'Frost Veil Coin'},{id:'elem-006',name:'Thunder Mark Coin'},
+    {id:'elem-007',name:'Shadow Flame Coin'},{id:'elem-008',name:'Iron Wind Coin'},
+    {id:'elem-009',name:'Void Rift Coin'},{id:'elem-010',name:'Arcane Surge Coin'},
+    {id:'elem-011',name:'Solar Flare Coin'},{id:'elem-012',name:'Lunar Tide Coin'},
+    {id:'elem-013',name:'Crystal Shard Coin'},{id:'elem-014',name:'Magma Flow Coin'},
+    {id:'elem-015',name:'Tempest Eye Coin'},
+  ]},
+  { id:'gothic', label:'UNDEAD & DARK GOTHIC', coins:[
+    {id:'goth-001',name:'Raven Watch Coin'},{id:'goth-002',name:'Coffin Seal Coin'},
+    {id:'goth-003',name:'Blood Moon Coin'},{id:'goth-004',name:'Wraith Mark Coin'},
+    {id:'goth-005',name:'Bone Crypt Coin'},{id:'goth-006',name:'Vampire Sigil Coin'},
+    {id:'goth-007',name:'Death Knell Coin'},{id:'goth-008',name:'Shadow Cross Coin'},
+    {id:'goth-009',name:'Lich Crown Coin'},{id:'goth-010',name:'Plague Bearer Coin'},
+  ]},
+  { id:'skull', label:'SKULL', coins:[
+    {id:'skul-001',name:'Warrior Skull Coin'},{id:'skul-002',name:'Pirate Skull Coin'},
+    {id:'skul-003',name:'Flaming Skull Coin'},{id:'skul-004',name:'Crystal Skull Coin'},
+    {id:'skul-005',name:'Horned Skull Coin'},{id:'skul-006',name:'Jester Skull Coin'},
+    {id:'skul-007',name:'Winged Skull Coin'},{id:'skul-008',name:'Memento Mori Coin'},
+  ]},
+  { id:'adventure', label:'FANTASY ADVENTURE & TREASURE', coins:[
+    {id:'adve-001',name:'Treasure Chest Coin'},{id:'adve-002',name:'Crossed Swords Coin'},
+    {id:'adve-003',name:'Explorer Map Coin'},{id:'adve-004',name:'Tavern Mug Coin'},
+    {id:'adve-005',name:'Compass Rose Coin'},{id:'adve-006',name:'Adventurer Pack Coin'},
+    {id:'adve-007',name:'Magic Scroll Coin'},{id:'adve-008',name:'Lantern Light Coin'},
+    {id:'adve-009',name:'Hero Shield Coin'},{id:'adve-010',name:'Quest Mark Coin'},
+  ]},
+  { id:'dragon', label:'DRAGONS', coins:[
+    {id:'drag-001',name:'Coiled Dragon Coin'},{id:'drag-002',name:'Dragon In Flight Coin'},
+    {id:'drag-003',name:'Fire Breath Coin'},{id:'drag-004',name:'Dragon Eye Coin'},
+    {id:'drag-005',name:'Dragon Hoard Coin'},{id:'drag-006',name:'Wyvern Coin'},
+    {id:'drag-007',name:'Dragon Scale Coin'},{id:'drag-008',name:'Dragon Skull Coin'},
+    {id:'drag-009',name:'Dragon Claw Coin'},{id:'drag-010',name:'Dragon Crown Coin'},
+  ]},
+  { id:'weapons', label:'WEAPONS', coins:[
+    {id:'weap-001',name:'Longsword Coin'},{id:'weap-002',name:'Battle Axe Coin'},
+    {id:'weap-003',name:'Longbow Coin'},{id:'weap-004',name:'Staff & Orb Coin'},
+    {id:'weap-005',name:'Dagger Pair Coin'},{id:'weap-006',name:'Warhammer Coin'},
+    {id:'weap-007',name:'Crossbow Coin'},{id:'weap-008',name:'Spear & Shield Coin'},
+    {id:'weap-009',name:'Scythe Coin'},{id:'weap-010',name:'Flail Coin'},
+  ]},
+];
+
+const COIN_TABLE = 'coin_inventory';
+let coinStock = {};
+let coinFilter = 'all';
+let coinSearch = '';
+
+async function loadCoinStock(){
+  showInd('saving','LOADING COINS...');
+  try {
+    const rows = await sb(`${COIN_TABLE}?select=coin_id,stock`);
+    if(rows && rows.length){
+      rows.forEach(r => coinStock[r.coin_id] = r.stock);
+    } else {
+      // Seed all coins with default stock of 10
+      const allCoins = COIN_THEMES.flatMap(t => t.coins.map(c => ({
+        coin_id: c.id, stock: 10, theme: t.label
+      })));
+      await sb(COIN_TABLE, {method:'POST', body:JSON.stringify(allCoins)});
+      allCoins.forEach(c => coinStock[c.coin_id] = 10);
+    }
+    showInd('ok','COINS LOADED');
+    renderCoinSections();
+    updateCoinStats();
+  } catch(e) {
+    showInd('error','COIN LOAD FAILED');
+    console.error(e);
+  }
+}
+
+async function saveCoinStock(coinId, newStock){
+  coinStock[coinId] = newStock;
+  updateCoinStats();
+  showInd('saving','SAVING...');
+  try {
+    await sb(`${COIN_TABLE}?coin_id=eq.${encodeURIComponent(coinId)}`, {
+      method:'PATCH', body:JSON.stringify({stock: newStock})
+    });
+    showInd('ok','SAVED');
+  } catch(e) { showInd('error','SAVE FAILED'); }
+}
+
+async function setAllCoinStock(val){
+  if(!confirm(`Set ALL coins to ${val} in stock?`)) return;
+  COIN_THEMES.forEach(t => t.coins.forEach(c => coinStock[c.id] = val));
+  renderCoinSections();
+  updateCoinStats();
+  showInd('saving','SAVING...');
+  try {
+    await sb(`${COIN_TABLE}?stock=gte.0`, {method:'PATCH', body:JSON.stringify({stock: val})});
+    showInd('ok','ALL SAVED');
+  } catch(e){ showInd('error','SAVE FAILED'); }
+}
+
+function setCoinFilter(f, el){
+  coinFilter = f;
+  document.querySelectorAll('#pane-coins .fbtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderCoinSections();
+}
+
+function filterCoins(v){ coinSearch = v.toLowerCase(); renderCoinSections(); }
+
+function renderCoinSections(){
+  const container = document.getElementById('coin-sections');
+  let html = '';
+  let totalShown = 0;
+
+  COIN_THEMES.forEach(theme => {
+    const coins = theme.coins.filter(c => {
+      const stock = coinStock[c.id] !== undefined ? coinStock[c.id] : 10;
+      if(coinFilter === 'low' && stock > 3) return false;
+      if(coinFilter === 'out' && stock !== 0) return false;
+      if(coinSearch && !c.name.toLowerCase().includes(coinSearch)) return false;
+      return true;
+    });
+    if(!coins.length) return;
+    totalShown += coins.length;
+
+    html += `<div class="coin-theme-block">
+      <div class="coin-theme-head">
+        <div class="coin-theme-title">${theme.label}</div>
+        <div class="coin-theme-count">${coins.length} SHOWN</div>
+      </div>
+      <div class="coin-grid">
+        ${coins.map(c => {
+          const stock = coinStock[c.id] !== undefined ? coinStock[c.id] : 10;
+          const status = stock === 0 ? 'out' : stock <= 3 ? 'low' : 'ok';
+          const statusLabel = stock === 0 ? 'OUT' : stock <= 3 ? 'LOW' : 'OK';
+          return `<div class="coin-stock-card ${status === 'out' ? 'out' : status === 'low' ? 'low' : ''}">
+            <div class="coin-stock-name">${c.name}</div>
+            <div class="coin-stock-controls">
+              <input type="number" class="coin-stock-input" id="ci-${c.id}"
+                value="${stock}" min="0" max="999"
+                onchange="coinStock['${c.id}']=parseInt(this.value)||0;updateCoinStats();">
+              <button class="coin-stock-save"
+                onclick="saveCoinStock('${c.id}', parseInt(document.getElementById('ci-${c.id}').value)||0)">
+                SAVE
+              </button>
+              <span class="coin-stock-badge ${status}">${statusLabel}</span>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+
+  if(!html) html = '<p style="font-style:italic;color:var(--muted);padding:2rem 0;">No coins match your filter.</p>';
+  container.innerHTML = html;
+}
+
+function updateCoinStats(){
+  const allCoins = COIN_THEMES.flatMap(t => t.coins);
+  const total = allCoins.length;
+  const out   = allCoins.filter(c => (coinStock[c.id]||10) === 0).length;
+  const low   = allCoins.filter(c => { const s=coinStock[c.id]||10; return s>0&&s<=3; }).length;
+  const inStock = total - out;
+  document.getElementById('cs-total').textContent = total;
+  document.getElementById('cs-in').textContent    = inStock;
+  document.getElementById('cs-low').textContent   = low;
+  document.getElementById('cs-out').textContent   = out;
 }
 
 if(sessionStorage.getItem(SK)==='1') loadInventory();

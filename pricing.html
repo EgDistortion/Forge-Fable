@@ -198,7 +198,50 @@
       position: absolute; top: -7px; right: -7px;
     }
     .cart-badge.show { display: flex; }
-  </style>
+  
+    /* ── CART NAV ICON ── */
+    .cart-icon-wrap {
+      position:relative;cursor:pointer;background:none;
+      border:1px solid var(--border);border-radius:var(--radius);
+      padding:7px 14px;display:flex;align-items:center;gap:8px;
+      font-family:var(--serif);font-size:11px;color:var(--muted);
+      letter-spacing:0.12em;transition:color 0.2s,border-color 0.2s;flex-shrink:0;
+    }
+    .cart-icon-wrap:hover{color:var(--gold);border-color:var(--border2);}
+    .cart-badge{display:none;background:var(--ember);color:#fff;font-family:var(--serif);font-size:9px;font-weight:700;border-radius:50%;width:18px;height:18px;align-items:center;justify-content:center;position:absolute;top:-7px;right:-7px;}
+    .cart-badge.show{display:flex;}
+    /* Cart Drawer */
+    .cart-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;}
+    .cart-overlay.open{display:block;}
+    .cart-drawer{position:fixed;top:0;right:-440px;width:420px;max-width:100vw;height:100vh;background:var(--surface);border-left:1px solid var(--border2);z-index:301;display:flex;flex-direction:column;transition:right 0.3s ease;}
+    .cart-drawer.open{right:0;}
+    .cart-head{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);flex-shrink:0;}
+    .cart-head-title{font-family:var(--serif);font-size:14px;color:var(--gold);letter-spacing:0.18em;}
+    .cart-close{font-family:var(--serif);font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;letter-spacing:0.1em;}
+    .cart-close:hover{color:var(--gold);}
+    .cart-items{flex:1;overflow-y:auto;padding:1rem 1.5rem;}
+    .cart-empty{text-align:center;padding:4rem 0;font-style:italic;color:var(--muted);font-size:16px;}
+    .cart-item{display:flex;gap:12px;padding:1rem 0;border-bottom:1px solid var(--border);align-items:flex-start;}
+    .cart-item:last-child{border-bottom:none;}
+    .cart-item-info{flex:1;}
+    .cart-item-name{font-size:15px;color:var(--text);font-style:italic;margin-bottom:3px;}
+    .cart-item-meta{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-bottom:8px;}
+    .cart-item-qty{display:flex;align-items:center;gap:8px;}
+    .qty-btn{width:24px;height:24px;background:var(--surface2);border:1px solid var(--border);color:var(--gold);font-size:14px;cursor:pointer;border-radius:3px;display:flex;align-items:center;justify-content:center;}
+    .qty-btn:hover{border-color:var(--border2);}
+    .qty-num{font-family:var(--serif);font-size:14px;color:var(--text);min-width:20px;text-align:center;}
+    .cart-item-price{font-family:var(--serif);font-size:15px;color:var(--gold2);flex-shrink:0;padding-top:2px;}
+    .cart-item-remove{font-size:12px;color:var(--muted);cursor:pointer;background:none;border:none;padding:2px 6px;border-radius:3px;}
+    .cart-item-remove:hover{color:var(--red);}
+    .cart-foot{padding:1.25rem 1.5rem;border-top:1px solid var(--border2);flex-shrink:0;background:var(--surface2);}
+    .cart-subtotal{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+    .cart-subtotal-label{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.15em;}
+    .cart-subtotal-val{font-family:var(--serif);font-size:22px;color:var(--gold2);}
+    .cart-note{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:1.25rem;line-height:1.5;}
+    .checkout-stripe{width:100%;padding:13px;font-family:var(--serif);font-size:11px;letter-spacing:0.16em;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:var(--radius);margin-bottom:8px;transition:background 0.2s;}
+    .checkout-stripe:hover{background:var(--gold2);}
+    .checkout-stripe:disabled{background:var(--surface3);color:var(--muted);cursor:not-allowed;}
+</style>
   <style id="page-map">
     html {
       background-color: #0d0f14;
@@ -225,10 +268,10 @@
       <li><a href="stl-sources.html">STL Guide</a></li>
     </ul>
     <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
-    <a href="shop.html" class="cart-icon-wrap" id="cart-nav-icon" aria-label="Cart">
+    <button class="cart-icon-wrap" onclick="openCart()" aria-label="Cart">
       🛒 CART
       <span class="cart-badge" id="cart-badge">0</span>
-    </a>
+    </button>
         <button class="nav-hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -416,19 +459,84 @@
       arrow.classList.toggle('open');
     }
   </script>
+
+  <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="ALZJ6EDJLKNUL"></script>
   <script>
-    // ── CART BADGE UPDATE (all pages) ──
-    (function() {
+    const STRIPE_KEY = 'pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
+    let cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
+
+    function saveCart(){ localStorage.setItem('ff_cart', JSON.stringify(cart)); }
+
+    function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); saveCart(); renderCartDrawer(); updateBadge(); }
+    function changeQty(id,delta){ const item=cart.find(i=>i.id===id); if(!item) return; item.qty=Math.max(0,item.qty+delta); if(item.qty===0) cart=cart.filter(i=>i.id!==id); saveCart(); renderCartDrawer(); updateBadge(); }
+
+    function updateBadge(){
+      const total=cart.reduce((s,i)=>s+i.qty,0);
+      const badge=document.getElementById('cart-badge');
+      if(badge){badge.textContent=total;badge.classList.toggle('show',total>0);}
+    }
+
+    function renderCartDrawer(){
+      const container=document.getElementById('cart-items');
+      const foot=document.getElementById('cart-foot');
+      if(!container) return;
+      if(cart.length===0){
+        container.innerHTML='<div class="cart-empty">Your cart is empty — <a href="shop.html" style="color:var(--gold);">browse the shop</a> to add items.</div>';
+        if(foot) foot.style.display='none';
+        return;
+      }
+      if(foot) foot.style.display='block';
+      let total=0;
+      container.innerHTML=cart.map(item=>{
+        const line=item.price*item.qty; total+=line;
+        return `<div class="cart-item">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-meta">${item.theme} · $${item.price.toFixed(2)} each</div>
+            <div class="cart-item-qty">
+              <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+              <span class="qty-num">${item.qty}</span>
+              <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+              <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</button>
+            </div>
+          </div>
+          <div class="cart-item-price">$${line.toFixed(2)}</div>
+        </div>`;
+      }).join('');
+      const totalEl=document.getElementById('cart-total');
+      if(totalEl) totalEl.textContent='$'+total.toFixed(2);
+    }
+
+    function openCart(){
+      document.getElementById('cart-overlay').classList.add('open');
+      document.getElementById('cart-drawer').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+    function closeCart(){
+      document.getElementById('cart-overlay').classList.remove('open');
+      document.getElementById('cart-drawer').classList.remove('open');
+      document.body.style.overflow='';
+    }
+
+    async function checkoutStripe(){
+      if(!cart.length) return;
+      const btn=document.getElementById('stripe-btn');
+      btn.textContent='PREPARING...'; btn.disabled=true;
       try {
-        const cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
-        const total = cart.reduce((s, i) => s + (i.qty || 0), 0);
-        const badge = document.getElementById('cart-badge');
-        if (badge && total > 0) {
-          badge.textContent = total;
-          badge.classList.add('show');
-        }
-      } catch(e) {}
-    })();
+        const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart})});
+        const data=await res.json();
+        if(data.url){ window.location.href=data.url; }
+        else throw new Error(data.error||'No URL');
+      } catch(err){
+        btn.textContent='💳 CHECKOUT WITH CARD'; btn.disabled=false;
+        alert('Checkout failed — please try PayPal or try again.');
+      }
+    }
+
+    // Init
+    updateBadge();
+    renderCartDrawer();
   </script>
+
 </body>
 </html>
