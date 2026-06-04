@@ -4,45 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shop — The Forge &amp; Fable</title>
-  <meta name="description" content="Ready-to-order 3D printed coin props from The Forge & Fable. Browse 200+ coin designs across 7 themes.">
   <link rel="stylesheet" href="style.css">
-  <!-- PayPal Cart Integration -->
   <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="ALZJ6EDJLKNUL"></script>
   <style>
-    /* ════════════════════════════════════════
-       PRICE CONFIG — change here only
-    ════════════════════════════════════════ */
-    :root {
-      --coin-price: 3;   /* $ per individual coin */
-      --set-price: 20;   /* $ per full set        */
-    }
+    /* ════════════════════════════
+       PRICE CONFIG
+    ════════════════════════════ */
+    /* Change COIN_PRICE and SET_PRICE in the JS below */
 
     /* ── CART ICON ── */
-    .cart-icon-wrap {
-      position:relative;cursor:pointer;background:none;
-      border:1px solid var(--border);border-radius:var(--radius);
-      padding:7px 14px;display:flex;align-items:center;gap:8px;
-      font-family:var(--serif);font-size:11px;color:var(--muted);
-      letter-spacing:0.12em;transition:color 0.2s,border-color 0.2s;flex-shrink:0;
-    }
+    .cart-icon-wrap{position:relative;cursor:pointer;background:none;border:1px solid var(--border);border-radius:var(--radius);padding:7px 14px;display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.12em;transition:color 0.2s,border-color 0.2s;flex-shrink:0;}
     .cart-icon-wrap:hover{color:var(--gold);border-color:var(--border2);}
-    .cart-badge{
-      display:none;background:var(--ember);color:#fff;
-      font-family:var(--serif);font-size:9px;font-weight:700;
-      border-radius:50%;width:18px;height:18px;
-      align-items:center;justify-content:center;
-      position:absolute;top:-7px;right:-7px;
-    }
+    .cart-badge{display:none;background:var(--ember);color:#fff;font-family:var(--serif);font-size:9px;font-weight:700;border-radius:50%;width:18px;height:18px;align-items:center;justify-content:center;position:absolute;top:-7px;right:-7px;}
     .cart-badge.show{display:flex;}
 
     /* ── CART DRAWER ── */
     .cart-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;}
     .cart-overlay.open{display:block;}
-    .cart-drawer{
-      position:fixed;top:0;right:-440px;width:420px;max-width:100vw;
-      height:100vh;background:var(--surface);border-left:1px solid var(--border2);
-      z-index:301;display:flex;flex-direction:column;transition:right 0.3s ease;
-    }
+    .cart-drawer{position:fixed;top:0;right:-440px;width:420px;max-width:100vw;height:100vh;background:var(--surface);border-left:1px solid var(--border2);z-index:301;display:flex;flex-direction:column;transition:right 0.3s ease;}
     .cart-drawer.open{right:0;}
     .cart-head{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);flex-shrink:0;}
     .cart-head-title{font-family:var(--serif);font-size:14px;color:var(--gold);letter-spacing:0.18em;}
@@ -71,102 +50,105 @@
     .checkout-stripe:hover{background:var(--gold2);}
     .checkout-stripe:disabled{background:var(--surface3);color:var(--muted);cursor:not-allowed;}
 
-    /* ── FILTER BAR ── */
-    .filter-bar{padding:1.5rem 0;border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-    .filter-label{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.18em;margin-right:4px;}
-    .filter-btn{font-family:var(--serif);font-size:11px;letter-spacing:0.12em;padding:7px 15px;background:transparent;color:var(--muted);border:1px solid var(--border);cursor:pointer;border-radius:var(--radius);transition:color 0.2s,border-color 0.2s;}
-    .filter-btn:hover,.filter-btn.active{color:var(--gold);border-color:var(--border2);}
+    /* ── SHOP VIEWS ── */
+    .shop-view{display:none;}
+    .shop-view.active{display:block;}
 
-    /* ── THEME SECTION ── */
-    .theme-section{margin-bottom:3rem;}
-    .theme-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:8px;border-bottom:1px solid var(--border2);}
-    .theme-title{font-family:var(--serif);font-size:14px;color:var(--ember);letter-spacing:0.2em;}
-    .theme-count{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.1em;}
+    /* ── VIEW 1: CATEGORY LANDING ── */
+    .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;padding:2.5rem 0;}
+    .cat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color 0.2s,transform 0.2s;}
+    .cat-card:hover{border-color:var(--border2);transform:translateY(-3px);}
+    .cat-card-img{height:160px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:52px;border-bottom:1px solid var(--border);position:relative;}
+    .cat-card-coming{position:absolute;top:10px;right:10px;font-family:var(--serif);font-size:9px;letter-spacing:0.12em;color:var(--muted);background:rgba(13,15,20,0.8);border:1px solid var(--border);padding:3px 8px;border-radius:var(--radius);}
+    .cat-card-body{padding:1.25rem;}
+    .cat-card-name{font-family:var(--serif);font-size:15px;color:var(--gold);letter-spacing:0.1em;margin-bottom:5px;}
+    .cat-card-desc{font-size:15px;color:var(--muted);font-style:italic;line-height:1.6;margin-bottom:12px;}
+    .cat-card-count{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.12em;}
+    .cat-card-link{font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.12em;margin-top:10px;}
+    .cat-card.disabled{opacity:0.55;cursor:default;}
+    .cat-card.disabled:hover{transform:none;border-color:var(--border);}
 
-    /* ── CAROUSEL ── */
-    .carousel-wrap{position:relative;}
-    .carousel-track-outer{overflow:hidden;border-radius:var(--radius);}
-    .carousel-track{display:flex;gap:14px;transition:transform 0.35s ease;will-change:transform;}
-    .carousel-btn{
-      position:absolute;top:50%;transform:translateY(-50%);
-      width:36px;height:36px;background:var(--surface);border:1px solid var(--border2);
-      color:var(--gold);font-size:16px;cursor:pointer;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;z-index:2;
-      transition:background 0.2s;flex-shrink:0;
-    }
-    .carousel-btn:hover{background:var(--surface2);}
-    .carousel-btn.prev{left:-18px;}
-    .carousel-btn.next{right:-18px;}
-    .carousel-btn:disabled{opacity:0.3;cursor:not-allowed;}
+    /* ── VIEW 2: COINS with sidebar ── */
+    .coins-layout{display:grid;grid-template-columns:200px 1fr;gap:0;min-height:60vh;}
+    .coins-sidebar{border-right:1px solid var(--border2);padding:1.5rem 0;}
+    .coins-sidebar-title{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.2em;padding:0 1.25rem 0.75rem;border-bottom:1px solid var(--border);margin-bottom:0.5rem;}
+    .sb-theme{font-family:var(--serif);font-size:11px;padding:8px 1.25rem;color:var(--muted);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:color 0.15s,background 0.15s;letter-spacing:0.08em;}
+    .sb-theme:hover{color:var(--gold);background:rgba(201,168,76,0.04);}
+    .sb-theme.active{color:var(--gold);background:rgba(201,168,76,0.06);border-left:2px solid var(--gold);}
+    .sb-theme .sb-cnt{font-size:10px;color:var(--muted);}
+    .sb-divider{border:none;border-top:1px solid var(--border);margin:0.75rem 1.25rem;}
+    .sb-all{font-family:var(--serif);font-size:11px;padding:8px 1.25rem;color:var(--muted);cursor:pointer;letter-spacing:0.08em;}
+    .sb-all:hover{color:var(--gold);}
+
+    .coins-content{padding:1.5rem 2rem;}
+    .coins-content-title{font-family:var(--serif);font-size:13px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;}
+    .back-btn{font-family:var(--serif);font-size:10px;color:var(--muted);background:none;border:1px solid var(--border);padding:5px 12px;border-radius:var(--radius);cursor:pointer;letter-spacing:0.1em;}
+    .back-btn:hover{color:var(--gold);border-color:var(--border2);}
+
+    /* ── COIN GRID ── */
+    .coin-grid-display{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;}
 
     /* ── COIN CARD ── */
-    .coin-card{
-      flex:0 0 220px;background:var(--surface);border:1px solid var(--border);
-      border-radius:var(--radius);overflow:hidden;transition:border-color 0.2s,transform 0.2s;
-      display:flex;flex-direction:column;
-    }
+    .coin-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color 0.2s,transform 0.2s;display:flex;flex-direction:column;}
     .coin-card:hover{border-color:var(--border2);transform:translateY(-2px);}
     .coin-card.out-of-stock{opacity:0.55;}
     .coin-card.low-stock{border-left:3px solid var(--ember);}
-
-    .coin-img{
-      height:180px;background:var(--surface2);
-      display:flex;align-items:center;justify-content:center;
-      border-bottom:1px solid var(--border);position:relative;overflow:hidden;
-    }
+    .coin-img{height:170px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;cursor:pointer;}
     .coin-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;}
-    .coin-card:hover .coin-img img{transform:scale(1.04);}
-    .coin-placeholder{opacity:0.15;font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.12em;text-align:center;padding:1rem;}
-
-    /* Stock badge on image */
-    .stock-badge{
-      position:absolute;top:8px;right:8px;
-      font-family:var(--serif);font-size:9px;letter-spacing:0.1em;
-      padding:3px 8px;border-radius:var(--radius);
-      background:rgba(13,15,20,0.88);border:1px solid;
-    }
+    .coin-card:hover .coin-img img{transform:scale(1.06);}
+    .coin-img-placeholder{opacity:0.15;font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.12em;text-align:center;padding:1rem;cursor:pointer;}
+    .coin-zoom-hint{position:absolute;bottom:8px;right:8px;background:rgba(13,15,20,0.75);border:1px solid var(--border);border-radius:var(--radius);padding:3px 8px;font-family:var(--serif);font-size:8px;color:var(--muted);letter-spacing:0.1em;opacity:0;transition:opacity 0.2s;}
+    .coin-img:hover .coin-zoom-hint{opacity:1;}
+    .stock-badge{position:absolute;top:8px;right:8px;font-family:var(--serif);font-size:9px;letter-spacing:0.1em;padding:3px 8px;border-radius:var(--radius);background:rgba(13,15,20,0.88);border:1px solid;}
     .stock-badge.in-stock{border-color:rgba(74,158,107,0.4);color:#6abf89;}
     .stock-badge.low{border-color:rgba(212,84,26,0.5);color:var(--ember2);}
     .stock-badge.out{border-color:rgba(184,64,64,0.5);color:var(--red);}
-
-    .coin-info{padding:0.9rem 1rem;flex:1;display:flex;flex-direction:column;}
+    .coin-card.out-of-stock .coin-img::after{content:'OUT OF STOCK';position:absolute;inset:0;background:rgba(13,15,20,0.6);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:11px;color:var(--red);letter-spacing:0.18em;}
+    .coin-info{padding:0.85rem 1rem;flex:1;display:flex;flex-direction:column;}
     .coin-name{font-size:14px;color:var(--text);font-style:italic;margin-bottom:4px;}
     .coin-material{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px;}
     .coin-footer{display:flex;justify-content:space-between;align-items:center;margin-top:auto;}
     .coin-price{font-family:var(--serif);font-size:16px;color:var(--gold2);}
-    .coin-add-btn{
-      font-family:var(--serif);font-size:9px;letter-spacing:0.1em;
-      padding:6px 12px;background:var(--gold);color:#0d0f14;
-      border:none;cursor:pointer;border-radius:var(--radius);transition:background 0.2s;
-    }
+    .coin-add-btn{font-family:var(--serif);font-size:9px;letter-spacing:0.1em;padding:6px 12px;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:var(--radius);transition:background 0.2s;}
     .coin-add-btn:hover{background:var(--gold2);}
     .coin-add-btn.added{background:var(--green);color:#fff;}
     .coin-add-btn:disabled{background:var(--surface3);color:var(--muted);cursor:not-allowed;}
 
-    /* Out of stock overlay */
-    .coin-card.out-of-stock .coin-img::after{
-      content:'OUT OF STOCK';
-      position:absolute;inset:0;
-      background:rgba(13,15,20,0.6);
-      display:flex;align-items:center;justify-content:center;
-      font-family:var(--serif);font-size:11px;color:var(--red);
-      letter-spacing:0.18em;
-    }
+    /* ── LIGHTBOX ── */
+    .lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:400;align-items:center;justify-content:center;padding:2rem;}
+    .lightbox-overlay.open{display:flex;}
+    .lightbox{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);max-width:680px;width:100%;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;position:relative;max-height:90vh;}
+    .lightbox-img{background:var(--surface2);display:flex;align-items:center;justify-content:center;min-height:360px;}
+    .lightbox-img img{width:100%;height:100%;object-fit:cover;}
+    .lightbox-img-placeholder{opacity:0.2;font-family:var(--serif);font-size:12px;color:var(--gold);letter-spacing:0.15em;text-align:center;padding:2rem;}
+    .lightbox-body{padding:2rem;display:flex;flex-direction:column;overflow-y:auto;}
+    .lightbox-close{position:absolute;top:12px;right:14px;font-family:var(--serif);font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;letter-spacing:0.1em;z-index:1;}
+    .lightbox-close:hover{color:var(--gold);}
+    .lightbox-theme{font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.2em;margin-bottom:8px;}
+    .lightbox-name{font-family:var(--serif);font-size:20px;color:var(--text);letter-spacing:0.06em;margin-bottom:8px;}
+    .lightbox-desc{font-size:15px;color:var(--muted);font-style:italic;line-height:1.7;margin-bottom:1.25rem;flex:1;}
+    .lightbox-material{margin-bottom:1.25rem;}
+    .lightbox-opt-label{font-family:var(--serif);font-size:10px;color:var(--soft);letter-spacing:0.15em;margin-bottom:8px;}
+    .lightbox-opts{display:flex;gap:8px;flex-wrap:wrap;}
+    .lightbox-opt{font-family:var(--serif);font-size:10px;letter-spacing:0.1em;padding:6px 14px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);cursor:pointer;border-radius:var(--radius);transition:all 0.15s;}
+    .lightbox-opt:hover,.lightbox-opt.sel{color:var(--gold);border-color:var(--border2);background:var(--surface3);}
+    .lightbox-price{font-family:var(--serif);font-size:26px;color:var(--gold2);margin-bottom:1.25rem;}
+    .lightbox-add-btn{width:100%;padding:13px;font-family:var(--serif);font-size:11px;letter-spacing:0.16em;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:var(--radius);transition:background 0.2s;}
+    .lightbox-add-btn:hover{background:var(--gold2);}
+    .lightbox-add-btn:disabled{background:var(--surface3);color:var(--muted);cursor:not-allowed;}
+    .lightbox-add-btn.added{background:var(--green);color:#fff;}
+    .lightbox-stock{font-family:var(--serif);font-size:10px;letter-spacing:0.12em;text-align:center;margin-top:8px;}
+    .lightbox-stock.ok{color:var(--green);}
+    .lightbox-stock.low{color:var(--ember);}
+    .lightbox-stock.out{color:var(--red);}
 
-    /* ── SHOP INTRO ── */
-    .shop-intro{background:rgba(201,168,76,0.04);border-bottom:1px solid var(--border);padding:2rem 0;}
-    .shop-intro-inner{display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap;}
-    .shop-intro p{font-size:17px;font-style:italic;color:var(--muted);line-height:1.75;max-width:560px;}
-    .shop-intro-stats{display:flex;gap:2rem;flex-shrink:0;}
-    .shop-stat{text-align:center;}
-    .shop-stat-val{font-family:var(--serif);font-size:28px;color:var(--gold2);}
-    .shop-stat-label{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.18em;margin-top:2px;}
-
-    @media(max-width:600px){
-      .carousel-btn.prev{left:-12px;}
-      .carousel-btn.next{right:-12px;}
-      .coin-card{flex:0 0 180px;}
-      .coin-img{height:150px;}
+    @media(max-width:700px){
+      .coins-layout{grid-template-columns:1fr;}
+      .coins-sidebar{border-right:none;border-bottom:1px solid var(--border);padding:1rem 0;}
+      .coins-content{padding:1rem;}
+      .lightbox{grid-template-columns:1fr;}
+      .lightbox-img{min-height:220px;}
+      .coin-grid-display{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
     }
   </style>
   <style id="page-map">
@@ -196,15 +178,14 @@
     </ul>
     <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
     <button class="cart-icon-wrap" onclick="openCart()" aria-label="Cart">
-      🛒 CART
-      <span class="cart-badge" id="cart-badge">0</span>
+      🛒 CART <span class="cart-badge" id="cart-badge">0</span>
     </button>
     <button class="nav-hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- ── CART DRAWER ── -->
+  <!-- CART DRAWER -->
   <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
   <div class="cart-drawer" id="cart-drawer">
     <div class="cart-head">
@@ -212,60 +193,133 @@
       <button class="cart-close" onclick="closeCart()">✕ CLOSE</button>
     </div>
     <div class="cart-items" id="cart-items">
-      <div class="cart-empty">Your cart is empty — browse the shop and add some coins.</div>
+      <div class="cart-empty">Your cart is empty — browse the shop to add items.</div>
     </div>
     <div class="cart-foot" id="cart-foot" style="display:none;">
       <div class="cart-subtotal">
         <span class="cart-subtotal-label">TOTAL</span>
         <span class="cart-subtotal-val" id="cart-total">$0.00</span>
       </div>
-      <p class="cart-note">We'll confirm your order by email within 24 hours. No payment until you approve.</p>
+      <p class="cart-note">We'll confirm your order within 24 hours. No payment until you approve.</p>
       <button class="checkout-stripe" id="stripe-btn" onclick="checkoutStripe()">💳 CHECKOUT WITH CARD</button>
       <div id="paypal-cart-button-container" style="margin-top:8px;"></div>
     </div>
   </div>
 
-  <div class="page-hero">
-    <div class="page-hero-inner">
-      <div class="section-tag">Ready to Order</div>
-      <h1>The Shop</h1>
-      <p>No STL needed — browse over 200 coin designs across 7 themes. Pick your coins, add to cart, and check out.</p>
-    </div>
-  </div>
-
-  <div class="shop-intro">
-    <div class="container">
-      <div class="shop-intro-inner">
-        <p>Every coin is available in resin for ultra-fine detail or PLA for a more durable finish. Mix and match across themes — your cart holds it all.</p>
-        <div class="shop-intro-stats">
-          <div class="shop-stat"><div class="shop-stat-val">200+</div><div class="shop-stat-label">COIN DESIGNS</div></div>
-          <div class="shop-stat"><div class="shop-stat-val">7</div><div class="shop-stat-label">THEMES</div></div>
-          <div class="shop-stat"><div class="shop-stat-val">~3-5d</div><div class="shop-stat-label">TURNAROUND</div></div>
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightbox-overlay" onclick="handleLightboxOverlay(event)">
+    <div class="lightbox" id="lightbox">
+      <button class="lightbox-close" onclick="closeLightbox()">✕ CLOSE</button>
+      <div class="lightbox-img" id="lb-img">
+        <div class="lightbox-img-placeholder">YOUR PHOTO HERE</div>
+      </div>
+      <div class="lightbox-body">
+        <div class="lightbox-theme" id="lb-theme"></div>
+        <div class="lightbox-name" id="lb-name"></div>
+        <div class="lightbox-desc" id="lb-desc"></div>
+        <div class="lightbox-material">
+          <div class="lightbox-opt-label">MATERIAL</div>
+          <div class="lightbox-opts">
+            <button class="lightbox-opt sel" onclick="selectLbOpt(this,'mat')">Resin — fine detail</button>
+            <button class="lightbox-opt" onclick="selectLbOpt(this,'mat')">PLA — durable</button>
+          </div>
         </div>
+        <div class="lightbox-price" id="lb-price"></div>
+        <button class="lightbox-add-btn" id="lb-add-btn" onclick="addFromLightbox()">+ ADD TO CART</button>
+        <div class="lightbox-stock" id="lb-stock"></div>
       </div>
     </div>
   </div>
 
-  <div class="container" style="padding-top:2.5rem;padding-bottom:4rem;">
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="section-tag" id="shop-breadcrumb">The Shop</div>
+      <h1 id="shop-hero-title">Browse Our Catalog</h1>
+      <p id="shop-hero-desc">No STL needed — everything here is ready to print and ship. Pick a category to get started.</p>
+    </div>
+  </div>
 
-    <div class="filter-bar">
-      <span class="filter-label">SHOW:</span>
-      <button class="filter-btn active" onclick="setFilter('all',this)">ALL THEMES</button>
-      <button class="filter-btn" onclick="setFilter('mythical',this)">MYTHICAL</button>
-      <button class="filter-btn" onclick="setFilter('elemental',this)">ELEMENTAL</button>
-      <button class="filter-btn" onclick="setFilter('gothic',this)">GOTHIC</button>
-      <button class="filter-btn" onclick="setFilter('skull',this)">SKULL</button>
-      <button class="filter-btn" onclick="setFilter('adventure',this)">ADVENTURE</button>
-      <button class="filter-btn" onclick="setFilter('dragon',this)">DRAGONS</button>
-      <button class="filter-btn" onclick="setFilter('weapons',this)">WEAPONS</button>
+  <div class="container" style="padding-bottom:4rem;">
+
+    <!-- VIEW 1: CATEGORY LANDING -->
+    <div class="shop-view active" id="view-categories">
+      <div class="cat-grid">
+        <div class="cat-card" onclick="goToCoins()">
+          <div class="cat-card-img">🪙</div>
+          <div class="cat-card-body">
+            <div class="cat-card-name">COIN PROPS</div>
+            <div class="cat-card-desc">Over 200 designs across 7 themes — mythical creatures, dragons, elemental forces, skulls, weapons and more.</div>
+            <div class="cat-card-count">7 THEMES · 70+ DESIGNS</div>
+            <div class="cat-card-link">BROWSE COINS →</div>
+          </div>
+        </div>
+        <div class="cat-card disabled">
+          <div class="cat-card-img">🏔️<div class="cat-card-coming">COMING SOON</div></div>
+          <div class="cat-card-body">
+            <div class="cat-card-name">TERRAIN &amp; SCENERY</div>
+            <div class="cat-card-desc">Dungeon tiles, scatter terrain, modular builds — available in multicolor PLA. Check back soon.</div>
+            <div class="cat-card-count">COMING SOON</div>
+          </div>
+        </div>
+        <div class="cat-card disabled">
+          <div class="cat-card-img">⚔️<div class="cat-card-coming">COMING SOON</div></div>
+          <div class="cat-card-body">
+            <div class="cat-card-name">DISPLAY MINIS</div>
+            <div class="cat-card-desc">High-detail resin miniatures for display and gaming — heroes, monsters, busts. Coming soon.</div>
+            <div class="cat-card-count">COMING SOON</div>
+          </div>
+        </div>
+        <div class="cat-card disabled">
+          <div class="cat-card-img">🎭<div class="cat-card-coming">COMING SOON</div></div>
+          <div class="cat-card-body">
+            <div class="cat-card-name">PROPS &amp; ACCESSORIES</div>
+            <div class="cat-card-desc">Cosplay props, display pieces, decorative items. Expanding catalogue — check back soon.</div>
+            <div class="cat-card-count">COMING SOON</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="window.location='order.html'">
+          <div class="cat-card-img">🛠️</div>
+          <div class="cat-card-body">
+            <div class="cat-card-name">CUSTOM PRINT</div>
+            <div class="cat-card-desc">Have your own STL or need something specific? We print anything — minis, props, functional parts, cosplay pieces.</div>
+            <div class="cat-card-count">REQUEST A QUOTE</div>
+            <div class="cat-card-link">GET A QUOTE →</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div id="shop-content"></div>
+    <!-- VIEW 2: COINS with sidebar -->
+    <div class="shop-view" id="view-coins">
+      <div style="padding:1.5rem 0 0.5rem;display:flex;align-items:center;gap:12px;">
+        <button class="back-btn" onclick="goToCategories()">← ALL CATEGORIES</button>
+      </div>
+      <div class="coins-layout">
+
+        <!-- SIDEBAR -->
+        <div class="coins-sidebar">
+          <div class="coins-sidebar-title">COIN THEMES</div>
+          <div id="sidebar-themes"></div>
+          <hr class="sb-divider">
+          <div class="sb-all" onclick="showAllCoins()">SHOW ALL THEMES</div>
+        </div>
+
+        <!-- COIN CONTENT -->
+        <div class="coins-content">
+          <div class="coins-content-title">
+            <span id="coins-section-title">ALL COINS</span>
+            <span id="coins-section-count" style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.1em;"></span>
+          </div>
+          <div class="coin-grid-display" id="coin-grid-display"></div>
+        </div>
+
+      </div>
+    </div>
 
   </div>
 
   <div style="text-align:center;padding:0 0 3rem;">
-    <p style="font-size:17px;font-style:italic;color:var(--muted);margin-bottom:1.5rem;">Need something custom? Send your own STL or describe your vision.</p>
+    <p style="font-size:17px;font-style:italic;color:var(--muted);margin-bottom:1.5rem;">Need something not in the shop? We print anything.</p>
     <a href="order.html" class="btn-primary">REQUEST A CUSTOM PRINT</a>
   </div>
 
@@ -283,498 +337,425 @@
 
   <script>
   // ════════════════════════════════════════════════════════════
-  //  PRICE CONFIG — change these two numbers only
+  //  PRICE CONFIG
   // ════════════════════════════════════════════════════════════
-  const COIN_PRICE = 3;   // $ per individual coin
-  const SET_PRICE  = 20;  // $ per full set
+  const COIN_PRICE = 3;
+  const SET_PRICE  = 20;
 
   // ════════════════════════════════════════════════════════════
-  //  SUPABASE CONFIG — same as inventory.html
+  //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
-  //  Add coins here. Each theme has an array of coins.
-  //  For photos: add images to images/shop/ and set img: 'filename.jpg'
-  //  Leave img: null for placeholder until you have photos.
-  //  stock is loaded live from Supabase — default is 10 if not set.
   // ════════════════════════════════════════════════════════════
   const THEMES = [
-    {
-      id: 'mythical', label: 'MYTHICAL CREATURES',
-      coins: [
-        { id:'myth-001', name:'Dragon Hoard Coin',      img:null },
-        { id:'myth-002', name:'Phoenix Rise Coin',      img:null },
-        { id:'myth-003', name:'Griffin Crest Coin',     img:null },
-        { id:'myth-004', name:'Kraken Deep Coin',       img:null },
-        { id:'myth-005', name:'Unicorn Grace Coin',     img:null },
-        { id:'myth-006', name:'Basilisk Gaze Coin',     img:null },
-        { id:'myth-007', name:'Manticore Fury Coin',    img:null },
-        { id:'myth-008', name:'Wyvern Wing Coin',       img:null },
-        { id:'myth-009', name:'Chimera Coin',           img:null },
-        { id:'myth-010', name:'Hydra Coin',             img:null },
-      ]
-    },
-    {
-      id: 'elemental', label: 'ELEMENTAL FORCES',
-      coins: [
-        { id:'elem-001', name:'Ember Core Coin',        img:null },
-        { id:'elem-002', name:'Tide Pull Coin',         img:null },
-        { id:'elem-003', name:'Stone Heart Coin',       img:null },
-        { id:'elem-004', name:'Storm Breath Coin',      img:null },
-        { id:'elem-005', name:'Frost Veil Coin',        img:null },
-        { id:'elem-006', name:'Thunder Mark Coin',      img:null },
-        { id:'elem-007', name:'Shadow Flame Coin',      img:null },
-        { id:'elem-008', name:'Iron Wind Coin',         img:null },
-        { id:'elem-009', name:'Void Rift Coin',         img:null },
-        { id:'elem-010', name:'Arcane Surge Coin',      img:null },
-        { id:'elem-011', name:'Solar Flare Coin',       img:null },
-        { id:'elem-012', name:'Lunar Tide Coin',        img:null },
-        { id:'elem-013', name:'Crystal Shard Coin',     img:null },
-        { id:'elem-014', name:'Magma Flow Coin',        img:null },
-        { id:'elem-015', name:'Tempest Eye Coin',       img:null },
-      ]
-    },
-    {
-      id: 'gothic', label: 'UNDEAD & DARK GOTHIC',
-      coins: [
-        { id:'goth-001', name:'Raven Watch Coin',       img:null },
-        { id:'goth-002', name:'Coffin Seal Coin',       img:null },
-        { id:'goth-003', name:'Blood Moon Coin',        img:null },
-        { id:'goth-004', name:'Wraith Mark Coin',       img:null },
-        { id:'goth-005', name:'Bone Crypt Coin',        img:null },
-        { id:'goth-006', name:'Vampire Sigil Coin',     img:null },
-        { id:'goth-007', name:'Death Knell Coin',       img:null },
-        { id:'goth-008', name:'Shadow Cross Coin',      img:null },
-        { id:'goth-009', name:'Lich Crown Coin',        img:null },
-        { id:'goth-010', name:'Plague Bearer Coin',     img:null },
-      ]
-    },
-    {
-      id: 'skull', label: 'SKULL',
-      coins: [
-        { id:'skul-001', name:'Warrior Skull Coin',     img:null },
-        { id:'skul-002', name:'Pirate Skull Coin',      img:null },
-        { id:'skul-003', name:'Flaming Skull Coin',     img:null },
-        { id:'skul-004', name:'Crystal Skull Coin',     img:null },
-        { id:'skul-005', name:'Horned Skull Coin',      img:null },
-        { id:'skul-006', name:'Jester Skull Coin',      img:null },
-        { id:'skul-007', name:'Winged Skull Coin',      img:null },
-        { id:'skul-008', name:'Memento Mori Coin',      img:null },
-      ]
-    },
-    {
-      id: 'adventure', label: 'FANTASY ADVENTURE & TREASURE',
-      coins: [
-        { id:'adve-001', name:'Treasure Chest Coin',    img:null },
-        { id:'adve-002', name:'Crossed Swords Coin',    img:null },
-        { id:'adve-003', name:'Explorer Map Coin',      img:null },
-        { id:'adve-004', name:'Tavern Mug Coin',        img:null },
-        { id:'adve-005', name:'Compass Rose Coin',      img:null },
-        { id:'adve-006', name:'Adventurer Pack Coin',   img:null },
-        { id:'adve-007', name:'Magic Scroll Coin',      img:null },
-        { id:'adve-008', name:'Lantern Light Coin',     img:null },
-        { id:'adve-009', name:'Hero Shield Coin',       img:null },
-        { id:'adve-010', name:'Quest Mark Coin',        img:null },
-      ]
-    },
-    {
-      id: 'dragon', label: 'DRAGONS',
-      coins: [
-        { id:'drag-001', name:'Coiled Dragon Coin',     img:null },
-        { id:'drag-002', name:'Dragon In Flight Coin',  img:null },
-        { id:'drag-003', name:'Fire Breath Coin',       img:null },
-        { id:'drag-004', name:'Dragon Eye Coin',        img:null },
-        { id:'drag-005', name:'Dragon Hoard Coin',      img:null },
-        { id:'drag-006', name:'Wyvern Coin',            img:null },
-        { id:'drag-007', name:'Dragon Scale Coin',      img:null },
-        { id:'drag-008', name:'Dragon Skull Coin',      img:null },
-        { id:'drag-009', name:'Dragon Claw Coin',       img:null },
-        { id:'drag-010', name:'Dragon Crown Coin',      img:null },
-      ]
-    },
-    {
-      id: 'weapons', label: 'WEAPONS',
-      coins: [
-        { id:'weap-001', name:'Longsword Coin',         img:null },
-        { id:'weap-002', name:'Battle Axe Coin',        img:null },
-        { id:'weap-003', name:'Longbow Coin',           img:null },
-        { id:'weap-004', name:'Staff & Orb Coin',       img:null },
-        { id:'weap-005', name:'Dagger Pair Coin',       img:null },
-        { id:'weap-006', name:'Warhammer Coin',         img:null },
-        { id:'weap-007', name:'Crossbow Coin',          img:null },
-        { id:'weap-008', name:'Spear & Shield Coin',    img:null },
-        { id:'weap-009', name:'Scythe Coin',            img:null },
-        { id:'weap-010', name:'Flail Coin',             img:null },
-      ]
-    },
+    { id:'mythical', label:'MYTHICAL CREATURES', coins:[
+      {id:'myth-001',name:'Dragon Hoard Coin',desc:'A richly detailed coin bearing a fearsome dragon coiled around a glittering hoard.',img:null},
+      {id:'myth-002',name:'Phoenix Rise Coin',desc:'A phoenix erupting from flames, wings spread wide — symbol of rebirth and fire.',img:null},
+      {id:'myth-003',name:'Griffin Crest Coin',desc:'The noble griffin in profile, part eagle part lion, rendered in bold relief.',img:null},
+      {id:'myth-004',name:'Kraken Deep Coin',desc:'Tentacles rising from dark water — the terror of the deep seas immortalized in metal.',img:null},
+      {id:'myth-005',name:'Unicorn Grace Coin',desc:'A rearing unicorn, its horn glowing with arcane power. Rare and collectible.',img:null},
+      {id:'myth-006',name:'Basilisk Gaze Coin',desc:'The deadly basilisk stares from the face of this coin — handle with caution.',img:null},
+      {id:'myth-007',name:'Manticore Fury Coin',desc:'Lion body, bat wings, scorpion tail — the manticore in full fury.',img:null},
+      {id:'myth-008',name:'Wyvern Wing Coin',desc:'A wyvern in flight, wings filling the coin face with menacing scale detail.',img:null},
+      {id:'myth-009',name:'Chimera Coin',desc:'Three beasts in one — the legendary chimera rendered in striking relief.',img:null},
+      {id:'myth-010',name:'Hydra Coin',desc:'Multiple serpentine heads rising from a single body — cut one off and two grow back.',img:null},
+    ]},
+    { id:'elemental', label:'ELEMENTAL FORCES', coins:[
+      {id:'elem-001',name:'Ember Core Coin',desc:'A pulsing core of elemental fire, radiating heat and primal energy.',img:null},
+      {id:'elem-002',name:'Tide Pull Coin',desc:'Crashing waves and the pull of the moon — water elemental in coin form.',img:null},
+      {id:'elem-003',name:'Stone Heart Coin',desc:'Earth and granite, the unbreakable heart of the mountain.',img:null},
+      {id:'elem-004',name:'Storm Breath Coin',desc:'Lightning crackling across storm clouds — the raw power of a tempest.',img:null},
+      {id:'elem-005',name:'Frost Veil Coin',desc:'Ice crystals and freezing mist, the quiet cold of deep winter.',img:null},
+      {id:'elem-006',name:'Thunder Mark Coin',desc:'A thunderbolt striking the earth — the mark of divine power.',img:null},
+      {id:'elem-007',name:'Shadow Flame Coin',desc:'Fire that burns cold and dark — the paradox of shadow and flame.',img:null},
+      {id:'elem-008',name:'Iron Wind Coin',desc:'A howling gale carrying shards of metal — the cutting edge of air.',img:null},
+      {id:'elem-009',name:'Void Rift Coin',desc:'A tear in reality itself — the void stares back from this unsettling coin.',img:null},
+      {id:'elem-010',name:'Arcane Surge Coin',desc:'Pure magical energy given form — swirling runes and crackling power.',img:null},
+      {id:'elem-011',name:'Solar Flare Coin',desc:'The corona of the sun in full eruption — blinding light in miniature.',img:null},
+      {id:'elem-012',name:'Lunar Tide Coin',desc:'The full moon and the tides it commands — silver and mysterious.',img:null},
+      {id:'elem-013',name:'Crystal Shard Coin',desc:'Razor-sharp crystal formations catching light from every angle.',img:null},
+      {id:'elem-014',name:'Magma Flow Coin',desc:'Molten rock flowing from a volcanic vent — dangerous beauty.',img:null},
+      {id:'elem-015',name:'Tempest Eye Coin',desc:'The still eye of a hurricane surrounded by chaos — calm within the storm.',img:null},
+    ]},
+    { id:'gothic', label:'UNDEAD & DARK GOTHIC', coins:[
+      {id:'goth-001',name:'Raven Watch Coin',desc:'A lone raven perched on a crumbling spire, watching with knowing eyes.',img:null},
+      {id:'goth-002',name:'Coffin Seal Coin',desc:'An ornate coffin sealed with wax — what lies within is best left unknown.',img:null},
+      {id:'goth-003',name:'Blood Moon Coin',desc:'The moon runs red — an omen of dark things to come.',img:null},
+      {id:'goth-004',name:'Wraith Mark Coin',desc:'The ghostly impression of a wraith, caught between worlds.',img:null},
+      {id:'goth-005',name:'Bone Crypt Coin',desc:'Ancient bones arranged in the pattern of a noble crest.',img:null},
+      {id:'goth-006',name:'Vampire Sigil Coin',desc:'The royal seal of a vampire bloodline — elegant and dangerous.',img:null},
+      {id:'goth-007',name:'Death Knell Coin',desc:'A tolling bell and the hourglass — time runs out for all.',img:null},
+      {id:'goth-008',name:'Shadow Cross Coin',desc:'A cross dissolving into shadow — faith and darkness intertwined.',img:null},
+      {id:'goth-009',name:'Lich Crown Coin',desc:'The crown of a lich king — power over death itself.',img:null},
+      {id:'goth-010',name:'Plague Bearer Coin',desc:'A masked figure bearing the mark of pestilence. Dark and striking.',img:null},
+    ]},
+    { id:'skull', label:'SKULL', coins:[
+      {id:'skul-001',name:'Warrior Skull Coin',desc:'Battle-scarred skull of a fallen warrior — honor in death.',img:null},
+      {id:'skul-002',name:'Pirate Skull Coin',desc:'The classic jolly roger — crossed bones and a grinning skull.',img:null},
+      {id:'skul-003',name:'Flaming Skull Coin',desc:'A skull wreathed in eternal flame — the mark of a ghost rider.',img:null},
+      {id:'skul-004',name:'Crystal Skull Coin',desc:'A skull carved from pure crystal, impossibly detailed.',img:null},
+      {id:'skul-005',name:'Horned Skull Coin',desc:'Demonic horns crown this fearsome skull — not of natural origin.',img:null},
+      {id:'skul-006',name:'Jester Skull Coin',desc:'A jester\'s cap sits atop a grinning skull — death plays no favorites.',img:null},
+      {id:'skul-007',name:'Winged Skull Coin',desc:'Angel wings frame this skull — the thin line between life and death.',img:null},
+      {id:'skul-008',name:'Memento Mori Coin',desc:'Remember that you will die — the classic vanitas symbol in coin form.',img:null},
+    ]},
+    { id:'adventure', label:'FANTASY ADVENTURE & TREASURE', coins:[
+      {id:'adve-001',name:'Treasure Chest Coin',desc:'An overflowing chest of gold and gems — the adventurer\'s ultimate reward.',img:null},
+      {id:'adve-002',name:'Crossed Swords Coin',desc:'Two blades crossed in battle — forged in conflict, earned in victory.',img:null},
+      {id:'adve-003',name:'Explorer Map Coin',desc:'A hand-drawn map with a marked destination — X marks the spot.',img:null},
+      {id:'adve-004',name:'Tavern Mug Coin',desc:'A frothing tankard — to adventures, companions, and stories worth telling.',img:null},
+      {id:'adve-005',name:'Compass Rose Coin',desc:'A detailed compass rose pointing the way — never lost, always exploring.',img:null},
+      {id:'adve-006',name:'Adventurer Pack Coin',desc:'A stuffed backpack with rope, torch, and bedroll — always prepared.',img:null},
+      {id:'adve-007',name:'Magic Scroll Coin',desc:'An unrolled scroll crackling with arcane text and glowing runes.',img:null},
+      {id:'adve-008',name:'Lantern Light Coin',desc:'A hooded lantern casting light into the dark — hope in the dungeon.',img:null},
+      {id:'adve-009',name:'Hero Shield Coin',desc:'A battered shield bearing the crest of a legendary hero.',img:null},
+      {id:'adve-010',name:'Quest Mark Coin',desc:'The mark left by a dungeon master — this quest has only just begun.',img:null},
+    ]},
+    { id:'dragon', label:'DRAGONS', coins:[
+      {id:'drag-001',name:'Coiled Dragon Coin',desc:'A massive dragon coiled in rest — still deadly, simply patient.',img:null},
+      {id:'drag-002',name:'Dragon In Flight Coin',desc:'Wings spread against the sky — freedom, power, and terrible beauty.',img:null},
+      {id:'drag-003',name:'Fire Breath Coin',desc:'The moment before destruction — flames rolling from parted jaws.',img:null},
+      {id:'drag-004',name:'Dragon Eye Coin',desc:'A single enormous eye staring from the coin face — it sees you.',img:null},
+      {id:'drag-005',name:'Dragon Hoard Coin',desc:'Sleeping atop centuries of treasure — do not disturb.',img:null},
+      {id:'drag-006',name:'Wyvern Coin',desc:'The smaller cousin of the dragon — still deadly, surprisingly fast.',img:null},
+      {id:'drag-007',name:'Dragon Scale Coin',desc:'A close study of dragon scale — overlapping armor of impossible hardness.',img:null},
+      {id:'drag-008',name:'Dragon Skull Coin',desc:'The skull of an ancient dragon — even in death, commanding respect.',img:null},
+      {id:'drag-009',name:'Dragon Claw Coin',desc:'A single hooked claw, razor sharp — the weapon of a apex predator.',img:null},
+      {id:'drag-010',name:'Dragon Crown Coin',desc:'The crown worn by the dragon king — dominion over all that flies.',img:null},
+    ]},
+    { id:'weapons', label:'WEAPONS', coins:[
+      {id:'weap-001',name:'Longsword Coin',desc:'The knight\'s blade — balanced, noble, and deadly in trained hands.',img:null},
+      {id:'weap-002',name:'Battle Axe Coin',desc:'A heavy double-headed axe — favored by warriors and berserkers alike.',img:null},
+      {id:'weap-003',name:'Longbow Coin',desc:'The archer\'s weapon of choice — patient, precise, and lethal at range.',img:null},
+      {id:'weap-004',name:'Staff & Orb Coin',desc:'A mage\'s staff topped with a glowing orb — conduit for arcane power.',img:null},
+      {id:'weap-005',name:'Dagger Pair Coin',desc:'Twin blades for the rogue who prefers to work up close.',img:null},
+      {id:'weap-006',name:'Warhammer Coin',desc:'A heavy maul that crushes armor — the paladin\'s weapon of divine justice.',img:null},
+      {id:'weap-007',name:'Crossbow Coin',desc:'Mechanical precision — the crossbow needs little training to be deadly.',img:null},
+      {id:'weap-008',name:'Spear & Shield Coin',desc:'The soldier\'s classic combination — reach and defense in equal measure.',img:null},
+      {id:'weap-009',name:'Scythe Coin',desc:'The reaper\'s instrument — not just a tool, a symbol of inevitable death.',img:null},
+      {id:'weap-010',name:'Flail Coin',desc:'A spiked ball on a chain — unpredictable and devastating.',img:null},
+    ]},
   ];
 
-  // ── STOCK (loaded from Supabase) ──
-  // Falls back to 10 per coin if Supabase not configured
+  // ── STOCK ──
   let coinStock = {};
+  let currentLbCoin = null;
 
   async function loadCoinStock() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/coin_inventory?select=coin_id,stock`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
       });
-      if (res.ok) {
-        const rows = await res.json();
-        rows.forEach(r => coinStock[r.coin_id] = r.stock);
-      }
-    } catch(e) {
-      console.warn('Could not load coin stock — using defaults');
-    }
-    renderShop();
-    subscribeToStock(); // start real-time updates
+      if(res.ok){ const rows=await res.json(); rows.forEach(r=>coinStock[r.coin_id]=r.stock); }
+    } catch(e){ console.warn('Stock load failed — using defaults'); }
+    buildSidebar();
+    showAllCoins();
+    subscribeToStock();
   }
 
-  // ── REAL-TIME STOCK UPDATES ──
-  // Listens for any change to coin_inventory in Supabase
-  // and updates the shop instantly without a page refresh
-  function subscribeToStock() {
+  function getStock(id){ return coinStock[id]!==undefined?coinStock[id]:10; }
+  function getStatus(s){ return s===0?'out':s<=3?'low':'in-stock'; }
+  function getLabel(s){ return s===0?'OUT OF STOCK':s<=3?`LOW — ${s} LEFT`:`${s} IN STOCK`; }
+
+  // ── REALTIME ──
+  function subscribeToStock(){
     try {
-      const ws = new WebSocket(
-        `${SUPABASE_URL.replace('https','wss')}/realtime/v1/websocket?apikey=${SUPABASE_KEY}&vsn=1.0.0`
-      );
-
-      ws.onopen = () => {
-        // Join the realtime channel for coin_inventory table
-        ws.send(JSON.stringify({
-          topic: 'realtime:public:coin_inventory',
-          event: 'phx_join',
-          payload: {},
-          ref: '1'
-        }));
-      };
-
-      ws.onmessage = (e) => {
-        try {
-          const msg = JSON.parse(e.data);
-          // Listen for UPDATE events on coin_inventory
-          if (msg.event === 'UPDATE' && msg.payload?.record) {
-            const { coin_id, stock } = msg.payload.record;
-            if (coin_id !== undefined && stock !== undefined) {
-              coinStock[coin_id] = stock;
-              // Update just that coin card without re-rendering everything
-              updateCoinCardLive(coin_id, stock);
-            }
+      const ws=new WebSocket(`${SUPABASE_URL.replace('https','wss')}/realtime/v1/websocket?apikey=${SUPABASE_KEY}&vsn=1.0.0`);
+      ws.onopen=()=>ws.send(JSON.stringify({topic:'realtime:public:coin_inventory',event:'phx_join',payload:{},ref:'1'}));
+      ws.onmessage=(e)=>{
+        try{
+          const msg=JSON.parse(e.data);
+          if(msg.event==='UPDATE'&&msg.payload?.record){
+            const{coin_id,stock}=msg.payload.record;
+            if(coin_id!==undefined&&stock!==undefined){ coinStock[coin_id]=stock; updateCardLive(coin_id,stock); }
           }
-        } catch(err) { /* ignore parse errors */ }
+        }catch(err){}
       };
-
-      ws.onerror = () => console.warn('Realtime connection failed — stock updates require refresh');
-
-      // Reconnect if connection drops
-      ws.onclose = () => setTimeout(subscribeToStock, 5000);
-
-    } catch(e) {
-      console.warn('Realtime not available');
-    }
+      ws.onclose=()=>setTimeout(subscribeToStock,5000);
+    }catch(e){}
   }
 
-  // Update a single coin card live without re-rendering the whole shop
-  function updateCoinCardLive(coinId, stock) {
-    const card = document.getElementById(`card-${coinId}`);
-    if (!card) return;
-
-    const status = stock === 0 ? 'out' : stock <= 3 ? 'low' : 'in-stock';
-    const label  = stock === 0 ? 'OUT OF STOCK' : stock <= 3 ? `LOW — ${stock} LEFT` : `${stock} IN STOCK`;
-    const isOut  = status === 'out';
-    const isLow  = status === 'low';
-
-    // Update card classes
-    card.classList.toggle('out-of-stock', isOut);
-    card.classList.toggle('low-stock', isLow);
-
-    // Update stock badge
-    const badge = card.querySelector('.stock-badge');
-    if (badge) {
-      badge.className = `stock-badge ${status === 'in-stock' ? 'in-stock' : status === 'low' ? 'low' : 'out'}`;
-      badge.textContent = label;
-    }
-
-    // Update add to cart button
-    const btn = document.getElementById(`btn-${coinId}`);
-    if (btn) {
-      btn.disabled = isOut;
-      if (isOut) btn.textContent = 'OUT OF STOCK';
-      else if (btn.textContent === 'OUT OF STOCK') btn.textContent = '+ CART';
-    }
+  function updateCardLive(coinId,stock){
+    const card=document.getElementById(`card-${coinId}`);
+    if(!card) return;
+    const status=getStatus(stock);
+    card.classList.toggle('out-of-stock',status==='out');
+    card.classList.toggle('low-stock',status==='low');
+    const badge=card.querySelector('.stock-badge');
+    if(badge){badge.className=`stock-badge ${status==='in-stock'?'in-stock':status}`;badge.textContent=getLabel(stock);}
+    const btn=document.getElementById(`btn-${coinId}`);
+    if(btn){btn.disabled=status==='out';if(status==='out')btn.textContent='OUT OF STOCK';else if(btn.textContent==='OUT OF STOCK')btn.textContent='+ CART';}
   }
 
-  function getStock(coinId) {
-    return coinStock[coinId] !== undefined ? coinStock[coinId] : 10;
+  // ── VIEW NAVIGATION ──
+  let currentTheme = null;
+
+  function goToCoins(){
+    document.getElementById('view-categories').classList.remove('active');
+    document.getElementById('view-coins').classList.add('active');
+    document.getElementById('shop-breadcrumb').textContent = 'Shop → Coins';
+    document.getElementById('shop-hero-title').textContent = 'Coin Props';
+    document.getElementById('shop-hero-desc').textContent = 'Over 200 designs across 7 themes. Click a theme in the sidebar or browse all.';
+    if(Object.keys(coinStock).length===0) loadCoinStock();
+    else { buildSidebar(); showAllCoins(); }
   }
 
-  function getStockStatus(stock) {
-    if (stock === 0) return 'out';
-    if (stock <= 3)  return 'low';
-    return 'in-stock';
+  function goToCategories(){
+    document.getElementById('view-coins').classList.remove('active');
+    document.getElementById('view-categories').classList.add('active');
+    document.getElementById('shop-breadcrumb').textContent = 'The Shop';
+    document.getElementById('shop-hero-title').textContent = 'Browse Our Catalog';
+    document.getElementById('shop-hero-desc').textContent = 'No STL needed — everything here is ready to print and ship.';
   }
 
-  function getStockLabel(stock) {
-    if (stock === 0) return 'OUT OF STOCK';
-    if (stock <= 3)  return `LOW — ${stock} LEFT`;
-    return `${stock} IN STOCK`;
+  function buildSidebar(){
+    const sb = document.getElementById('sidebar-themes');
+    sb.innerHTML = THEMES.map(t=>`
+      <div class="sb-theme" id="sb-${t.id}" onclick="showTheme('${t.id}')">
+        ${t.label} <span class="sb-cnt">${t.coins.length}</span>
+      </div>`).join('');
   }
 
-  // ── RENDER SHOP ──
-  let activeFilter = 'all';
-
-  function setFilter(f, el) {
-    activeFilter = f;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    renderShop();
+  function showTheme(themeId){
+    currentTheme = themeId;
+    const theme = THEMES.find(t=>t.id===themeId);
+    if(!theme) return;
+    document.querySelectorAll('.sb-theme').forEach(s=>s.classList.remove('active'));
+    const sbEl=document.getElementById(`sb-${themeId}`);
+    if(sbEl) sbEl.classList.add('active');
+    document.getElementById('coins-section-title').textContent = theme.label;
+    renderCoins(theme.coins, theme.label);
   }
 
-  function renderShop() {
-    const content = document.getElementById('shop-content');
-    const themes = activeFilter === 'all'
-      ? THEMES
-      : THEMES.filter(t => t.id === activeFilter);
+  function showAllCoins(){
+    currentTheme = null;
+    document.querySelectorAll('.sb-theme').forEach(s=>s.classList.remove('active'));
+    document.getElementById('coins-section-title').textContent = 'ALL COINS';
+    const all = THEMES.flatMap(t=>t.coins.map(c=>({...c,themeLabel:t.label})));
+    renderCoinsAll(all);
+  }
 
-    content.innerHTML = themes.map(theme => `
-      <div class="theme-section" data-theme="${theme.id}">
-        <div class="theme-header">
-          <div class="theme-title">${theme.label}</div>
-          <div class="theme-count">${theme.coins.length} DESIGNS</div>
-        </div>
-        <div class="carousel-wrap">
-          <button class="carousel-btn prev" onclick="slide('${theme.id}',-1)" id="prev-${theme.id}">‹</button>
-          <div class="carousel-track-outer" id="outer-${theme.id}">
-            <div class="carousel-track" id="track-${theme.id}">
-              ${theme.coins.map(coin => renderCoinCard(coin, theme.label)).join('')}
-            </div>
-          </div>
-          <button class="carousel-btn next" onclick="slide('${theme.id}',1)" id="next-${theme.id}">›</button>
+  function renderCoins(coins, themeLabel){
+    const total = coins.length;
+    document.getElementById('coins-section-count').textContent = `${total} DESIGNS`;
+    document.getElementById('coin-grid-display').innerHTML = coins.map(c=>coinCardHTML(c,themeLabel)).join('');
+  }
+
+  function renderCoinsAll(coins){
+    document.getElementById('coins-section-count').textContent = `${coins.length} DESIGNS`;
+    document.getElementById('coin-grid-display').innerHTML = coins.map(c=>coinCardHTML(c,c.themeLabel)).join('');
+  }
+
+  function coinCardHTML(coin, themeLabel){
+    const stock=getStock(coin.id), status=getStatus(stock), label=getLabel(stock);
+    const isOut=status==='out', isLow=status==='low';
+    return `<div class="${['coin-card',isOut?'out-of-stock':'',isLow?'low-stock':''].filter(Boolean).join(' ')}" id="card-${coin.id}">
+      <div class="coin-img" onclick="openLightbox('${coin.id}','${themeLabel}')">
+        ${coin.img?`<img src="images/shop/${coin.img}" alt="${coin.name}" loading="lazy">`:`<div class="coin-img-placeholder">YOUR PHOTO HERE</div>`}
+        <span class="stock-badge ${status==='in-stock'?'in-stock':status}">${label}</span>
+        <div class="coin-zoom-hint">🔍 VIEW</div>
+      </div>
+      <div class="coin-info">
+        <div class="coin-name">${coin.name}</div>
+        <div class="coin-material">RESIN OR PLA · $${COIN_PRICE}</div>
+        <div class="coin-footer">
+          <div class="coin-price">$${COIN_PRICE}</div>
+          <button class="coin-add-btn" id="btn-${coin.id}"
+            onclick="addToCart('${coin.id}','${coin.name}','${themeLabel}',${COIN_PRICE},this)"
+            ${isOut?'disabled':''}>
+            ${isOut?'OUT OF STOCK':'+ CART'}
+          </button>
         </div>
       </div>
-    `).join('');
-
-    // Init carousel positions
-    themes.forEach(t => updateCarouselBtns(t.id));
+    </div>`;
   }
 
-  function renderCoinCard(coin, themeLabel) {
-    const stock  = getStock(coin.id);
-    const status = getStockStatus(stock);
-    const label  = getStockLabel(stock);
-    const isOut  = status === 'out';
-    const isLow  = status === 'low';
+  // ── LIGHTBOX ──
+  function openLightbox(coinId, themeLabel){
+    const theme = THEMES.find(t=>t.coins.some(c=>c.id===coinId));
+    const coin  = theme?.coins.find(c=>c.id===coinId);
+    if(!coin) return;
+    currentLbCoin = {coinId, themeLabel, price:COIN_PRICE};
 
-    const cardClass = ['coin-card', isOut ? 'out-of-stock' : '', isLow ? 'low-stock' : ''].filter(Boolean).join(' ');
-    const badgeClass = status === 'in-stock' ? 'in-stock' : status === 'low' ? 'low' : 'out';
+    // Populate
+    document.getElementById('lb-theme').textContent = themeLabel;
+    document.getElementById('lb-name').textContent  = coin.name;
+    document.getElementById('lb-desc').textContent  = coin.desc || 'A beautifully detailed 3D printed coin prop, available in resin or PLA.';
+    document.getElementById('lb-price').textContent = `$${COIN_PRICE}`;
 
-    return `
-      <div class="${cardClass}" id="card-${coin.id}">
-        <div class="coin-img">
-          ${coin.img
-            ? `<img src="images/shop/${coin.img}" alt="${coin.name}" loading="lazy">`
-            : `<div class="coin-placeholder">YOUR PHOTO HERE</div>`
-          }
-          <span class="stock-badge ${badgeClass}">${label}</span>
-        </div>
-        <div class="coin-info">
-          <div class="coin-name">${coin.name}</div>
-          <div class="coin-material">RESIN OR PLA · $${COIN_PRICE}</div>
-          <div class="coin-footer">
-            <div class="coin-price">$${COIN_PRICE}</div>
-            <button class="coin-add-btn" id="btn-${coin.id}"
-              onclick="addToCart('${coin.id}','${coin.name}','${themeLabel}',${COIN_PRICE}, this)"
-              ${isOut ? 'disabled' : ''}>
-              ${isOut ? 'OUT OF STOCK' : '+ CART'}
-            </button>
-          </div>
-        </div>
-      </div>`;
+    // Image
+    const imgEl = document.getElementById('lb-img');
+    imgEl.innerHTML = coin.img
+      ? `<img src="images/shop/${coin.img}" alt="${coin.name}">`
+      : `<div class="lightbox-img-placeholder">YOUR PHOTO HERE</div>`;
+
+    // Stock
+    const stock=getStock(coinId), status=getStatus(stock), label=getLabel(stock);
+    const stockEl = document.getElementById('lb-stock');
+    stockEl.textContent = label;
+    stockEl.className = `lightbox-stock ${status==='in-stock'?'ok':status}`;
+
+    // Button
+    const btn = document.getElementById('lb-add-btn');
+    btn.disabled = status==='out';
+    btn.textContent = status==='out' ? 'OUT OF STOCK' : '+ ADD TO CART';
+    btn.classList.remove('added');
+
+    // Reset material opts
+    document.querySelectorAll('.lightbox-opt').forEach((o,i)=>{o.classList.toggle('sel',i===0);});
+
+    document.getElementById('lightbox-overlay').classList.add('open');
+    document.body.style.overflow='hidden';
   }
 
-  // ── CAROUSEL ──
-  const carouselPositions = {};
-
-  function slide(themeId, dir) {
-    const track = document.getElementById(`track-${themeId}`);
-    const outer = document.getElementById(`outer-${themeId}`);
-    if (!track || !outer) return;
-
-    const cardWidth = 220 + 14; // card width + gap
-    const visibleCount = Math.floor(outer.offsetWidth / cardWidth);
-    const theme = THEMES.find(t => t.id === themeId);
-    const maxPos = Math.max(0, theme.coins.length - visibleCount);
-
-    carouselPositions[themeId] = carouselPositions[themeId] || 0;
-    carouselPositions[themeId] = Math.max(0, Math.min(maxPos, carouselPositions[themeId] + dir));
-
-    track.style.transform = `translateX(-${carouselPositions[themeId] * cardWidth}px)`;
-    updateCarouselBtns(themeId);
+  function closeLightbox(){
+    document.getElementById('lightbox-overlay').classList.remove('open');
+    document.body.style.overflow='';
+    currentLbCoin=null;
   }
 
-  function updateCarouselBtns(themeId) {
-    const pos    = carouselPositions[themeId] || 0;
-    const outer  = document.getElementById(`outer-${themeId}`);
-    const theme  = THEMES.find(t => t.id === themeId);
-    if (!outer || !theme) return;
-
-    const cardWidth    = 220 + 14;
-    const visibleCount = Math.floor(outer.offsetWidth / cardWidth);
-    const maxPos       = Math.max(0, theme.coins.length - visibleCount);
-
-    const prevBtn = document.getElementById(`prev-${themeId}`);
-    const nextBtn = document.getElementById(`next-${themeId}`);
-    if (prevBtn) prevBtn.disabled = pos === 0;
-    if (nextBtn) nextBtn.disabled = pos >= maxPos;
+  function handleLightboxOverlay(e){
+    if(e.target===document.getElementById('lightbox-overlay')) closeLightbox();
   }
+
+  function selectLbOpt(el,group){
+    el.closest('.lightbox-opts').querySelectorAll('.lightbox-opt').forEach(o=>o.classList.remove('sel'));
+    el.classList.add('sel');
+  }
+
+  function addFromLightbox(){
+    if(!currentLbCoin) return;
+    const{coinId,themeLabel,price}=currentLbCoin;
+    const coin=THEMES.flatMap(t=>t.coins).find(c=>c.id===coinId);
+    if(!coin) return;
+    addToCart(coinId,coin.name,themeLabel,price,null);
+    const btn=document.getElementById('lb-add-btn');
+    btn.textContent='✓ ADDED TO CART';
+    btn.classList.add('added');
+    setTimeout(()=>{btn.textContent='+ ADD TO CART';btn.classList.remove('added');},2000);
+  }
+
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
 
   // ── CART ──
-  let cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
+  let cart=JSON.parse(localStorage.getItem('ff_cart')||'[]');
+  function saveCart(){localStorage.setItem('ff_cart',JSON.stringify(cart));}
 
-  function saveCart()  { localStorage.setItem('ff_cart', JSON.stringify(cart)); }
-
-  function addToCart(id, name, theme, price, btn) {
-    const existing = cart.find(i => i.id === id);
-    if (existing) { existing.qty++; }
-    else { cart.push({ id, name, theme, price, qty:1 }); }
-    saveCart(); renderCart(); updateBadge();
-    if (btn) {
-      const orig = btn.textContent;
-      btn.textContent = '✓ ADDED';
-      btn.classList.add('added');
-      setTimeout(() => { btn.textContent = orig; btn.classList.remove('added'); }, 1500);
+  function addToCart(id,name,theme,price,btn){
+    const ex=cart.find(i=>i.id===id);
+    if(ex){ex.qty++;}else{cart.push({id,name,theme,price,qty:1});}
+    saveCart();renderCart();updateBadge();renderPayPalButton();
+    if(btn){
+      btn.textContent='✓ ADDED';btn.classList.add('added');
+      setTimeout(()=>{btn.textContent='+ CART';btn.classList.remove('added');},1500);
     }
   }
 
-  function removeFromCart(id) {
-    cart = cart.filter(i => i.id !== id);
-    saveCart(); renderCart(); updateBadge(); renderPayPalButton();
+  function removeFromCart(id){cart=cart.filter(i=>i.id!==id);saveCart();renderCart();updateBadge();renderPayPalButton();}
+  function changeQty(id,delta){
+    const item=cart.find(i=>i.id===id);if(!item)return;
+    item.qty=Math.max(0,item.qty+delta);
+    if(item.qty===0)cart=cart.filter(i=>i.id!==id);
+    saveCart();renderCart();updateBadge();renderPayPalButton();
   }
 
-  function changeQty(id, delta) {
-    const item = cart.find(i => i.id === id);
-    if (!item) return;
-    item.qty = Math.max(0, item.qty + delta);
-    if (item.qty === 0) cart = cart.filter(i => i.id !== id);
-    saveCart(); renderCart(); updateBadge(); renderPayPalButton();
+  function updateBadge(){
+    const total=cart.reduce((s,i)=>s+i.qty,0);
+    const badge=document.getElementById('cart-badge');
+    if(badge){badge.textContent=total;badge.classList.toggle('show',total>0);}
   }
 
-  function updateBadge() {
-    const total = cart.reduce((s,i) => s + i.qty, 0);
-    const badge = document.getElementById('cart-badge');
-    if (badge) { badge.textContent = total; badge.classList.toggle('show', total > 0); }
-  }
-
-  function renderCart() {
-    const container = document.getElementById('cart-items');
-    const foot      = document.getElementById('cart-foot');
-    if (!container) return;
-
-    if (cart.length === 0) {
-      container.innerHTML = '<div class="cart-empty">Your cart is empty — browse the shop and add some coins.</div>';
-      if (foot) foot.style.display = 'none';
-      return;
+  function renderCart(){
+    const container=document.getElementById('cart-items');
+    const foot=document.getElementById('cart-foot');
+    if(!container)return;
+    if(cart.length===0){
+      container.innerHTML='<div class="cart-empty">Your cart is empty — browse the shop to add items.</div>';
+      if(foot)foot.style.display='none';return;
     }
-
-    if (foot) foot.style.display = 'block';
-    let total = 0;
-    container.innerHTML = cart.map(item => {
-      const line = item.price * item.qty;
-      total += line;
-      return `
-        <div class="cart-item">
-          <div class="cart-item-info">
-            <div class="cart-item-name">${item.name}</div>
-            <div class="cart-item-meta">${item.theme} · $${item.price.toFixed(2)} each</div>
-            <div class="cart-item-qty">
-              <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
-              <span class="qty-num">${item.qty}</span>
-              <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
-              <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</button>
-            </div>
+    if(foot)foot.style.display='block';
+    let total=0;
+    container.innerHTML=cart.map(item=>{
+      const line=item.price*item.qty;total+=line;
+      return `<div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-meta">${item.theme} · $${item.price.toFixed(2)} each</div>
+          <div class="cart-item-qty">
+            <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+            <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</button>
           </div>
-          <div class="cart-item-price">$${line.toFixed(2)}</div>
-        </div>`;
+        </div>
+        <div class="cart-item-price">$${line.toFixed(2)}</div>
+      </div>`;
     }).join('');
-
-    const totalEl = document.getElementById('cart-total');
-    if (totalEl) totalEl.textContent = '$' + total.toFixed(2);
+    document.getElementById('cart-total').textContent='$'+total.toFixed(2);
     renderPayPalButton();
   }
 
-  function openCart() {
+  function openCart(){
     document.getElementById('cart-overlay').classList.add('open');
     document.getElementById('cart-drawer').classList.add('open');
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow='hidden';
   }
-
-  function closeCart() {
+  function closeCart(){
     document.getElementById('cart-overlay').classList.remove('open');
     document.getElementById('cart-drawer').classList.remove('open');
-    document.body.style.overflow = '';
+    document.body.style.overflow='';
   }
 
-  // ── STRIPE CHECKOUT ──
-  const STRIPE_KEY = 'pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
-
-  async function checkoutStripe() {
-    if (!cart.length) return;
-    const btn = document.getElementById('stripe-btn');
-    btn.textContent = 'PREPARING...';
-    btn.disabled = true;
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: cart })
-      });
-      const data = await res.json();
-      if (data.url) { window.location.href = data.url; }
-      else throw new Error(data.error || 'No URL');
-    } catch(err) {
-      btn.textContent = '💳 CHECKOUT WITH CARD';
-      btn.disabled = false;
+  // ── STRIPE ──
+  const STRIPE_KEY='pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
+  async function checkoutStripe(){
+    if(!cart.length)return;
+    const btn=document.getElementById('stripe-btn');
+    btn.textContent='PREPARING...';btn.disabled=true;
+    try{
+      const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart})});
+      const data=await res.json();
+      if(data.url){window.location.href=data.url;}
+      else throw new Error(data.error||'No URL');
+    }catch(err){
+      btn.textContent='💳 CHECKOUT WITH CARD';btn.disabled=false;
       alert('Checkout failed — please try PayPal or try again.');
     }
   }
 
   // ── PAYPAL ──
-  function renderPayPalButton() {
-    const container = document.getElementById('paypal-cart-button-container');
-    if (!container || !cart.length) { if(container) container.innerHTML=''; return; }
-    const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
-    const items  = cart.map(i => ({ name:i.name, quantity:i.qty, unitPrice:i.price.toFixed(2), currency:'USD' }));
-    try {
-      if (window.paypal && window.paypal.CartButton) {
-        container.innerHTML = '';
+  function renderPayPalButton(){
+    const container=document.getElementById('paypal-cart-button-container');
+    if(!container||!cart.length){if(container)container.innerHTML='';return;}
+    const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+    const items=cart.map(i=>({name:i.name,quantity:i.qty,unitPrice:i.price.toFixed(2),currency:'USD'}));
+    try{
+      if(window.paypal&&window.paypal.CartButton){
+        container.innerHTML='';
         window.paypal.CartButton({
-          items, currency:'USD', amount:total.toFixed(2),
-          onApprove: () => {
-            cart = []; saveCart(); renderCart(); updateBadge();
-            document.getElementById('cart-foot').innerHTML = `
-              <div style="text-align:center;padding:2rem;font-family:var(--serif);color:var(--green);letter-spacing:0.1em;">
-                <div style="font-size:16px;margin-bottom:8px;">PAYMENT COMPLETE</div>
-                <p style="font-size:14px;color:var(--muted);font-style:italic;">Thank you! We'll be in touch within 24 hours.</p>
-              </div>`;
+          items,currency:'USD',amount:total.toFixed(2),
+          onApprove:()=>{
+            cart=[];saveCart();renderCart();updateBadge();
+            document.getElementById('cart-foot').innerHTML=`<div style="text-align:center;padding:2rem;font-family:var(--serif);color:var(--green);letter-spacing:0.1em;"><div style="font-size:16px;margin-bottom:8px;">PAYMENT COMPLETE</div><p style="font-size:14px;color:var(--muted);font-style:italic;">Thank you! We\'ll be in touch within 24 hours.</p></div>`;
           },
-          onError: () => alert('PayPal error — please try again.')
+          onError:()=>alert('PayPal error — please try again.')
         }).render('#paypal-cart-button-container');
       }
-    } catch(e) { console.warn('PayPal button error:', e); }
+    }catch(e){}
   }
 
   // ── INIT ──
-  document.getElementById('hamburger').addEventListener('click', function(){
+  document.getElementById('hamburger').addEventListener('click',function(){
     document.getElementById('nav-links').classList.toggle('open');
   });
 
-  // Load stock then render
-  loadCoinStock();
   renderCart();
   updateBadge();
-  window.addEventListener('load', renderPayPalButton);
+  window.addEventListener('load',renderPayPalButton);
   </script>
 </body>
 </html>
