@@ -249,7 +249,7 @@
           <div class="cat-card-body">
             <div class="cat-card-name">COIN PROPS</div>
             <div class="cat-card-desc">Over 200 designs across 7 themes — mythical creatures, dragons, elemental forces, skulls, weapons and more.</div>
-            <div class="cat-card-count">7 THEMES · 70+ DESIGNS</div>
+            <div class="cat-card-count">12 THEMES · 160+ DESIGNS</div>
             <div class="cat-card-link">BROWSE COINS →</div>
           </div>
         </div>
@@ -345,103 +345,211 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
   // ════════════════════════════════════════════════════════════
   const THEMES = [
     { id:'mythical', label:'MYTHICAL CREATURES', coins:[
-      {id:'myth-001',name:'Dragon Hoard Coin',desc:'A richly detailed coin bearing a fearsome dragon coiled around a glittering hoard.',img:null},
-      {id:'myth-002',name:'Phoenix Rise Coin',desc:'A phoenix erupting from flames, wings spread wide — symbol of rebirth and fire.',img:null},
-      {id:'myth-003',name:'Griffin Crest Coin',desc:'The noble griffin in profile, part eagle part lion, rendered in bold relief.',img:null},
-      {id:'myth-004',name:'Kraken Deep Coin',desc:'Tentacles rising from dark water — the terror of the deep seas immortalized in metal.',img:null},
-      {id:'myth-005',name:'Unicorn Grace Coin',desc:'A rearing unicorn, its horn glowing with arcane power. Rare and collectible.',img:null},
-      {id:'myth-006',name:'Basilisk Gaze Coin',desc:'The deadly basilisk stares from the face of this coin — handle with caution.',img:null},
-      {id:'myth-007',name:'Manticore Fury Coin',desc:'Lion body, bat wings, scorpion tail — the manticore in full fury.',img:null},
-      {id:'myth-008',name:'Wyvern Wing Coin',desc:'A wyvern in flight, wings filling the coin face with menacing scale detail.',img:null},
-      {id:'myth-009',name:'Chimera Coin',desc:'Three beasts in one — the legendary chimera rendered in striking relief.',img:null},
-      {id:'myth-010',name:'Hydra Coin',desc:'Multiple serpentine heads rising from a single body — cut one off and two grow back.',img:null},
-    ]},
+      {id:'myth-001',name:'Dragon Hoard Coin',desc:'A richly detailed coin bearing a fearsome dragon coiled around a glittering hoard.'},
+      {id:'myth-002',name:'Phoenix Rise Coin',desc:'A phoenix erupting from flames, wings spread wide — symbol of rebirth and fire.'},
+      {id:'myth-003',name:'Griffin Crest Coin',desc:'The noble griffin in profile, part eagle part lion, rendered in bold relief.'},
+      {id:'myth-004',name:'Kraken Deep Coin',desc:'Tentacles rising from dark water — the terror of the deep seas immortalized in metal.'},
+      {id:'myth-005',name:'Unicorn Grace Coin',desc:'A rearing unicorn, its horn glowing with arcane power. Rare and collectible.'},
+      {id:'myth-006',name:'Basilisk Gaze Coin',desc:'The deadly basilisk stares from the face of this coin — handle with caution.'},
+      {id:'myth-007',name:'Manticore Fury Coin',desc:'Lion body, bat wings, scorpion tail — the manticore in full fury.'},
+      {id:'myth-008',name:'Wyvern Wing Coin',desc:'A wyvern in flight, wings filling the coin face with menacing scale detail.'},
+      {id:'myth-009',name:'Chimera Coin',desc:'Three beasts in one — the legendary chimera rendered in striking relief.'},
+      {id:'myth-010',name:'Hydra Coin',desc:'Multiple serpentine heads rising from a single body — cut one off and two grow back.'},
+          {id:'myth-011',name:'Sphinx Riddle Coin',desc:'The ancient sphinx guards its secrets — answer correctly or face the consequences.'},
+      {id:'myth-012',name:'Leviathan Coin',desc:'The great sea serpent that encircles the world — older than memory.'},
+      {id:'myth-013',name:'Pegasus Coin',desc:'The winged horse soaring above the clouds — grace and freedom combined.'},
+      {id:'myth-014',name:'Cerberus Coin',desc:'Three heads, one purpose — the guardian of the underworld never sleeps.'},
+      {id:'myth-015',name:'Minotaur Coin',desc:'Half man, half bull — lost in the labyrinth, dangerous beyond measure.'},
+      {id:'myth-016',name:'Medusa Coin',desc:'Serpents for hair, a petrifying gaze — do not meet her eyes.'},
+      {id:'myth-017',name:'Cyclops Coin',desc:'The one-eyed giant of ancient myth — immense strength, one critical weakness.'},
+      {id:'myth-018',name:'Thunderbird Coin',desc:'The great bird that summons storms with each beat of its enormous wings.'},
+      {id:'myth-019',name:'Kirin Coin',desc:'The divine chimera of eastern legend — bringer of prosperity and good fortune.'},
+      {id:'myth-020',name:'Fenrir Bound Coin',desc:'The wolf that will end the world — for now, still chained.'},
+]},
     { id:'elemental', label:'ELEMENTAL FORCES', coins:[
-      {id:'elem-001',name:'Ember Core Coin',desc:'A pulsing core of elemental fire, radiating heat and primal energy.',img:null},
-      {id:'elem-002',name:'Tide Pull Coin',desc:'Crashing waves and the pull of the moon — water elemental in coin form.',img:null},
-      {id:'elem-003',name:'Stone Heart Coin',desc:'Earth and granite, the unbreakable heart of the mountain.',img:null},
-      {id:'elem-004',name:'Storm Breath Coin',desc:'Lightning crackling across storm clouds — the raw power of a tempest.',img:null},
-      {id:'elem-005',name:'Frost Veil Coin',desc:'Ice crystals and freezing mist, the quiet cold of deep winter.',img:null},
-      {id:'elem-006',name:'Thunder Mark Coin',desc:'A thunderbolt striking the earth — the mark of divine power.',img:null},
-      {id:'elem-007',name:'Shadow Flame Coin',desc:'Fire that burns cold and dark — the paradox of shadow and flame.',img:null},
-      {id:'elem-008',name:'Iron Wind Coin',desc:'A howling gale carrying shards of metal — the cutting edge of air.',img:null},
-      {id:'elem-009',name:'Void Rift Coin',desc:'A tear in reality itself — the void stares back from this unsettling coin.',img:null},
-      {id:'elem-010',name:'Arcane Surge Coin',desc:'Pure magical energy given form — swirling runes and crackling power.',img:null},
-      {id:'elem-011',name:'Solar Flare Coin',desc:'The corona of the sun in full eruption — blinding light in miniature.',img:null},
-      {id:'elem-012',name:'Lunar Tide Coin',desc:'The full moon and the tides it commands — silver and mysterious.',img:null},
-      {id:'elem-013',name:'Crystal Shard Coin',desc:'Razor-sharp crystal formations catching light from every angle.',img:null},
-      {id:'elem-014',name:'Magma Flow Coin',desc:'Molten rock flowing from a volcanic vent — dangerous beauty.',img:null},
-      {id:'elem-015',name:'Tempest Eye Coin',desc:'The still eye of a hurricane surrounded by chaos — calm within the storm.',img:null},
+      {id:'elem-001',name:'Ember Core Coin',desc:'A pulsing core of elemental fire, radiating heat and primal energy.'},
+      {id:'elem-002',name:'Tide Pull Coin',desc:'Crashing waves and the pull of the moon — water elemental in coin form.'},
+      {id:'elem-003',name:'Stone Heart Coin',desc:'Earth and granite, the unbreakable heart of the mountain.'},
+      {id:'elem-004',name:'Storm Breath Coin',desc:'Lightning crackling across storm clouds — the raw power of a tempest.'},
+      {id:'elem-005',name:'Frost Veil Coin',desc:'Ice crystals and freezing mist, the quiet cold of deep winter.'},
+      {id:'elem-006',name:'Thunder Mark Coin',desc:'A thunderbolt striking the earth — the mark of divine power.'},
+      {id:'elem-007',name:'Shadow Flame Coin',desc:'Fire that burns cold and dark — the paradox of shadow and flame.'},
+      {id:'elem-008',name:'Iron Wind Coin',desc:'A howling gale carrying shards of metal — the cutting edge of air.'},
+      {id:'elem-009',name:'Void Rift Coin',desc:'A tear in reality itself — the void stares back from this unsettling coin.'},
+      {id:'elem-010',name:'Arcane Surge Coin',desc:'Pure magical energy given form — swirling runes and crackling power.'},
+      {id:'elem-011',name:'Solar Flare Coin',desc:'The corona of the sun in full eruption — blinding light in miniature.'},
+      {id:'elem-012',name:'Lunar Tide Coin',desc:'The full moon and the tides it commands — silver and mysterious.'},
+      {id:'elem-013',name:'Crystal Shard Coin',desc:'Razor-sharp crystal formations catching light from every angle.'},
+      {id:'elem-014',name:'Magma Flow Coin',desc:'Molten rock flowing from a volcanic vent — dangerous beauty.'},
+      {id:'elem-015',name:'Tempest Eye Coin',desc:'The still eye of a hurricane surrounded by chaos — calm within the storm.'},
     ]},
     { id:'gothic', label:'UNDEAD & DARK GOTHIC', coins:[
-      {id:'goth-001',name:'Raven Watch Coin',desc:'A lone raven perched on a crumbling spire, watching with knowing eyes.',img:null},
-      {id:'goth-002',name:'Coffin Seal Coin',desc:'An ornate coffin sealed with wax — what lies within is best left unknown.',img:null},
-      {id:'goth-003',name:'Blood Moon Coin',desc:'The moon runs red — an omen of dark things to come.',img:null},
-      {id:'goth-004',name:'Wraith Mark Coin',desc:'The ghostly impression of a wraith, caught between worlds.',img:null},
-      {id:'goth-005',name:'Bone Crypt Coin',desc:'Ancient bones arranged in the pattern of a noble crest.',img:null},
-      {id:'goth-006',name:'Vampire Sigil Coin',desc:'The royal seal of a vampire bloodline — elegant and dangerous.',img:null},
-      {id:'goth-007',name:'Death Knell Coin',desc:'A tolling bell and the hourglass — time runs out for all.',img:null},
-      {id:'goth-008',name:'Shadow Cross Coin',desc:'A cross dissolving into shadow — faith and darkness intertwined.',img:null},
-      {id:'goth-009',name:'Lich Crown Coin',desc:'The crown of a lich king — power over death itself.',img:null},
-      {id:'goth-010',name:'Plague Bearer Coin',desc:'A masked figure bearing the mark of pestilence. Dark and striking.',img:null},
-    ]},
+      {id:'goth-001',name:'Raven Watch Coin',desc:'A lone raven perched on a crumbling spire, watching with knowing eyes.'},
+      {id:'goth-002',name:'Coffin Seal Coin',desc:'An ornate coffin sealed with wax — what lies within is best left unknown.'},
+      {id:'goth-003',name:'Blood Moon Coin',desc:'The moon runs red — an omen of dark things to come.'},
+      {id:'goth-004',name:'Wraith Mark Coin',desc:'The ghostly impression of a wraith, caught between worlds.'},
+      {id:'goth-005',name:'Bone Crypt Coin',desc:'Ancient bones arranged in the pattern of a noble crest.'},
+      {id:'goth-006',name:'Vampire Sigil Coin',desc:'The royal seal of a vampire bloodline — elegant and dangerous.'},
+      {id:'goth-007',name:'Death Knell Coin',desc:'A tolling bell and the hourglass — time runs out for all.'},
+      {id:'goth-008',name:'Shadow Cross Coin',desc:'A cross dissolving into shadow — faith and darkness intertwined.'},
+      {id:'goth-009',name:'Lich Crown Coin',desc:'The crown of a lich king — power over death itself.'},
+      {id:'goth-010',name:'Plague Bearer Coin',desc:'A masked figure bearing the mark of pestilence. Dark and striking.'},
+          {id:'goth-011',name:'Haunted Manor Coin',desc:'A crumbling mansion silhouetted against a full moon — lights in empty windows.'},
+      {id:'goth-012',name:'Gothic Rose Coin',desc:'A black rose dripping blood — dark beauty in its purest form.'},
+      {id:'goth-013',name:'Gargoyle Coin',desc:'A stone guardian crouching at the cathedral edge — watching, always watching.'},
+      {id:'goth-014',name:'Necromancer Coin',desc:'A robed figure raising the dead — the forbidden art made tangible.'},
+      {id:'goth-015',name:'Dark Cathedral Coin',desc:'Spires reaching into a storm — the seat of unholy power.'},
+      {id:'goth-016',name:'Specter Coin',desc:'A translucent figure drifting through walls — between worlds, belonging to neither.'},
+      {id:'goth-017',name:'Cursed Mirror Coin',desc:'A mirror reflecting something other than what stands before it.'},
+      {id:'goth-018',name:'Bone Throne Coin',desc:'A throne constructed entirely of bones — power built on the fallen.'},
+      {id:'goth-019',name:'Death Tarot Coin',desc:'The death card — not an end, but a transformation.'},
+      {id:'goth-020',name:'Mausoleum Coin',desc:'An ornate tomb sealed for centuries — the inscription warns against opening it.'},
+]},
     { id:'skull', label:'SKULL', coins:[
-      {id:'skul-001',name:'Warrior Skull Coin',desc:'Battle-scarred skull of a fallen warrior — honor in death.',img:null},
-      {id:'skul-002',name:'Pirate Skull Coin',desc:'The classic jolly roger — crossed bones and a grinning skull.',img:null},
-      {id:'skul-003',name:'Flaming Skull Coin',desc:'A skull wreathed in eternal flame — the mark of a ghost rider.',img:null},
-      {id:'skul-004',name:'Crystal Skull Coin',desc:'A skull carved from pure crystal, impossibly detailed.',img:null},
-      {id:'skul-005',name:'Horned Skull Coin',desc:'Demonic horns crown this fearsome skull — not of natural origin.',img:null},
-      {id:'skul-006',name:'Jester Skull Coin',desc:'A jester\'s cap sits atop a grinning skull — death plays no favorites.',img:null},
-      {id:'skul-007',name:'Winged Skull Coin',desc:'Angel wings frame this skull — the thin line between life and death.',img:null},
-      {id:'skul-008',name:'Memento Mori Coin',desc:'Remember that you will die — the classic vanitas symbol in coin form.',img:null},
-    ]},
+      {id:'skul-001',name:'Warrior Skull Coin',desc:'Battle-scarred skull of a fallen warrior — honor in death.'},
+      {id:'skul-002',name:'Pirate Skull Coin',desc:'The classic jolly roger — crossed bones and a grinning skull.'},
+      {id:'skul-003',name:'Flaming Skull Coin',desc:'A skull wreathed in eternal flame — the mark of a ghost rider.'},
+      {id:'skul-004',name:'Crystal Skull Coin',desc:'A skull carved from pure crystal, impossibly detailed.'},
+      {id:'skul-005',name:'Horned Skull Coin',desc:'Demonic horns crown this fearsome skull — not of natural origin.'},
+      {id:'skul-006',name:'Jester Skull Coin',desc:'A jester\'s cap sits atop a grinning skull — death plays no favorites.'},
+      {id:'skul-007',name:'Winged Skull Coin',desc:'Angel wings frame this skull — the thin line between life and death.'},
+      {id:'skul-008',name:'Memento Mori Coin',desc:'Remember that you will die — the classic vanitas symbol in coin form.'},
+          {id:'skul-009',name:'Crown Skull Coin',desc:'A skull wearing a golden crown — even kings must answer to death.'},
+      {id:'skul-010',name:'Serpent Skull Coin',desc:'A serpent coiling through the eye sockets — death and rebirth intertwined.'},
+      {id:'skul-011',name:'Anchor Skull Coin',desc:'A sailor's skull — the sea claims all eventually.'},
+      {id:'skul-012',name:'Rose Skull Coin',desc:'Beauty and death in one image — a rose growing through a skull.'},
+      {id:'skul-013',name:'Diamond Skull Coin',desc:'Encrusted with gems — even in death, wealth follows some.'},
+      {id:'skul-014',name:'Tribal Skull Coin',desc:'Bold geometric tribal markings across the skull — ancestral and powerful.'},
+      {id:'skul-015',name:'Sugar Skull Coin',desc:'Ornate Day of the Dead decoration — celebrating the cycle of life.'},
+]},
     { id:'adventure', label:'FANTASY ADVENTURE & TREASURE', coins:[
-      {id:'adve-001',name:'Treasure Chest Coin',desc:'An overflowing chest of gold and gems — the adventurer\'s ultimate reward.',img:null},
-      {id:'adve-002',name:'Crossed Swords Coin',desc:'Two blades crossed in battle — forged in conflict, earned in victory.',img:null},
-      {id:'adve-003',name:'Explorer Map Coin',desc:'A hand-drawn map with a marked destination — X marks the spot.',img:null},
-      {id:'adve-004',name:'Tavern Mug Coin',desc:'A frothing tankard — to adventures, companions, and stories worth telling.',img:null},
-      {id:'adve-005',name:'Compass Rose Coin',desc:'A detailed compass rose pointing the way — never lost, always exploring.',img:null},
-      {id:'adve-006',name:'Adventurer Pack Coin',desc:'A stuffed backpack with rope, torch, and bedroll — always prepared.',img:null},
-      {id:'adve-007',name:'Magic Scroll Coin',desc:'An unrolled scroll crackling with arcane text and glowing runes.',img:null},
-      {id:'adve-008',name:'Lantern Light Coin',desc:'A hooded lantern casting light into the dark — hope in the dungeon.',img:null},
-      {id:'adve-009',name:'Hero Shield Coin',desc:'A battered shield bearing the crest of a legendary hero.',img:null},
-      {id:'adve-010',name:'Quest Mark Coin',desc:'The mark left by a dungeon master — this quest has only just begun.',img:null},
+      {id:'adve-001',name:'Treasure Chest Coin',desc:'An overflowing chest of gold and gems — the adventurer\'s ultimate reward.'},
+      {id:'adve-002',name:'Crossed Swords Coin',desc:'Two blades crossed in battle — forged in conflict, earned in victory.'},
+      {id:'adve-003',name:'Explorer Map Coin',desc:'A hand-drawn map with a marked destination — X marks the spot.'},
+      {id:'adve-004',name:'Tavern Mug Coin',desc:'A frothing tankard — to adventures, companions, and stories worth telling.'},
+      {id:'adve-005',name:'Compass Rose Coin',desc:'A detailed compass rose pointing the way — never lost, always exploring.'},
+      {id:'adve-006',name:'Adventurer Pack Coin',desc:'A stuffed backpack with rope, torch, and bedroll — always prepared.'},
+      {id:'adve-007',name:'Magic Scroll Coin',desc:'An unrolled scroll crackling with arcane text and glowing runes.'},
+      {id:'adve-008',name:'Lantern Light Coin',desc:'A hooded lantern casting light into the dark — hope in the dungeon.'},
+      {id:'adve-009',name:'Hero Shield Coin',desc:'A battered shield bearing the crest of a legendary hero.'},
+      {id:'adve-010',name:'Quest Mark Coin',desc:'The mark left by a dungeon master — this quest has only just begun.'},
     ]},
     { id:'dragon', label:'DRAGONS', coins:[
-      {id:'drag-001',name:'Coiled Dragon Coin',desc:'A massive dragon coiled in rest — still deadly, simply patient.',img:null},
-      {id:'drag-002',name:'Dragon In Flight Coin',desc:'Wings spread against the sky — freedom, power, and terrible beauty.',img:null},
-      {id:'drag-003',name:'Fire Breath Coin',desc:'The moment before destruction — flames rolling from parted jaws.',img:null},
-      {id:'drag-004',name:'Dragon Eye Coin',desc:'A single enormous eye staring from the coin face — it sees you.',img:null},
-      {id:'drag-005',name:'Dragon Hoard Coin',desc:'Sleeping atop centuries of treasure — do not disturb.',img:null},
-      {id:'drag-006',name:'Wyvern Coin',desc:'The smaller cousin of the dragon — still deadly, surprisingly fast.',img:null},
-      {id:'drag-007',name:'Dragon Scale Coin',desc:'A close study of dragon scale — overlapping armor of impossible hardness.',img:null},
-      {id:'drag-008',name:'Dragon Skull Coin',desc:'The skull of an ancient dragon — even in death, commanding respect.',img:null},
-      {id:'drag-009',name:'Dragon Claw Coin',desc:'A single hooked claw, razor sharp — the weapon of a apex predator.',img:null},
-      {id:'drag-010',name:'Dragon Crown Coin',desc:'The crown worn by the dragon king — dominion over all that flies.',img:null},
-    ]},
+      {id:'drag-001',name:'Coiled Dragon Coin',desc:'A massive dragon coiled in rest — still deadly, simply patient.'},
+      {id:'drag-002',name:'Dragon In Flight Coin',desc:'Wings spread against the sky — freedom, power, and terrible beauty.'},
+      {id:'drag-003',name:'Fire Breath Coin',desc:'The moment before destruction — flames rolling from parted jaws.'},
+      {id:'drag-004',name:'Dragon Eye Coin',desc:'A single enormous eye staring from the coin face — it sees you.'},
+      {id:'drag-005',name:'Dragon Hoard Coin',desc:'Sleeping atop centuries of treasure — do not disturb.'},
+      {id:'drag-006',name:'Wyvern Coin',desc:'The smaller cousin of the dragon — still deadly, surprisingly fast.'},
+      {id:'drag-007',name:'Dragon Scale Coin',desc:'A close study of dragon scale — overlapping armor of impossible hardness.'},
+      {id:'drag-008',name:'Dragon Skull Coin',desc:'The skull of an ancient dragon — even in death, commanding respect.'},
+      {id:'drag-009',name:'Dragon Claw Coin',desc:'A single hooked claw, razor sharp — the weapon of a apex predator.'},
+      {id:'drag-010',name:'Dragon Crown Coin',desc:'The crown worn by the dragon king — dominion over all that flies.'},
+          {id:'drag-011',name:'Ancient Dragon Coin',desc:'Millennia old — this dragon has outlasted kingdoms and remembers the first age.'},
+      {id:'drag-012',name:'Dragon Wyrmling Coin',desc:'Small but already dangerous — the wyrmling grows fast and learns faster.'},
+      {id:'drag-013',name:'Dragon Breath Coin',desc:'The moment of release — fire, lightning, or acid, equally devastating.'},
+      {id:'drag-014',name:'Dragon Lair Coin',desc:'The cavern treasure hoard — mountains of gold with one sleeping guardian.'},
+      {id:'drag-015',name:'Dragon Fight Coin',desc:'Two dragons locked in battle — the sky burns with their conflict.'},
+      {id:'drag-016',name:'Dragon Roar Coin',desc:'The earth-shaking roar that freezes armies in their tracks.'},
+      {id:'drag-017',name:'Dragon Talon Coin',desc:'A massive talon gripping the coin edge — ownership claimed.'},
+      {id:'drag-018',name:'Dragon Profile Coin',desc:'The regal side profile of a great wyrm — dignified and terrifying.'},
+      {id:'drag-019',name:'Dragon Silhouette Coin',desc:'A dragon against a full moon — the shadow of doom on the horizon.'},
+      {id:'drag-020',name:'Dragon Rampant Coin',desc:'Rearing up in the heraldic pose — the dragon as noble sigil.'},
+]},
     { id:'weapons', label:'WEAPONS', coins:[
-      {id:'weap-001',name:'Longsword Coin',desc:'The knight\'s blade — balanced, noble, and deadly in trained hands.',img:null},
-      {id:'weap-002',name:'Battle Axe Coin',desc:'A heavy double-headed axe — favored by warriors and berserkers alike.',img:null},
-      {id:'weap-003',name:'Longbow Coin',desc:'The archer\'s weapon of choice — patient, precise, and lethal at range.',img:null},
-      {id:'weap-004',name:'Staff & Orb Coin',desc:'A mage\'s staff topped with a glowing orb — conduit for arcane power.',img:null},
-      {id:'weap-005',name:'Dagger Pair Coin',desc:'Twin blades for the rogue who prefers to work up close.',img:null},
-      {id:'weap-006',name:'Warhammer Coin',desc:'A heavy maul that crushes armor — the paladin\'s weapon of divine justice.',img:null},
-      {id:'weap-007',name:'Crossbow Coin',desc:'Mechanical precision — the crossbow needs little training to be deadly.',img:null},
-      {id:'weap-008',name:'Spear & Shield Coin',desc:'The soldier\'s classic combination — reach and defense in equal measure.',img:null},
-      {id:'weap-009',name:'Scythe Coin',desc:'The reaper\'s instrument — not just a tool, a symbol of inevitable death.',img:null},
-      {id:'weap-010',name:'Flail Coin',desc:'A spiked ball on a chain — unpredictable and devastating.',img:null},
+      {id:'weap-001',name:'Longsword Coin',desc:'The knight\'s blade — balanced, noble, and deadly in trained hands.'},
+      {id:'weap-002',name:'Battle Axe Coin',desc:'A heavy double-headed axe — favored by warriors and berserkers alike.'},
+      {id:'weap-003',name:'Longbow Coin',desc:'The archer\'s weapon of choice — patient, precise, and lethal at range.'},
+      {id:'weap-004',name:'Staff & Orb Coin',desc:'A mage\'s staff topped with a glowing orb — conduit for arcane power.'},
+      {id:'weap-005',name:'Dagger Pair Coin',desc:'Twin blades for the rogue who prefers to work up close.'},
+      {id:'weap-006',name:'Warhammer Coin',desc:'A heavy maul that crushes armor — the paladin\'s weapon of divine justice.'},
+      {id:'weap-007',name:'Crossbow Coin',desc:'Mechanical precision — the crossbow needs little training to be deadly.'},
+      {id:'weap-008',name:'Spear & Shield Coin',desc:'The soldier\'s classic combination — reach and defense in equal measure.'},
+      {id:'weap-009',name:'Scythe Coin',desc:'The reaper\'s instrument — not just a tool, a symbol of inevitable death.'},
+      {id:'weap-010',name:'Flail Coin',desc:'A spiked ball on a chain — unpredictable and devastating.'},
+          {id:'weap-011',name:'Trident Coin',desc:'The weapon of sea gods — three tines that command the ocean depths.'},
+      {id:'weap-012',name:'Katana Coin',desc:'The samurai's soul in blade form — a lifetime of discipline in a single edge.'},
+      {id:'weap-013',name:'Halberd Coin',desc:'Spear, axe, and hook in one weapon — the ultimate polearm.'},
+      {id:'weap-014',name:'Whip Coin',desc:'Reach, speed, and pain — the whip demands skill to wield effectively.'},
+      {id:'weap-015',name:'Gauntlet Coin',desc:'An armored fist — the weapon that is always with you.'},
+      {id:'weap-016',name:'Throwing Stars Coin',desc:'Four-pointed blades spinning through the air — silent and deadly.'},
+      {id:'weap-017',name:'Greatsword Coin',desc:'A two-handed blade requiring immense strength — for those who commit fully.'},
+      {id:'weap-018',name:'Magic Sword Coin',desc:'A blade glowing with enchantment — forged with purpose, destined for legend.'},
+      {id:'weap-019',name:'Dwarven Pick Coin',desc:'Miner's tool and warrior's weapon — equally effective against rock and bone.'},
+      {id:'weap-020',name:'Elven Bow Coin',desc:'A graceful curve of living wood — accurate beyond mortal understanding.'},
+]},
+    { id:'dwarven', label:'DWARVEN', coins:[
+      {id:'dwav-001',name:'Dwarven Forge Coin',desc:'The master forge — heart of the mountain hold, where legends are made.'},
+      {id:'dwav-002',name:'Dwarven Axe Coin',desc:'The iconic dwarven waraxe, passed down through generations of clan warriors.'},
+      {id:'dwav-003',name:'Dwarven Rune Coin',desc:'Ancient runes carved deep into stone — words of power in the old tongue.'},
+      {id:'dwav-004',name:'Dwarven Crown Coin',desc:'The crown of the mountain king — solid gold, unbreakable as the stone it was forged in.'},
+      {id:'dwav-005',name:'Dwarven Shield Coin',desc:'A clan shield bearing the sigil of the oldest dwarven bloodline.'},
+      {id:'dwav-006',name:'Dwarven Ale Coin',desc:'A frothing tankard of the finest dwarven ale — the truest currency underground.'},
+      {id:'dwav-007',name:'Dwarven Gem Coin',desc:'A perfectly cut gemstone — dwarven craftsmanship at its finest.'},
+      {id:'dwav-008',name:'Dwarven Hammer Coin',desc:'The warhammer of a dwarven thane — built to last a thousand years.'},
+    ]},
+    { id:'viking', label:'FANTASY VIKING', coins:[
+      {id:'vike-001',name:'Viking Longship Coin',desc:'A dragon-prowed longship cutting through storm seas — freedom and conquest.'},
+      {id:'vike-002',name:'Valknut Coin',desc:'Three interlocked triangles — the mark of Odin, chosen of the slain.'},
+      {id:'vike-003',name:'Mjolnir Coin',desc:'Thor\'s hammer, the destroyer of giants — protection and power in one symbol.'},
+      {id:'vike-004',name:'Viking Raven Coin',desc:'Huginn or Muninn — thought or memory — circling above a battlefield.'},
+      {id:'vike-005',name:'Yggdrasil Coin',desc:'The world tree connecting the nine realms — life, fate, and cosmic order.'},
+      {id:'vike-006',name:'Viking Helm Coin',desc:'A horned helm of a Norse jarl — feared across the known world.'},
+      {id:'vike-007',name:'Runic Compass Coin',desc:'The Vegvisir — a runic compass to guide the lost through storms.'},
+      {id:'vike-008',name:'Ouroboros Coin',desc:'The serpent devouring its own tail — the eternal cycle of destruction and rebirth.'},
+      {id:'vike-009',name:'Viking Wolf Coin',desc:'Fenrir straining against his bonds — inevitable, unstoppable, world-ending.'},
+      {id:'vike-010',name:'Viking Shield Coin',desc:'A round shield painted with the mark of a legendary shieldmaiden.'},
+    ]},
+    { id:'mushroom', label:'MUSHROOM', coins:[
+      {id:'mush-001',name:'Amanita Coin',desc:'The iconic red cap with white spots — beautiful, magical, and deadly.'},
+      {id:'mush-002',name:'Mycelium Network Coin',desc:'The underground web of fungal threads — nature\'s hidden communication network.'},
+      {id:'mush-003',name:'Spore Cloud Coin',desc:'A burst of spores drifting on the air — spreading life, or something stranger.'},
+      {id:'mush-004',name:'Fairy Ring Coin',desc:'A perfect circle of mushrooms — step inside and see where it takes you.'},
+      {id:'mush-005',name:'Mushroom King Coin',desc:'The crowned ruler of the fungal kingdom — ancient and unknowable.'},
+      {id:'mush-006',name:'Glowing Cap Coin',desc:'A bioluminescent mushroom lighting the darkness of the deep forest.'},
+    ]},
+    { id:'sq-dragon-egg', label:'SQUARE DRAGON EGGS', coins:[
+      {id:'sqeg-001',name:'Fire Dragon Egg Coin',desc:'A square-cut dragon egg crackling with inner flame — hatching is imminent.'},
+      {id:'sqeg-002',name:'Ice Dragon Egg Coin',desc:'Frozen in crystal-clear blue — the cold dragon within waits in silence.'},
+      {id:'sqeg-003',name:'Shadow Dragon Egg Coin',desc:'Dark as obsidian — the void dragon within absorbs all light.'},
+      {id:'sqeg-004',name:'Storm Dragon Egg Coin',desc:'Electric veins crackle across the surface — lightning trapped inside.'},
+      {id:'sqeg-005',name:'Earth Dragon Egg Coin',desc:'Stone-grey and ancient — a dragon of the deep mountain places.'},
+      {id:'sqeg-006',name:'Poison Dragon Egg Coin',desc:'Sickly green with dark veins — handle with extreme caution.'},
+      {id:'sqeg-007',name:'Gold Dragon Egg Coin',desc:'Gleaming metallic scales — the rarest and most coveted of all dragon eggs.'},
+      {id:'sqeg-008',name:'Void Dragon Egg Coin',desc:'A perfect square of absolute darkness — something ancient stirs within.'},
+    ]},
+    { id:'sq-fire-dragon', label:'SQUARE FIRE BREATHING DRAGON', coins:[
+      {id:'sqfr-001',name:'Red Fire Dragon Coin',desc:'The classic red dragon mid-breath — fire erupting from parted jaws.'},
+      {id:'sqfr-002',name:'Black Fire Dragon Coin',desc:'Shadow and flame — a black dragon whose fire corrodes as it burns.'},
+      {id:'sqfr-003',name:'Gold Fire Dragon Coin',desc:'Noble and ancient — the gold dragon\'s breath purifies rather than destroys.'},
+      {id:'sqfr-004',name:'Green Fire Dragon Coin',desc:'Toxic flame pours from the green dragon — poison and fire combined.'},
+      {id:'sqfr-005',name:'Blue Fire Dragon Coin',desc:'Lightning-laced flame from the storm dragon — electric and searing.'},
+      {id:'sqfr-006',name:'White Fire Dragon Coin',desc:'Frost-fire from the arctic dragon — burns cold rather than hot.'},
+      {id:'sqfr-007',name:'Copper Fire Dragon Coin',desc:'The trickster dragon laughing as it breathes — unpredictable and mischievous.'},
+      {id:'sqfr-008',name:'Silver Fire Dragon Coin',desc:'Moonfire from the silver dragon — beautiful and deadly in equal measure.'},
     ]},
   ];
 
-  // ── STOCK ──
+  function coinImgHTML(coin) {
+    if (!coin.img && !coin.id) return `<div class="coin-img-placeholder">YOUR PHOTO HERE</div>`;
+    const id = coin.id;
+    // Try jpg first, fall back to png, fall back to placeholder
+    // Uses onerror chain to auto-detect whichever format exists
+    return `<img
+      src="images/shop/${id}.jpg"
+      alt="${coin.name}"
+      loading="lazy"
+      onerror="this.onerror=null;this.src='images/shop/${id}.png';this.onerror=function(){this.parentElement.innerHTML='<div class=\\'coin-img-placeholder\\'>YOUR PHOTO HERE</div>';};"
+    >`;
+  }
   let coinStock = {};
   let currentLbCoin = null;
 
@@ -555,7 +663,7 @@
     const isOut=status==='out', isLow=status==='low';
     return `<div class="${['coin-card',isOut?'out-of-stock':'',isLow?'low-stock':''].filter(Boolean).join(' ')}" id="card-${coin.id}">
       <div class="coin-img" onclick="openLightbox('${coin.id}','${themeLabel}')">
-        ${coin.img?`<img src="images/shop/${coin.img}" alt="${coin.name}" loading="lazy">`:`<div class="coin-img-placeholder">YOUR PHOTO HERE</div>`}
+        ${coinImgHTML(coin)}
         <span class="stock-badge ${status==='in-stock'?'in-stock':status}">${label}</span>
         <div class="coin-zoom-hint">🔍 VIEW</div>
       </div>
@@ -589,9 +697,7 @@
 
     // Image
     const imgEl = document.getElementById('lb-img');
-    imgEl.innerHTML = coin.img
-      ? `<img src="images/shop/${coin.img}" alt="${coin.name}">`
-      : `<div class="lightbox-img-placeholder">YOUR PHOTO HERE</div>`;
+    imgEl.innerHTML = coinImgHTML(coin);
 
     // Stock
     const stock=getStock(coinId), status=getStatus(stock), label=getLabel(stock);
