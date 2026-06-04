@@ -193,8 +193,8 @@
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
 const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -448,9 +448,9 @@ const COIN_THEMES = [
 ]},
   { id:'weapons', label:'WEAPONS', coins:[
     {id:'weap-001',name:'Longsword Coin'},{id:'weap-002',name:'Battle Axe Coin'},
-    {id:'weap-003',name:'Longbow Coin'},{id:'weap-004',name:'Staff & Orb Coin'},
+    {id:'weap-003',name:'Longbow Coin'},{id:'weap-004',name:'Staff and Orb Coin'},
     {id:'weap-005',name:'Dagger Pair Coin'},{id:'weap-006',name:'Warhammer Coin'},
-    {id:'weap-007',name:'Crossbow Coin'},{id:'weap-008',name:'Spear & Shield Coin'},
+    {id:'weap-007',name:'Crossbow Coin'},{id:'weap-008',name:'Spear and Shield Coin'},
     {id:'weap-009',name:'Scythe Coin'},{id:'weap-010',name:'Flail Coin'},
       {id:'weap-011',name:'Trident Coin'},
     {id:'weap-012',name:'Katana Coin'},
@@ -506,15 +506,24 @@ async function loadCoinStock(){
     const rows = await sb(`${COIN_TABLE}?select=coin_id,stock`);
     if(rows && rows.length){
       rows.forEach(r => coinStock[r.coin_id] = r.stock);
-    } else {
-      // Seed all coins with default stock of 10
-      const allCoins = COIN_THEMES.flatMap(t => t.coins.map(c => ({
-        coin_id: c.id, stock: 10, theme: t.label
-      })));
-      await sb(COIN_TABLE, {method:'POST', body:JSON.stringify(allCoins)});
-      allCoins.forEach(c => coinStock[c.coin_id] = 10);
     }
-    showInd('ok','COINS LOADED');
+
+    // Check for any coins missing from the database and seed them
+    const allCoins = COIN_THEMES.flatMap(t => t.coins.map(c => ({
+      coin_id: c.id, stock: 10, theme: t.label
+    })));
+    const existingIds = new Set(Object.keys(coinStock));
+    const missingCoins = allCoins.filter(c => !existingIds.has(c.coin_id));
+
+    if(missingCoins.length > 0){
+      showInd('saving', `SEEDING ${missingCoins.length} NEW COINS...`);
+      await sb(COIN_TABLE, {method:'POST', body:JSON.stringify(missingCoins)});
+      missingCoins.forEach(c => coinStock[c.coin_id] = 10);
+      showInd('ok', `ADDED ${missingCoins.length} NEW COINS`);
+    } else {
+      showInd('ok','COINS LOADED');
+    }
+
     renderCoinSections();
     updateCoinStats();
   } catch(e) {
