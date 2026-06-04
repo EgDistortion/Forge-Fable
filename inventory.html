@@ -105,24 +105,66 @@
     .save-ind.saving{color:var(--gold);}
     .save-ind.error{color:var(--red);}
     /* ── DASHBOARD ── */
-    .dash-alert{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);}
-    .dash-alert:last-child{border-bottom:none;}
-    .dash-alert-name{font-size:13px;color:var(--text);font-style:italic;}
-    .dash-alert-val{font-family:var(--serif);font-size:11px;letter-spacing:0.08em;}
-    .dash-alert-val.low{color:var(--ember);}
-    .dash-alert-val.out{color:var(--red);}
-    .dash-payment{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
-    .dash-payment:last-child{border-bottom:none;}
-    .dash-payment-desc{font-size:13px;color:var(--text);font-style:italic;flex:1;}
-    .dash-payment-amt{font-family:var(--serif);font-size:14px;color:var(--green);flex-shrink:0;margin-left:12px;}
-    .dash-payment-date{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.08em;flex-shrink:0;margin-left:10px;}
-    .dash-review-item{padding:8px 0;border-bottom:1px solid var(--border);}
-    .dash-review-item:last-child{border-bottom:none;}
-    .dash-review-head{display:flex;justify-content:space-between;margin-bottom:3px;}
-    .dash-review-author{font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.08em;}
-    .dash-review-stars{font-size:12px;color:var(--gold2);}
-    .dash-review-coin{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-bottom:3px;}
-    .dash-review-text{font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;}
+    .dash-tabs{display:flex;gap:0;border-bottom:1px solid var(--border2);margin-bottom:1.5rem;}
+    .dash-tab{font-family:var(--serif);font-size:11px;letter-spacing:0.15em;padding:0.75rem 1.25rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;}
+    .dash-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+    .dash-subpane{display:none;}
+    .dash-subpane.active{display:block;}
+
+    .stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem;}
+    .stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;border-top:3px solid;}
+    .stat-card.blue{border-top-color:#378add;}
+    .stat-card.green{border-top-color:var(--green);}
+    .stat-card.amber{border-top-color:var(--ember);}
+    .stat-card.teal{border-top-color:#1d9e75;}
+    .stat-card-label{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.18em;margin-bottom:6px;}
+    .stat-card-val{font-family:var(--serif);font-size:28px;color:var(--text);line-height:1;margin-bottom:6px;}
+    .stat-card-sub{font-size:13px;font-style:italic;}
+    .stat-card.blue .stat-card-sub{color:#378add;}
+    .stat-card.green .stat-card-sub{color:var(--green);}
+    .stat-card.amber .stat-card-sub{color:var(--ember);}
+    .stat-card.teal .stat-card-sub{color:#1d9e75;}
+
+    .orders-table{width:100%;border-collapse:collapse;font-size:14px;}
+    .orders-table th{font-family:var(--serif);font-size:9px;letter-spacing:0.16em;color:var(--muted);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border2);background:var(--surface2);}
+    .orders-table td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--soft);vertical-align:top;}
+    .orders-table tr:last-child td{border-bottom:none;}
+    .orders-table tr:hover td{background:rgba(201,168,76,0.03);}
+    .order-num{font-family:var(--serif);font-size:12px;color:var(--gold);letter-spacing:0.1em;}
+    .order-customer{font-size:14px;color:var(--text);}
+    .order-email{font-size:11px;color:var(--muted);margin-top:2px;}
+    .order-item{font-style:italic;}
+    .order-total{font-family:var(--serif);font-size:14px;color:var(--gold2);}
+    .order-date{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.08em;}
+    .order-expand-btn{font-family:var(--serif);font-size:9px;letter-spacing:0.1em;color:var(--gold);background:none;border:1px solid var(--border);padding:3px 8px;cursor:pointer;border-radius:var(--radius);}
+    .order-expand-btn:hover{border-color:var(--border2);}
+    .order-detail-row{display:none;background:var(--surface2);}
+    .order-detail-row.open{display:table-row;}
+    .order-detail-inner{padding:1rem 1.25rem;border-bottom:1px solid var(--border);}
+    .order-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .order-detail-section{font-size:13px;color:var(--muted);line-height:1.7;}
+    .order-detail-section strong{font-style:normal;color:var(--soft);font-weight:400;font-family:var(--serif);font-size:9px;letter-spacing:0.15em;display:block;margin-bottom:4px;}
+
+    /* Low stock dropdown */
+    .low-stock-toggle{display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.1rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:4px;}
+    .low-stock-toggle-label{font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.15em;}
+    .low-stock-toggle-right{display:flex;align-items:center;gap:10px;}
+    .low-stock-count{font-family:var(--serif);font-size:11px;color:var(--ember);}
+    .low-stock-arrow{font-size:12px;color:var(--muted);transition:transform 0.2s;}
+    .low-stock-arrow.open{transform:rotate(180deg);}
+    .low-stock-body{display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:0.75rem 1.1rem;margin-bottom:1rem;}
+    .low-stock-body.open{display:block;}
+    .low-stock-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
+    .low-stock-row:last-child{border-bottom:none;}
+    .low-stock-name{font-size:13px;color:var(--soft);font-style:italic;}
+    .low-stock-badge{font-family:var(--serif);font-size:9px;letter-spacing:0.08em;}
+    .low-stock-badge.out{color:var(--red);}
+    .low-stock-badge.low{color:var(--ember);}
+
+    .filament-toggle{display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.1rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:4px;margin-top:1rem;}
+    .filament-toggle-label{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.15em;}
+    .filament-body{display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:0.75rem 1.1rem;margin-bottom:1rem;}
+    .filament-body.open{display:block;}
   </style>
 </head>
 <body>
@@ -203,40 +245,91 @@
 
       <!-- DASHBOARD PANE -->
       <div class="inv-pane" id="pane-dashboard">
-        <div class="stats-row" style="margin-bottom:1.5rem;">
-          <div class="stat"><div class="stat-label">STRIPE REVENUE (30d)</div><div class="stat-value ok" id="dash-revenue">—</div></div>
-          <div class="stat"><div class="stat-label">TOTAL ORDERS</div><div class="stat-value ok" id="dash-orders">—</div></div>
-          <div class="stat"><div class="stat-label">AVG ORDER VALUE</div><div class="stat-value ok" id="dash-avg">—</div></div>
-          <div class="stat"><div class="stat-label">REVIEWS</div><div class="stat-value ok" id="dash-reviews">—</div></div>
+
+        <!-- STAT CARDS -->
+        <div class="stat-cards">
+          <div class="stat-card blue">
+            <div class="stat-card-label">ACTIVE ORDERS</div>
+            <div class="stat-card-val" id="dc-orders">—</div>
+            <div class="stat-card-sub" id="dc-orders-sub">loading...</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-card-label">REVENUE THIS MONTH</div>
+            <div class="stat-card-val" id="dc-revenue">—</div>
+            <div class="stat-card-sub" id="dc-revenue-sub">loading...</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-card-label">LOW STOCK ALERTS</div>
+            <div class="stat-card-val" id="dc-lowstock">—</div>
+            <div class="stat-card-sub" id="dc-lowstock-sub">loading...</div>
+          </div>
+          <div class="stat-card teal">
+            <div class="stat-card-label">AVG ORDER VALUE</div>
+            <div class="stat-card-val" id="dc-avg">—</div>
+            <div class="stat-card-sub" id="dc-avg-sub">loading...</div>
+          </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:2rem;">
+        <!-- DASHBOARD SUB TABS -->
+        <div class="dash-tabs">
+          <button class="dash-tab active" onclick="switchDashTab('orders',this)">RECENT ORDERS</button>
+          <button class="dash-tab" onclick="switchDashTab('alerts',this)">STOCK ALERTS</button>
+          <button class="dash-tab" onclick="switchDashTab('reviews',this)">REVIEWS</button>
+        </div>
 
-          <!-- LOW STOCK ALERTS -->
-          <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.25rem;">
-            <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1rem;">LOW STOCK ALERTS</div>
-            <div id="dash-low-stock"><div style="font-style:italic;color:var(--muted);font-size:14px;">Loading...</div></div>
+        <!-- ORDERS SUB PANE -->
+        <div class="dash-subpane active" id="dsp-orders">
+          <div style="overflow-x:auto;">
+            <table class="orders-table" id="orders-table">
+              <thead>
+                <tr>
+                  <th>ORDER</th>
+                  <th>CUSTOMER</th>
+                  <th>ITEMS</th>
+                  <th>TOTAL</th>
+                  <th>DATE</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="orders-tbody">
+                <tr><td colspan="6" style="text-align:center;padding:2rem;font-style:italic;color:var(--muted);">Loading orders from Stripe...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ALERTS SUB PANE -->
+        <div class="dash-subpane" id="dsp-alerts">
+          <!-- Coin Low Stock Dropdown -->
+          <div class="low-stock-toggle" onclick="toggleDropdown('coins-alert')">
+            <div class="low-stock-toggle-label">COIN STOCK ALERTS</div>
+            <div class="low-stock-toggle-right">
+              <span class="low-stock-count" id="coin-alert-count">— alerts</span>
+              <span class="low-stock-arrow" id="arrow-coins-alert">▼</span>
+            </div>
+          </div>
+          <div class="low-stock-body" id="body-coins-alert">
+            <div id="coin-alert-list" style="font-style:italic;color:var(--muted);font-size:14px;">Load Coin Stock tab first.</div>
           </div>
 
-          <!-- RECENT REVIEWS -->
-          <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.25rem;">
-            <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1rem;">RECENT REVIEWS</div>
-            <div id="dash-recent-reviews"><div style="font-style:italic;color:var(--muted);font-size:14px;">Loading...</div></div>
+          <!-- Filament Out of Stock Dropdown -->
+          <div class="filament-toggle" onclick="toggleDropdown('filament-alert')">
+            <div class="filament-toggle-label">FILAMENT OUT OF STOCK</div>
+            <div class="low-stock-toggle-right">
+              <span class="low-stock-count" id="filament-alert-count">— out</span>
+              <span class="low-stock-arrow" id="arrow-filament-alert">▼</span>
+            </div>
           </div>
-
+          <div class="filament-body" id="body-filament-alert">
+            <div id="filament-alert-list" style="font-style:italic;color:var(--muted);font-size:14px;">Load Filament tab first.</div>
+          </div>
         </div>
 
-        <!-- RECENT STRIPE PAYMENTS -->
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.25rem;margin-bottom:2rem;">
-          <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1rem;">RECENT PAYMENTS</div>
-          <div id="dash-payments"><div style="font-style:italic;color:var(--muted);font-size:14px;">Loading...</div></div>
+        <!-- REVIEWS SUB PANE -->
+        <div class="dash-subpane" id="dsp-reviews">
+          <div id="dash-reviews-list" style="font-style:italic;color:var(--muted);font-size:14px;padding:1rem 0;">Loading reviews...</div>
         </div>
 
-        <!-- FILAMENT OUT OF STOCK -->
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.25rem;">
-          <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1rem;">FILAMENT OUT OF STOCK</div>
-          <div id="dash-filament-out"><div style="font-style:italic;color:var(--muted);font-size:14px;">Loading...</div></div>
-        </div>
       </div>
 
     </div>
@@ -250,8 +343,8 @@
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
 const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -698,128 +791,201 @@ function updateCoinStats(){
 }
 
 // ── DASHBOARD ──
-const STRIPE_KEY_INV = 'pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
-
-async function loadDashboard(){
-  loadLowStockAlerts();
-  loadRecentReviews();
-  loadRecentPayments();
-  loadFilamentOut();
+function switchDashTab(tab, el) {
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dash-subpane').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('dsp-' + tab).classList.add('active');
+  if (tab === 'alerts') populateAlerts();
+  if (tab === 'reviews') loadDashReviews();
 }
 
-function loadLowStockAlerts(){
-  const el = document.getElementById('dash-low-stock');
-  if(!el) return;
-  if(Object.keys(coinStock).length === 0){
-    el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">Load the Coin Stock tab first to see alerts.</div>';
+function toggleDropdown(id) {
+  const body = document.getElementById('body-' + id);
+  const arrow = document.getElementById('arrow-' + id);
+  body.classList.toggle('open');
+  if (arrow) arrow.classList.toggle('open');
+}
+
+async function loadDashboard() {
+  loadDashboardStripe();
+  populateStatAlerts();
+}
+
+async function loadDashboardStripe() {
+  try {
+    const res = await fetch('/api/payments');
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+
+    // Stat cards
+    const { stats, orders } = data;
+    document.getElementById('dc-orders').textContent = stats.total_orders || 0;
+    document.getElementById('dc-orders-sub').textContent = `${orders.length} this month`;
+    document.getElementById('dc-revenue').textContent = '$' + ((stats.total_revenue || 0) / 100).toFixed(2);
+    const delta = stats.rev_delta;
+    document.getElementById('dc-revenue-sub').textContent = delta
+      ? `${delta > 0 ? '+' : ''}${delta}% vs last period`
+      : 'vs last period';
+    document.getElementById('dc-avg').textContent = '$' + ((stats.avg_order || 0) / 100).toFixed(2);
+    document.getElementById('dc-avg-sub').textContent = 'per order';
+
+    // Orders table
+    renderOrdersTable(orders);
+
+  } catch(e) {
+    document.getElementById('dc-orders').textContent = '—';
+    document.getElementById('dc-revenue').textContent = '—';
+    document.getElementById('dc-avg').textContent = '—';
+    document.getElementById('dc-orders-sub').textContent = 'Stripe not connected';
+    document.getElementById('dc-revenue-sub').textContent = '';
+    document.getElementById('dc-avg-sub').textContent = '';
+    document.getElementById('orders-tbody').innerHTML = `
+      <tr><td colspan="6" style="text-align:center;padding:2rem;">
+        <div style="font-style:italic;color:var(--muted);font-size:14px;margin-bottom:8px;">Could not load Stripe orders.</div>
+        <a href="https://dashboard.stripe.com/payments" target="_blank" style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.1em;">VIEW IN STRIPE DASHBOARD →</a>
+      </td></tr>`;
+  }
+}
+
+function renderOrdersTable(orders) {
+  const tbody = document.getElementById('orders-tbody');
+  if (!orders || !orders.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;font-style:italic;color:var(--muted);">No orders found.</td></tr>';
     return;
   }
-  const allCoins = COIN_THEMES.flatMap(t => t.coins.map(c=>({...c,theme:t.label})));
-  const alerts = allCoins
-    .filter(c => (coinStock[c.id]||10) <= 3)
-    .sort((a,b) => (coinStock[a.id]||10) - (coinStock[b.id]||10));
-  if(!alerts.length){
-    el.innerHTML = '<div style="font-style:italic;color:var(--green);font-size:14px;">All coins well stocked.</div>';
-    return;
-  }
-  el.innerHTML = alerts.map(c => {
-    const stock = coinStock[c.id]||0;
-    const cls = stock===0?'out':'low';
-    const label = stock===0?'OUT OF STOCK':`${stock} LEFT`;
-    return `<div class="dash-alert">
-      <div>
-        <div class="dash-alert-name">${c.name}</div>
-        <div style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.08em;">${c.theme}</div>
-      </div>
-      <div class="dash-alert-val ${cls}">${label}</div>
-    </div>`;
+
+  tbody.innerHTML = orders.map((o, i) => {
+    const itemsText = o.items.map(it => `${it.qty > 1 ? it.qty + '× ' : ''}${it.name}`).join(', ');
+    const total = '$' + ((o.total || 0) / 100).toFixed(2);
+    const addr = o.shipping?.address || o.address;
+    const addrStr = addr
+      ? [addr.line1, addr.line2, addr.city, addr.state, addr.postal_code, addr.country].filter(Boolean).join(', ')
+      : 'No address provided';
+
+    return `
+      <tr>
+        <td><div class="order-num">${o.order_num}</div></td>
+        <td>
+          <div class="order-customer">${o.customer}</div>
+          <div class="order-email">${o.email}</div>
+        </td>
+        <td><div class="order-item">${itemsText || 'Shop order'}</div></td>
+        <td><div class="order-total">${total}</div></td>
+        <td><div class="order-date">${o.date}</div></td>
+        <td>
+          <button class="order-expand-btn" onclick="toggleOrderDetail('od-${i}')">DETAILS</button>
+        </td>
+      </tr>
+      <tr class="order-detail-row" id="od-${i}">
+        <td colspan="6">
+          <div class="order-detail-inner">
+            <div class="order-detail-grid">
+              <div class="order-detail-section">
+                <strong>SHIP TO</strong>
+                ${addrStr}
+              </div>
+              <div class="order-detail-section">
+                <strong>ITEMS</strong>
+                ${o.items.map(it => `${it.qty > 1 ? it.qty + '× ' : ''}${it.name} — $${((it.amount||0)/100).toFixed(2)}`).join('<br>') || 'Shop order'}
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>`;
   }).join('');
 }
 
-async function loadRecentReviews(){
-  const el = document.getElementById('dash-recent-reviews');
-  if(!el) return;
+function toggleOrderDetail(id) {
+  const row = document.getElementById(id);
+  if (row) row.classList.toggle('open');
+}
+
+function populateStatAlerts() {
+  // Count alerts for stat card
+  const allCoins = typeof COIN_THEMES !== 'undefined'
+    ? COIN_THEMES.flatMap(t => t.coins)
+    : [];
+  const lowCoins = allCoins.filter(c => (coinStock[c.id] !== undefined ? coinStock[c.id] : 10) <= 3).length;
+  const outFilament = typeof BASIC !== 'undefined'
+    ? [...BASIC, ...MATTE].filter(c => stock['B_'+c.name] === false || stock['M_'+c.name] === false).length
+    : 0;
+  const totalAlerts = lowCoins + outFilament;
+  document.getElementById('dc-lowstock').textContent = totalAlerts;
+  document.getElementById('dc-lowstock-sub').textContent = totalAlerts > 0 ? 'needs attention' : 'all clear';
+}
+
+function populateAlerts() {
+  // Coins
+  const coinEl = document.getElementById('coin-alert-list');
+  const coinCountEl = document.getElementById('coin-alert-count');
+  if (coinEl) {
+    const allCoins = typeof COIN_THEMES !== 'undefined' ? COIN_THEMES.flatMap(t => t.coins.map(c => ({...c, themeLabel: t.label}))) : [];
+    const alerts = allCoins.filter(c => (coinStock[c.id] !== undefined ? coinStock[c.id] : 10) <= 3)
+      .sort((a,b) => (coinStock[a.id]||0) - (coinStock[b.id]||0));
+    if (coinCountEl) coinCountEl.textContent = alerts.length + ' alert' + (alerts.length !== 1 ? 's' : '');
+    if (!alerts.length) {
+      coinEl.innerHTML = '<div style="font-style:italic;color:var(--green);font-size:14px;padding:6px 0;">All coins well stocked.</div>';
+    } else {
+      coinEl.innerHTML = alerts.map(c => {
+        const s = coinStock[c.id] || 0;
+        const cls = s === 0 ? 'out' : 'low';
+        const label = s === 0 ? 'OUT OF STOCK' : s + ' LEFT';
+        return `<div class="low-stock-row">
+          <div>
+            <div class="low-stock-name">${c.name}</div>
+            <div style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.08em;">${c.themeLabel}</div>
+          </div>
+          <div class="low-stock-badge ${cls}">${label}</div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // Filament
+  const filEl = document.getElementById('filament-alert-list');
+  const filCountEl = document.getElementById('filament-alert-count');
+  if (filEl && typeof BASIC !== 'undefined') {
+    const all = [
+      ...BASIC.map(c => ({name:c.name, key:'B_'+c.name, material:'PLA Basic'})),
+      ...MATTE.map(c => ({name:c.name, key:'M_'+c.name, material:'PLA Matte'})),
+    ];
+    const out = all.filter(c => stock[c.key] === false);
+    if (filCountEl) filCountEl.textContent = out.length + ' out';
+    if (!out.length) {
+      filEl.innerHTML = '<div style="font-style:italic;color:var(--green);font-size:14px;padding:6px 0;">All filament in stock.</div>';
+    } else {
+      filEl.innerHTML = out.map(c => `
+        <div class="low-stock-row">
+          <div class="low-stock-name">${c.name}</div>
+          <div class="low-stock-badge out">${c.material} OUT</div>
+        </div>`).join('');
+    }
+  }
+}
+
+async function loadDashReviews() {
+  const el = document.getElementById('dash-reviews-list');
+  if (!el) return;
   try {
-    const res = await sb('reviews?select=reviewer_name,coin_ordered,review_text,rating,created_at&order=created_at.desc&limit=5');
-    if(!res||!res.length){
-      el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">No reviews yet.</div>';
+    const rows = await sb('reviews?select=reviewer_name,coin_ordered,review_text,rating,created_at&order=created_at.desc&limit=10');
+    if (!rows || !rows.length) {
+      el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;padding:1rem 0;">No reviews yet.</div>';
       return;
     }
-    el.innerHTML = res.map(r=>`
-      <div class="dash-review-item">
-        <div class="dash-review-head">
-          <div class="dash-review-author">${r.reviewer_name||'Anonymous'}</div>
-          <div class="dash-review-stars">${'★'.repeat(r.rating||5)}</div>
+    el.innerHTML = rows.map(r => `
+      <div style="padding:1rem 0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <div style="font-family:var(--serif);font-size:12px;color:var(--gold);letter-spacing:0.08em;">${r.reviewer_name||'Anonymous'}</div>
+          <div style="font-size:14px;color:var(--gold2)">${'★'.repeat(r.rating||5)}${'☆'.repeat(5-(r.rating||5))}</div>
         </div>
-        <div class="dash-review-coin">${r.coin_ordered||''}</div>
-        <div class="dash-review-text">${(r.review_text||'').substring(0,100)}${(r.review_text||'').length>100?'...':''}</div>
+        <div style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-bottom:6px;">${r.coin_ordered||''}</div>
+        <div style="font-size:14px;color:var(--muted);font-style:italic;line-height:1.6;">${r.review_text||''}</div>
+        <div style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.08em;margin-top:6px;">${r.created_at?new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}</div>
       </div>`).join('');
-  } catch(e){
+  } catch(e) {
     el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">Reviews table not set up yet.</div>';
   }
-}
-
-async function loadRecentPayments(){
-  const el = document.getElementById('dash-payments');
-  const revEl = document.getElementById('dash-revenue');
-  const ordEl = document.getElementById('dash-orders');
-  const avgEl = document.getElementById('dash-avg');
-  if(!el) return;
-
-  try {
-    // Fetch recent Stripe payments via the checkout API
-    const res = await fetch('/api/payments', { method: 'GET' });
-    if(res.ok){
-      const data = await res.json();
-      if(data.payments && data.payments.length){
-        const total = data.payments.reduce((s,p)=>s+(p.amount||0),0)/100;
-        const avg = total/data.payments.length;
-        if(revEl) revEl.textContent = '$'+total.toFixed(2);
-        if(ordEl) ordEl.textContent = data.payments.length;
-        if(avgEl) avgEl.textContent = '$'+avg.toFixed(2);
-        el.innerHTML = data.payments.map(p=>`
-          <div class="dash-payment">
-            <div class="dash-payment-desc">${p.description||'Shop order'}</div>
-            <div class="dash-payment-amt">$${((p.amount||0)/100).toFixed(2)}</div>
-            <div class="dash-payment-date">${p.date||''}</div>
-          </div>`).join('');
-      } else {
-        el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">No recent payments found.</div>';
-      }
-    } else {
-      throw new Error('API not available');
-    }
-  } catch(e){
-    // Stripe payments API requires a separate serverless function
-    // Show helpful message in the meantime
-    if(revEl) revEl.textContent = 'See Stripe';
-    if(ordEl) ordEl.textContent = '—';
-    if(avgEl) avgEl.textContent = '—';
-    el.innerHTML = `<div style="font-style:italic;color:var(--muted);font-size:14px;line-height:1.6;">
-      Payment data pulls from Stripe directly.
-      <a href="https://dashboard.stripe.com/payments" target="_blank" style="color:var(--gold);">View in Stripe dashboard →</a>
-    </div>`;
-  }
-}
-
-function loadFilamentOut(){
-  const el = document.getElementById('dash-filament-out');
-  if(!el) return;
-  if(!Object.keys(stock).length){
-    el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">Load the Filament tab first.</div>';
-    return;
-  }
-  const ALL_COLORS = [...BASIC.map(c=>({...c,material:'PLA Basic'})), ...MATTE.map(c=>({...c,material:'PLA Matte'}))];
-  const out = ALL_COLORS.filter(c => stock['B_'+c.name]===false || stock['M_'+c.name]===false);
-  if(!out.length){
-    el.innerHTML = '<div style="font-style:italic;color:var(--green);font-size:14px;">All filament in stock.</div>';
-    return;
-  }
-  el.innerHTML = out.map(c=>`
-    <div class="dash-alert">
-      <div class="dash-alert-name">${c.name}</div>
-      <div class="dash-alert-val out">${c.material} — OUT</div>
-    </div>`).join('');
 }
 
 if(sessionStorage.getItem(SK)==='1') loadInventory();
