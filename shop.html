@@ -88,6 +88,22 @@
     /* ── COIN GRID ── */
     .coin-grid-display{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;}
 
+    /* ── COIN FILTER BAR ── */
+    .coin-filter-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:0.85rem 0;border-bottom:1px solid var(--border);margin-bottom:1.25rem;}
+    .coin-filter-pills{display:flex;gap:6px;flex-wrap:wrap;}
+    .coin-fpill{font-family:var(--serif);font-size:10px;letter-spacing:0.1em;padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.15s;}
+    .coin-fpill:hover{border-color:var(--border2);color:var(--gold);}
+    .coin-fpill.active{background:var(--gold);border-color:var(--gold);color:#0d0f14;}
+    .coin-fpill.active-green{background:rgba(74,158,107,0.12);border-color:rgba(74,158,107,0.4);color:var(--green);}
+    .coin-fpill.active-amber{background:rgba(212,84,26,0.1);border-color:rgba(212,84,26,0.4);color:var(--ember2);}
+    .coin-fpill.active-red{background:rgba(184,64,64,0.1);border-color:rgba(184,64,64,0.4);color:var(--red);}
+    .coin-toggle-wrap{display:flex;align-items:center;gap:8px;cursor:pointer;}
+    .coin-toggle{width:38px;height:20px;background:var(--green);border-radius:10px;position:relative;transition:background 0.2s;flex-shrink:0;}
+    .coin-toggle.off{background:var(--border2);}
+    .coin-toggle-knob{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:2px;right:2px;transition:right 0.2s;}
+    .coin-toggle.off .coin-toggle-knob{right:20px;}
+    .coin-toggle-label{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.1em;white-space:nowrap;}
+
     /* ── COIN CARD ── */
     .coin-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color 0.2s,transform 0.2s;display:flex;flex-direction:column;}
     .coin-card:hover{border-color:var(--border2);transform:translateY(-2px);}
@@ -150,6 +166,42 @@
       .lightbox-img{min-height:220px;}
       .coin-grid-display{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
     }
+
+    /* ── REVIEWS ── */
+    .reviews-section{padding:3rem 0;border-top:1px solid var(--border);}
+    .reviews-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;}
+    .reviews-title{font-family:var(--serif);font-size:18px;color:var(--gold);letter-spacing:0.1em;}
+    .reviews-avg{display:flex;align-items:center;gap:10px;}
+    .reviews-stars{color:var(--gold2);font-size:22px;letter-spacing:2px;}
+    .reviews-avg-num{font-family:var(--serif);font-size:24px;color:var(--gold2);}
+    .reviews-avg-count{font-size:14px;color:var(--muted);font-style:italic;}
+    .reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:3rem;}
+    .review-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;}
+    .review-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+    .review-author{font-family:var(--serif);font-size:12px;color:var(--text);letter-spacing:0.08em;}
+    .review-stars{color:var(--gold2);font-size:14px;letter-spacing:1px;}
+    .review-coin{font-family:var(--serif);font-size:9px;color:var(--gold);letter-spacing:0.12em;margin-bottom:8px;}
+    .review-text{font-size:15px;color:var(--muted);font-style:italic;line-height:1.7;}
+    .review-date{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-top:8px;}
+    .review-form-wrap{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:1.75rem;max-width:600px;}
+    .review-form-title{font-family:var(--serif);font-size:14px;color:var(--gold);letter-spacing:0.15em;margin-bottom:1.25rem;}
+    .review-star-pick{display:flex;gap:6px;margin-bottom:1rem;}
+    .star-btn{font-size:24px;cursor:pointer;opacity:0.3;transition:opacity 0.15s;background:none;border:none;padding:0;}
+    .star-btn.lit{opacity:1;}
+    .review-form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+    .review-form-group{margin-bottom:12px;}
+    .review-form-group label{display:block;font-family:var(--serif);font-size:10px;color:var(--soft);letter-spacing:0.15em;margin-bottom:5px;}
+    .review-form-group input,
+    .review-form-group select,
+    .review-form-group textarea{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:var(--body);font-size:15px;padding:9px 12px;outline:none;border-radius:var(--radius);}
+    .review-form-group input:focus,
+    .review-form-group select:focus,
+    .review-form-group textarea:focus{border-color:var(--border2);}
+    .review-form-group textarea{min-height:90px;resize:vertical;}
+    .review-submit{font-family:var(--serif);font-size:11px;letter-spacing:0.16em;padding:12px 28px;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:var(--radius);transition:background 0.2s;}
+    .review-submit:hover{background:var(--gold2);}
+    .review-success{display:none;text-align:center;padding:1.5rem;font-family:var(--serif);font-size:13px;color:var(--green);letter-spacing:0.1em;}
+    .no-reviews{text-align:center;padding:2rem;font-style:italic;color:var(--muted);font-size:16px;}
   </style>
   <style id="page-map">
     html {
@@ -310,12 +362,89 @@
             <span id="coins-section-title">ALL COINS</span>
             <span id="coins-section-count" style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.1em;"></span>
           </div>
+
+          <!-- FILTER BAR -->
+          <div class="coin-filter-bar">
+            <div class="coin-filter-pills">
+              <button class="coin-fpill active" onclick="setCoinShopFilter('all',this)">All</button>
+              <button class="coin-fpill" onclick="setCoinShopFilter('in',this)">In stock</button>
+              <button class="coin-fpill" onclick="setCoinShopFilter('low',this)">Low stock</button>
+              <button class="coin-fpill" onclick="setCoinShopFilter('out',this)">Out of stock</button>
+            </div>
+            <div class="coin-toggle-wrap" onclick="toggleHideOut()">
+              <div class="coin-toggle" id="hide-out-toggle"><div class="coin-toggle-knob"></div></div>
+              <span class="coin-toggle-label">HIDE OUT OF STOCK</span>
+            </div>
+          </div>
+
+          <!-- ASSET SMITHS CREDIT -->
+          <div style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.12em;margin-bottom:1.25rem;">
+            COIN DESIGNS BY <a href="https://www.myminifactory.com/users/AssetSmiths" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;letter-spacing:0.12em;">ASSET SMITHS</a> — COMMERCIAL LICENSE HELD
+          </div>
+
           <div class="coin-grid-display" id="coin-grid-display"></div>
         </div>
 
       </div>
     </div>
 
+  </div>
+
+  <div class="container reviews-section" id="reviews-section">
+    <div class="reviews-header">
+      <div class="reviews-title">CUSTOMER REVIEWS</div>
+      <div class="reviews-avg" id="reviews-avg" style="display:none;">
+        <div class="reviews-stars" id="avg-stars">★★★★★</div>
+        <div class="reviews-avg-num" id="avg-num">5.0</div>
+        <div class="reviews-avg-count" id="avg-count">— reviews</div>
+      </div>
+    </div>
+
+    <div class="reviews-grid" id="reviews-grid">
+      <div class="no-reviews" id="no-reviews-msg">No reviews yet — be the first to leave one below!</div>
+    </div>
+
+    <div class="review-form-wrap">
+      <div class="review-form-title">LEAVE A REVIEW</div>
+      <form id="review-form" action="https://formspree.io/f/xnjryqen" method="POST">
+        <input type="hidden" name="_subject" value="New Review — The Forge &amp; Fable">
+        <input type="hidden" name="rating" id="rating-input" value="5">
+        <input type="hidden" name="_next" value="https://theforgeandfable.com/shop.html?reviewed=true">
+
+        <div style="margin-bottom:1rem;">
+          <div style="font-family:var(--serif);font-size:10px;color:var(--soft);letter-spacing:0.15em;margin-bottom:8px;">YOUR RATING *</div>
+          <div class="review-star-pick" id="star-pick">
+            <button type="button" class="star-btn lit" data-val="1" onclick="setStars(1)">★</button>
+            <button type="button" class="star-btn lit" data-val="2" onclick="setStars(2)">★</button>
+            <button type="button" class="star-btn lit" data-val="3" onclick="setStars(3)">★</button>
+            <button type="button" class="star-btn lit" data-val="4" onclick="setStars(4)">★</button>
+            <button type="button" class="star-btn lit" data-val="5" onclick="setStars(5)">★</button>
+          </div>
+        </div>
+
+        <div class="review-form-row">
+          <div class="review-form-group">
+            <label>YOUR NAME *</label>
+            <input type="text" name="reviewer_name" placeholder="Jane D." required>
+          </div>
+          <div class="review-form-group">
+            <label>COIN ORDERED *</label>
+            <select name="coin_ordered" required id="review-coin-select">
+              <option value="">— Select coin —</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="review-form-group">
+          <label>YOUR REVIEW *</label>
+          <textarea name="review_text" placeholder="Tell other customers what you thought of the print quality, packaging, and overall experience..." required></textarea>
+        </div>
+
+        <input type="text" name="_gotcha" style="display:none">
+        <button type="submit" class="review-submit">SUBMIT REVIEW</button>
+        <div class="review-success" id="review-success">THANK YOU FOR YOUR REVIEW!</div>
+      </form>
+    </div>
   </div>
 
   <div style="text-align:center;padding:0 0 3rem;">
@@ -345,8 +474,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -611,6 +740,44 @@
     if(btn){btn.disabled=status==='out';if(status==='out')btn.textContent='OUT OF STOCK';else if(btn.textContent==='OUT OF STOCK')btn.textContent='+ CART';}
   }
 
+  // ── COIN SHOP FILTERS ──
+  let coinShopFilter = 'all';
+  let hideOutOfStock = false;
+
+  function setCoinShopFilter(filter, btn) {
+    coinShopFilter = filter;
+    document.querySelectorAll('.coin-fpill').forEach(b => {
+      b.classList.remove('active','active-green','active-amber','active-red');
+    });
+    const classMap = {all:'active', in:'active-green', low:'active-amber', out:'active-red'};
+    btn.classList.add(classMap[filter] || 'active');
+    reRenderCurrentView();
+  }
+
+  function toggleHideOut() {
+    hideOutOfStock = !hideOutOfStock;
+    const toggle = document.getElementById('hide-out-toggle');
+    toggle.classList.toggle('off', !hideOutOfStock);
+    reRenderCurrentView();
+  }
+
+  function reRenderCurrentView() {
+    if (currentTheme) showTheme(currentTheme);
+    else showAllCoins();
+  }
+
+  function filterCoinsByShopFilter(coins) {
+    return coins.filter(c => {
+      const stock = getStock(c.id);
+      const status = getStatus(stock);
+      if (hideOutOfStock && status === 'out') return false;
+      if (coinShopFilter === 'in' && status !== 'in-stock') return false;
+      if (coinShopFilter === 'low' && status !== 'low') return false;
+      if (coinShopFilter === 'out' && status !== 'out') return false;
+      return true;
+    });
+  }
+
   // ── VIEW NAVIGATION ──
   let currentTheme = null;
 
@@ -660,14 +827,19 @@
   }
 
   function renderCoins(coins, themeLabel){
-    const total = coins.length;
-    document.getElementById('coins-section-count').textContent = `${total} DESIGNS`;
-    document.getElementById('coin-grid-display').innerHTML = coins.map(c=>coinCardHTML(c,themeLabel)).join('');
+    const filtered = filterCoinsByShopFilter(coins);
+    document.getElementById('coins-section-count').textContent = `${filtered.length} OF ${coins.length} DESIGNS`;
+    document.getElementById('coin-grid-display').innerHTML = filtered.length
+      ? filtered.map(c=>coinCardHTML(c,themeLabel)).join('')
+      : `<div style="grid-column:1/-1;text-align:center;padding:3rem;font-style:italic;color:var(--muted);font-size:16px;">No coins match this filter.</div>`;
   }
 
   function renderCoinsAll(coins){
-    document.getElementById('coins-section-count').textContent = `${coins.length} DESIGNS`;
-    document.getElementById('coin-grid-display').innerHTML = coins.map(c=>coinCardHTML(c,c.themeLabel)).join('');
+    const filtered = filterCoinsByShopFilter(coins);
+    document.getElementById('coins-section-count').textContent = `${filtered.length} OF ${coins.length} DESIGNS`;
+    document.getElementById('coin-grid-display').innerHTML = filtered.length
+      ? filtered.map(c=>coinCardHTML(c,c.themeLabel)).join('')
+      : `<div style="grid-column:1/-1;text-align:center;padding:3rem;font-style:italic;color:var(--muted);font-size:16px;">No coins match this filter.</div>`;
   }
 
   function coinCardHTML(coin, themeLabel){
@@ -866,6 +1038,93 @@
     }catch(e){}
   }
 
+  // ── REVIEWS ──
+  let reviews = [];
+  let currentRating = 5;
+
+  function setStars(val) {
+    currentRating = val;
+    document.getElementById('rating-input').value = val;
+    document.querySelectorAll('.star-btn').forEach(b => {
+      b.classList.toggle('lit', parseInt(b.dataset.val) <= val);
+    });
+  }
+
+  function starsHTML(rating) {
+    return '★'.repeat(Math.max(0,Math.min(5,rating||5))) + '☆'.repeat(5-Math.max(0,Math.min(5,rating||5)));
+  }
+
+  function populateCoinSelect() {
+    const select = document.getElementById('review-coin-select');
+    if (!select) return;
+    THEMES.forEach(theme => {
+      const group = document.createElement('optgroup');
+      group.label = theme.label;
+      theme.coins.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.name; opt.textContent = c.name;
+        group.appendChild(opt);
+      });
+      select.appendChild(group);
+    });
+  }
+
+  async function loadReviews() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=*&order=created_at.desc&limit=20`, {
+        headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+      });
+      if (res.ok) { reviews = await res.json(); renderReviews(); }
+    } catch(e) { renderReviews(); }
+  }
+
+  function renderReviews() {
+    const grid = document.getElementById('reviews-grid');
+    const noMsg = document.getElementById('no-reviews-msg');
+    const avgWrap = document.getElementById('reviews-avg');
+    if (!grid) return;
+    if (!reviews.length) { if(noMsg) noMsg.style.display='block'; return; }
+    if(noMsg) noMsg.style.display='none';
+    if(avgWrap) avgWrap.style.display='flex';
+    const avg = reviews.reduce((s,r)=>s+(r.rating||5),0)/reviews.length;
+    const avgStars = document.getElementById('avg-stars');
+    const avgNum = document.getElementById('avg-num');
+    const avgCount = document.getElementById('avg-count');
+    if(avgStars) avgStars.textContent = starsHTML(Math.round(avg));
+    if(avgNum) avgNum.textContent = avg.toFixed(1);
+    if(avgCount) avgCount.textContent = `${reviews.length} review${reviews.length!==1?'s':''}`;
+    grid.innerHTML = reviews.map(r=>`
+      <div class="review-card">
+        <div class="review-card-head">
+          <div class="review-author">${r.reviewer_name||'Anonymous'}</div>
+          <div class="review-stars">${starsHTML(r.rating||5)}</div>
+        </div>
+        <div class="review-coin">${r.coin_ordered||''}</div>
+        <div class="review-text">${r.review_text||''}</div>
+        <div class="review-date">${r.created_at?new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}</div>
+      </div>`).join('');
+  }
+
+  const reviewForm = document.getElementById('review-form');
+  if (reviewForm) {
+    reviewForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const data = new FormData(this);
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/reviews`,{
+          method:'POST',
+          headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},
+          body:JSON.stringify({reviewer_name:data.get('reviewer_name'),coin_ordered:data.get('coin_ordered'),review_text:data.get('review_text'),rating:parseInt(data.get('rating'))||5})
+        });
+      } catch(e){ console.warn('Supabase review save failed'); }
+      fetch(this.action,{method:'POST',body:data,headers:{'Accept':'application/json'}});
+      this.style.display='none';
+      const succ = document.getElementById('review-success');
+      if(succ) succ.style.display='block';
+      setTimeout(()=>loadReviews(),1000);
+    });
+  }
+
   // ── INIT ──
   document.getElementById('hamburger').addEventListener('click',function(){
     document.getElementById('nav-links').classList.toggle('open');
@@ -873,7 +1132,16 @@
 
   renderCart();
   updateBadge();
+  populateCoinSelect();
+  loadReviews();
   window.addEventListener('load',renderPayPalButton);
+
+  if(window.location.search.includes('reviewed=true')){
+    const rf=document.getElementById('review-form');
+    const rs=document.getElementById('review-success');
+    if(rf) rf.style.display='none';
+    if(rs) rs.style.display='block';
+  }
   </script>
 </body>
 </html>

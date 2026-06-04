@@ -104,7 +104,25 @@
     .save-ind.ok{color:var(--green);}
     .save-ind.saving{color:var(--gold);}
     .save-ind.error{color:var(--red);}
-    @media(max-width:600px){.stats-row{grid-template-columns:1fr 1fr;}.color-grid{grid-template-columns:1fr 1fr;}}
+    /* ── DASHBOARD ── */
+    .dash-alert{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);}
+    .dash-alert:last-child{border-bottom:none;}
+    .dash-alert-name{font-size:13px;color:var(--text);font-style:italic;}
+    .dash-alert-val{font-family:var(--serif);font-size:11px;letter-spacing:0.08em;}
+    .dash-alert-val.low{color:var(--ember);}
+    .dash-alert-val.out{color:var(--red);}
+    .dash-payment{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+    .dash-payment:last-child{border-bottom:none;}
+    .dash-payment-desc{font-size:13px;color:var(--text);font-style:italic;flex:1;}
+    .dash-payment-amt{font-family:var(--serif);font-size:14px;color:var(--green);flex-shrink:0;margin-left:12px;}
+    .dash-payment-date{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.08em;flex-shrink:0;margin-left:10px;}
+    .dash-review-item{padding:8px 0;border-bottom:1px solid var(--border);}
+    .dash-review-item:last-child{border-bottom:none;}
+    .dash-review-head{display:flex;justify-content:space-between;margin-bottom:3px;}
+    .dash-review-author{font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.08em;}
+    .dash-review-stars{font-size:12px;color:var(--gold2);}
+    .dash-review-coin{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-bottom:3px;}
+    .dash-review-text{font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;}
   </style>
 </head>
 <body>
@@ -132,6 +150,7 @@
       <div class="inv-tabs">
         <button class="inv-tab active" onclick="switchInvTab('filament',this)">FILAMENT</button>
         <button class="inv-tab" onclick="switchInvTab('coins',this)">COIN STOCK</button>
+        <button class="inv-tab" onclick="switchInvTab('dashboard',this)">DASHBOARD</button>
       </div>
 
       <!-- FILAMENT PANE -->
@@ -182,6 +201,44 @@
         <div id="coin-sections"></div>
       </div>
 
+      <!-- DASHBOARD PANE -->
+      <div class="inv-pane" id="pane-dashboard">
+        <div class="stats-row" style="margin-bottom:1.5rem;">
+          <div class="stat"><div class="stat-label">STRIPE REVENUE (30d)</div><div class="stat-value ok" id="dash-revenue">—</div></div>
+          <div class="stat"><div class="stat-label">TOTAL ORDERS</div><div class="stat-value ok" id="dash-orders">—</div></div>
+          <div class="stat"><div class="stat-label">AVG ORDER VALUE</div><div class="stat-value ok" id="dash-avg">—</div></div>
+          <div class="stat"><div class="stat-label">REVIEWS</div><div class="stat-value ok" id="dash-reviews">—</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:2rem;">
+
+          <!-- LOW STOCK ALERTS -->
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.25rem;">
+            <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1rem;">LOW STOCK ALERTS</div>
+            <div id="dash-low-stock"><div style="font-style:italic;color:var(--muted);font-size:14px;">Loading...</div></div>
+          </div>
+
+          <!-- RECENT REVIEWS -->
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.25rem;">
+            <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1rem;">RECENT REVIEWS</div>
+            <div id="dash-recent-reviews"><div style="font-style:italic;color:var(--muted);font-size:14px;">Loading...</div></div>
+          </div>
+
+        </div>
+
+        <!-- RECENT STRIPE PAYMENTS -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.25rem;margin-bottom:2rem;">
+          <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1rem;">RECENT PAYMENTS</div>
+          <div id="dash-payments"><div style="font-style:italic;color:var(--muted);font-size:14px;">Loading...</div></div>
+        </div>
+
+        <!-- FILAMENT OUT OF STOCK -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.25rem;">
+          <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1rem;">FILAMENT OUT OF STOCK</div>
+          <div id="dash-filament-out"><div style="font-style:italic;color:var(--muted);font-size:14px;">Loading...</div></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -193,8 +250,8 @@
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
 const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -361,6 +418,7 @@ function switchInvTab(tab, el){
   el.classList.add('active');
   document.getElementById('pane-'+tab).classList.add('active');
   if(tab==='coins' && Object.keys(coinStock).length===0) loadCoinStock();
+  if(tab==='dashboard') loadDashboard();
 }
 
 // ── COIN THEMES (same as shop.html) ──
@@ -637,6 +695,131 @@ function updateCoinStats(){
   document.getElementById('cs-in').textContent    = inStock;
   document.getElementById('cs-low').textContent   = low;
   document.getElementById('cs-out').textContent   = out;
+}
+
+// ── DASHBOARD ──
+const STRIPE_KEY_INV = 'pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
+
+async function loadDashboard(){
+  loadLowStockAlerts();
+  loadRecentReviews();
+  loadRecentPayments();
+  loadFilamentOut();
+}
+
+function loadLowStockAlerts(){
+  const el = document.getElementById('dash-low-stock');
+  if(!el) return;
+  if(Object.keys(coinStock).length === 0){
+    el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">Load the Coin Stock tab first to see alerts.</div>';
+    return;
+  }
+  const allCoins = COIN_THEMES.flatMap(t => t.coins.map(c=>({...c,theme:t.label})));
+  const alerts = allCoins
+    .filter(c => (coinStock[c.id]||10) <= 3)
+    .sort((a,b) => (coinStock[a.id]||10) - (coinStock[b.id]||10));
+  if(!alerts.length){
+    el.innerHTML = '<div style="font-style:italic;color:var(--green);font-size:14px;">All coins well stocked.</div>';
+    return;
+  }
+  el.innerHTML = alerts.map(c => {
+    const stock = coinStock[c.id]||0;
+    const cls = stock===0?'out':'low';
+    const label = stock===0?'OUT OF STOCK':`${stock} LEFT`;
+    return `<div class="dash-alert">
+      <div>
+        <div class="dash-alert-name">${c.name}</div>
+        <div style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.08em;">${c.theme}</div>
+      </div>
+      <div class="dash-alert-val ${cls}">${label}</div>
+    </div>`;
+  }).join('');
+}
+
+async function loadRecentReviews(){
+  const el = document.getElementById('dash-recent-reviews');
+  if(!el) return;
+  try {
+    const res = await sb('reviews?select=reviewer_name,coin_ordered,review_text,rating,created_at&order=created_at.desc&limit=5');
+    if(!res||!res.length){
+      el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">No reviews yet.</div>';
+      return;
+    }
+    el.innerHTML = res.map(r=>`
+      <div class="dash-review-item">
+        <div class="dash-review-head">
+          <div class="dash-review-author">${r.reviewer_name||'Anonymous'}</div>
+          <div class="dash-review-stars">${'★'.repeat(r.rating||5)}</div>
+        </div>
+        <div class="dash-review-coin">${r.coin_ordered||''}</div>
+        <div class="dash-review-text">${(r.review_text||'').substring(0,100)}${(r.review_text||'').length>100?'...':''}</div>
+      </div>`).join('');
+  } catch(e){
+    el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">Reviews table not set up yet.</div>';
+  }
+}
+
+async function loadRecentPayments(){
+  const el = document.getElementById('dash-payments');
+  const revEl = document.getElementById('dash-revenue');
+  const ordEl = document.getElementById('dash-orders');
+  const avgEl = document.getElementById('dash-avg');
+  if(!el) return;
+
+  try {
+    // Fetch recent Stripe payments via the checkout API
+    const res = await fetch('/api/payments', { method: 'GET' });
+    if(res.ok){
+      const data = await res.json();
+      if(data.payments && data.payments.length){
+        const total = data.payments.reduce((s,p)=>s+(p.amount||0),0)/100;
+        const avg = total/data.payments.length;
+        if(revEl) revEl.textContent = '$'+total.toFixed(2);
+        if(ordEl) ordEl.textContent = data.payments.length;
+        if(avgEl) avgEl.textContent = '$'+avg.toFixed(2);
+        el.innerHTML = data.payments.map(p=>`
+          <div class="dash-payment">
+            <div class="dash-payment-desc">${p.description||'Shop order'}</div>
+            <div class="dash-payment-amt">$${((p.amount||0)/100).toFixed(2)}</div>
+            <div class="dash-payment-date">${p.date||''}</div>
+          </div>`).join('');
+      } else {
+        el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">No recent payments found.</div>';
+      }
+    } else {
+      throw new Error('API not available');
+    }
+  } catch(e){
+    // Stripe payments API requires a separate serverless function
+    // Show helpful message in the meantime
+    if(revEl) revEl.textContent = 'See Stripe';
+    if(ordEl) ordEl.textContent = '—';
+    if(avgEl) avgEl.textContent = '—';
+    el.innerHTML = `<div style="font-style:italic;color:var(--muted);font-size:14px;line-height:1.6;">
+      Payment data pulls from Stripe directly.
+      <a href="https://dashboard.stripe.com/payments" target="_blank" style="color:var(--gold);">View in Stripe dashboard →</a>
+    </div>`;
+  }
+}
+
+function loadFilamentOut(){
+  const el = document.getElementById('dash-filament-out');
+  if(!el) return;
+  if(!Object.keys(stock).length){
+    el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">Load the Filament tab first.</div>';
+    return;
+  }
+  const ALL_COLORS = [...BASIC.map(c=>({...c,material:'PLA Basic'})), ...MATTE.map(c=>({...c,material:'PLA Matte'}))];
+  const out = ALL_COLORS.filter(c => stock['B_'+c.name]===false || stock['M_'+c.name]===false);
+  if(!out.length){
+    el.innerHTML = '<div style="font-style:italic;color:var(--green);font-size:14px;">All filament in stock.</div>';
+    return;
+  }
+  el.innerHTML = out.map(c=>`
+    <div class="dash-alert">
+      <div class="dash-alert-name">${c.name}</div>
+      <div class="dash-alert-val out">${c.material} — OUT</div>
+    </div>`).join('');
 }
 
 if(sessionStorage.getItem(SK)==='1') loadInventory();
