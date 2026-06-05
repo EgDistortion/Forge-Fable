@@ -180,9 +180,22 @@
       .pricing-grid { grid-template-columns: 1fr; }
     }
 
-    /* ── CART NAV ICON ── */
-    .cart-icon-wrap {
-      position: relative; cursor: pointer; background: none;
+    /* ── ESTIMATOR ── */
+    .estimator-wrap{display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start;}
+    .estimator-fields{display:flex;flex-direction:column;gap:1.5rem;}
+    .est-label{display:block;font-family:var(--serif);font-size:10px;color:var(--soft);letter-spacing:0.18em;margin-bottom:8px;}
+    .est-opts{display:flex;gap:8px;flex-wrap:wrap;}
+    .est-opt{font-family:var(--serif);font-size:11px;letter-spacing:0.1em;padding:7px 16px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);cursor:pointer;border-radius:var(--radius);transition:all 0.15s;}
+    .est-opt:hover{color:var(--gold);border-color:var(--border2);}
+    .est-opt.active{background:var(--gold);color:#0d0f14;border-color:var(--gold);}
+    .estimator-result{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:1.75rem;position:sticky;top:80px;}
+    .est-result-label{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.2em;margin-bottom:8px;}
+    .est-result-val{font-family:var(--serif);font-size:38px;color:var(--gold2);line-height:1;margin-bottom:8px;}
+    .est-result-sub{font-size:14px;color:var(--muted);font-style:italic;margin-bottom:1rem;line-height:1.5;}
+    .est-result-note{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding-top:1rem;border-top:1px solid var(--border);}
+    @media(max-width:760px){.estimator-wrap{grid-template-columns:1fr;}.estimator-result{position:static;}}
+
+    /* ── CART NAV ICON (first) ── */
       border: 1px solid var(--border); border-radius: var(--radius);
       padding: 7px 14px; display: flex; align-items: center; gap: 8px;
       font-family: var(--serif); font-size: 11px; color: var(--muted);
@@ -289,9 +302,9 @@
 
     <div class="section">
       <p class="pricing-intro">
-        All prices below are estimates based on typical print jobs. Every order starts as a free quote —
-        we review your STL, assess print time and material use, then confirm pricing within 24 hours.
-        You only pay once you approve the quote.
+        Every print is different — size, complexity, material, and print time all factor in.
+        All prices below are <em>starting points</em>. Send us your file for a free quote within 24 hours.
+        You only pay once you approve.
       </p>
 
       <div class="pricing-grid">
@@ -299,7 +312,7 @@
         <div class="p-card">
           <div class="p-name">RESIN — STANDARD</div>
           <div class="p-sub">Hero minis, 28–32mm</div>
-          <div class="p-price">$8–15</div>
+          <div class="p-price">from $8</div>
           <div class="p-unit">per miniature</div>
           <ul class="p-features">
             <li>4K LCD resin printer</li>
@@ -313,7 +326,7 @@
         <div class="p-card featured">
           <div class="p-name">RESIN — DISPLAY</div>
           <div class="p-sub">Character pieces, 54–75mm</div>
-          <div class="p-price">$22–45</div>
+          <div class="p-price">from $22</div>
           <div class="p-unit">per piece</div>
           <ul class="p-features">
             <li>4K LCD resin printer</li>
@@ -327,7 +340,7 @@
         <div class="p-card">
           <div class="p-name">PLA — TERRAIN</div>
           <div class="p-sub">Tiles, scatter, large builds</div>
-          <div class="p-price">$5–40</div>
+          <div class="p-price">from $5</div>
           <div class="p-unit">per piece or set</div>
           <ul class="p-features">
             <li>FDM PLA Basic or PLA Matte</li>
@@ -341,7 +354,7 @@
         <div class="p-card">
           <div class="p-name">MULTICOLOR TERRAIN</div>
           <div class="p-sub">AMS multicolor FDM builds</div>
-          <div class="p-price">$8–50</div>
+          <div class="p-price">from $8</div>
           <div class="p-unit">per piece or set</div>
           <ul class="p-features">
             <li>Up to 4 colors in one print</li>
@@ -355,12 +368,74 @@
       </div>
 
       <div class="pricing-note">
-        <strong>Multicolor terrain</strong> uses our Bambu AMS system to print up to 4 filament colors in a single build — no painting required for base colors. We'll reach out after your order to discuss exactly which colors go where before we start printing.
+        <strong>How pricing is calculated:</strong> Final quotes factor in material weight, print time, post-processing, and complexity.
+        A simple 28mm mini in resin typically runs $8–15. A large 75mm display piece runs $22–45.
+        PLA terrain is priced by material used and print time — small scatter pieces start around $5, full dungeon tile sets $20–60+.
         <br><br>
         <strong>Rush orders</strong> (1–2 business day turnaround) are available at a +50% surcharge when the print schedule allows.
-        Contact us before placing a rush order to confirm availability.
         <br><br>
-        <strong>Multi-piece orders</strong> (5+ of the same mini) may qualify for a small volume discount — mention it in your order notes.
+        <strong>Multi-piece orders</strong> (5+ of the same design) may qualify for a volume discount — mention it in your order notes.
+      </div>
+    </div>
+
+    <!-- COST ESTIMATOR -->
+    <div class="section">
+      <div class="section-tag">Estimate Your Cost</div>
+      <h2 style="margin-bottom:0.5rem;">Quick Price Calculator</h2>
+      <p style="font-size:16px;font-style:italic;color:var(--muted);margin-bottom:2rem;line-height:1.7;">
+        Not a final quote — just a ballpark based on typical jobs. Send us your file for a precise number.
+      </p>
+
+      <div class="estimator-wrap">
+        <div class="estimator-fields">
+
+          <div class="est-group">
+            <label class="est-label">PRINT TYPE</label>
+            <div class="est-opts" id="est-type">
+              <button class="est-opt active" onclick="setEst('type','resin-mini',this)">Resin Mini</button>
+              <button class="est-opt" onclick="setEst('type','resin-display',this)">Display Piece</button>
+              <button class="est-opt" onclick="setEst('type','pla-terrain',this)">PLA Terrain</button>
+              <button class="est-opt" onclick="setEst('type','pla-multi',this)">Multicolor</button>
+            </div>
+          </div>
+
+          <div class="est-group">
+            <label class="est-label">SIZE</label>
+            <div class="est-opts" id="est-size">
+              <button class="est-opt active" onclick="setEst('size','small',this)">Small</button>
+              <button class="est-opt" onclick="setEst('size','medium',this)">Medium</button>
+              <button class="est-opt" onclick="setEst('size','large',this)">Large</button>
+              <button class="est-opt" onclick="setEst('size','xlarge',this)">X-Large</button>
+            </div>
+          </div>
+
+          <div class="est-group">
+            <label class="est-label">QUANTITY</label>
+            <div class="est-opts" id="est-qty">
+              <button class="est-opt active" onclick="setEst('qty','1',this)">1</button>
+              <button class="est-opt" onclick="setEst('qty','3',this)">3</button>
+              <button class="est-opt" onclick="setEst('qty','5',this)">5</button>
+              <button class="est-opt" onclick="setEst('qty','10',this)">10+</button>
+            </div>
+          </div>
+
+          <div class="est-group">
+            <label class="est-label">TURNAROUND</label>
+            <div class="est-opts" id="est-rush">
+              <button class="est-opt active" onclick="setEst('rush','standard',this)">Standard (3–5d)</button>
+              <button class="est-opt" onclick="setEst('rush','rush',this)">Rush (1–2d) +50%</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="estimator-result" id="est-result">
+          <div class="est-result-label">ESTIMATED RANGE</div>
+          <div class="est-result-val" id="est-val">$8 – $15</div>
+          <div class="est-result-sub" id="est-sub">per miniature · resin · standard scale</div>
+          <div class="est-result-note">This is a ballpark only. Send your STL for a free exact quote within 24 hours.</div>
+          <a href="order.html" class="btn-primary" style="display:inline-block;margin-top:1.5rem;font-size:11px;">GET A FREE QUOTE →</a>
+        </div>
       </div>
     </div>
 
@@ -536,6 +611,64 @@
     // Init
     updateBadge();
     renderCartDrawer();
+
+    // ── COST ESTIMATOR ──
+    // Based on market research: FDM $0.10-0.50/g, Resin $0.70-3.00/g
+    // Service markup covers machine time, labor, post-processing, overhead
+    const EST = {
+      // [low, high] base price per unit
+      'resin-mini':   { small:[8,12],  medium:[12,18], large:[18,28],  xlarge:[28,45],  unit:'per miniature',  desc:'resin · 4K LCD · washed & cured' },
+      'resin-display':{ small:[18,28], medium:[28,40], large:[40,65],  xlarge:[65,120], unit:'per display piece', desc:'resin · ultra-fine · washed & cured' },
+      'pla-terrain':  { small:[5,10],  medium:[10,20], large:[20,40],  xlarge:[40,80],  unit:'per piece or set', desc:'PLA Basic or Matte · FDM' },
+      'pla-multi':    { small:[8,15],  medium:[15,28], large:[28,55],  xlarge:[55,100], unit:'per piece or set', desc:'multicolor AMS · up to 4 colors' },
+    };
+
+    const SIZE_LABELS = {
+      small:  { 'resin-mini':'28mm standard', 'resin-display':'54mm bust', 'pla-terrain':'scatter piece', 'pla-multi':'small terrain' },
+      medium: { 'resin-mini':'32mm heroic',   'resin-display':'75mm display', 'pla-terrain':'dungeon tile', 'pla-multi':'tile or prop' },
+      large:  { 'resin-mini':'50mm large',    'resin-display':'100mm bust', 'pla-terrain':'modular set',  'pla-multi':'multi-tile set' },
+      xlarge: { 'resin-mini':'75mm+ figure',  'resin-display':'130mm+',    'pla-terrain':'full terrain set', 'pla-multi':'large build' },
+    };
+
+    let estState = { type:'resin-mini', size:'small', qty:'1', rush:'standard' };
+
+    function setEst(key, val, btn) {
+      estState[key] = val;
+      btn.closest('.est-opts').querySelectorAll('.est-opt').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      calcEstimate();
+    }
+
+    function calcEstimate() {
+      const { type, size, qty, rush } = estState;
+      const base = EST[type][size];
+      const qtyNum = parseInt(qty) || 1;
+
+      // Volume discount: 5+ gets 10%, 10+ gets 15%
+      let discount = 1;
+      if (qtyNum >= 10) discount = 0.85;
+      else if (qtyNum >= 5) discount = 0.90;
+
+      // Rush surcharge
+      const rushMult = rush === 'rush' ? 1.5 : 1;
+
+      let low  = Math.round(base[0] * qtyNum * discount * rushMult);
+      let high = Math.round(base[1] * qtyNum * discount * rushMult);
+
+      // Round to clean numbers
+      low  = Math.ceil(low  / 5) * 5;
+      high = Math.ceil(high / 5) * 5;
+
+      const sizeLabel = SIZE_LABELS[size][type];
+      const rushNote = rush === 'rush' ? ' · rush +50%' : '';
+      const discNote = discount < 1 ? ` · ${Math.round((1-discount)*100)}% vol. discount` : '';
+
+      document.getElementById('est-val').textContent = `$${low} – $${high}`;
+      document.getElementById('est-sub').textContent =
+        `${qtyNum > 1 ? qtyNum + '× ' : ''}${sizeLabel} · ${EST[type].desc}${rushNote}${discNote}`;
+    }
+
+    calcEstimate();
   </script>
 
 </body>
