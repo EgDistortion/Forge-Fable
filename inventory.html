@@ -87,7 +87,7 @@
     .inv-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--border2);}
     .inv-section-title{font-family:var(--serif);font-size:13px;color:var(--ember);letter-spacing:0.2em;}
     .inv-section-count{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.12em;}
-    .color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+    .color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;}
     .color-item{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.6rem 0.75rem;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;user-select:none;}
     .color-item:hover{border-color:var(--border2);}
     .color-item.in-stock{border-left:3px solid var(--green);}
@@ -348,8 +348,8 @@
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
 const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -458,6 +458,10 @@ async function toggleStock(key){
       method:'PATCH',body:JSON.stringify({in_stock:stock[key]})
     });
     showInd('ok','SAVED');
+    // Refresh alerts if dashboard alerts tab is open
+    const alertPane = document.getElementById('dsp-alerts');
+    if(alertPane && alertPane.classList.contains('active')) populateAlerts();
+    populateStatAlerts();
   }catch(e){ showInd('error','SAVE FAILED'); }
 }
 
@@ -469,6 +473,9 @@ async function markAllInStock(){
   try{
     await sb(`${TABLE}?in_stock=eq.false`,{method:'PATCH',body:JSON.stringify({in_stock:true})});
     showInd('ok','ALL SAVED');
+    const alertPane = document.getElementById('dsp-alerts');
+    if(alertPane && alertPane.classList.contains('active')) populateAlerts();
+    populateStatAlerts();
   }catch(e){ showInd('error','SAVE FAILED'); }
 }
 
