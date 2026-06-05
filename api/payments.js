@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     const sessions = await stripe.checkout.sessions.list({
       limit: 50,
       created: { gte: thirtyDaysAgo },
-      expand: ['data.line_items', 'data.line_items.data.price.product', 'data.customer_details'],
+      expand: ['data.line_items'],
     });
 
     // Build order list
@@ -26,10 +26,7 @@ module.exports = async (req, res) => {
       .filter(s => s.payment_status === 'paid')
       .map((s, i) => {
         const items = s.line_items?.data?.map(li => ({
-          name: li.price?.product_data?.name
-             || li.description
-             || li.price?.product?.name
-             || 'Shop item',
+          name: li.description || li.price?.product_data?.name || li.price?.nickname || 'Shop item',
           qty: li.quantity,
           amount: li.amount_total,
         })) || [];
