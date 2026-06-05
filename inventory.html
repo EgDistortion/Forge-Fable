@@ -99,6 +99,11 @@
     .color-item.in-stock .color-status{color:var(--green);}
     .color-item.out-of-stock .color-status{color:var(--red);}
     .color-checkbox{width:17px;height:17px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;}
+
+    /* Spool count */
+    .spool-input{width:46px;background:var(--surface3);border:1px solid var(--border);color:var(--text);font-family:var(--serif);font-size:13px;padding:3px 5px;text-align:center;outline:none;border-radius:3px;margin-left:6px;}
+    .spool-input:focus{border-color:var(--border2);}
+    .spool-label{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.08em;margin-left:3px;}
     .save-ind{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--border2);padding:10px 18px;font-family:var(--serif);font-size:11px;letter-spacing:0.12em;border-radius:4px;opacity:0;transition:opacity 0.3s;pointer-events:none;}
     .save-ind.show{opacity:1;}
     .save-ind.ok{color:var(--green);}
@@ -343,12 +348,22 @@
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
 const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
 const SK    = 'ff_inv_auth';
+
+// ── SPOOL COUNTS (localStorage only — private to this device) ──
+const SPOOL_KEY = 'ff_spools';
+let spools = JSON.parse(localStorage.getItem(SPOOL_KEY) || '{}');
+
+function saveSpool(key, count) {
+  spools[key] = count;
+  localStorage.setItem(SPOOL_KEY, JSON.stringify(spools));
+  showInd('ok', 'SPOOL COUNT SAVED');
+}
 
 // ── AUTH ──
 function checkPw(){
@@ -485,6 +500,10 @@ function renderGrid(gid,colors,pfx,cid,sid,type){
       <div class="color-swatch" style="background:${c.hex}"></div>
       <span class="color-name">${c.name}</span>
       <span class="color-status">${inStock?'IN STOCK':'OUT'}</span>
+      <input type="number" class="spool-input" value="${spools[key]||0}" min="0" max="99"
+        title="Spools on hand" onclick="event.stopPropagation()"
+        onchange="event.stopPropagation();saveSpool('${key}',parseInt(this.value)||0)">
+      <span class="spool-label">spools</span>
       <input type="checkbox" class="color-checkbox" ${inStock?'checked':''} onclick="event.stopPropagation();toggleStock('${key}')">
     </div>`).join('');
 }
@@ -916,19 +935,28 @@ function populateStatAlerts() {
 }
 
 function populateAlerts() {
+  // Load coin stock first if not loaded yet
+  if (Object.keys(coinStock).length === 0) {
+    document.getElementById('coin-alert-list').innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">Loading coin stock...</div>';
+    loadCoinStock().then(() => populateAlerts());
+    return;
+  }
+
   // Coins
   const coinEl = document.getElementById('coin-alert-list');
   const coinCountEl = document.getElementById('coin-alert-count');
   if (coinEl) {
-    const allCoins = typeof COIN_THEMES !== 'undefined' ? COIN_THEMES.flatMap(t => t.coins.map(c => ({...c, themeLabel: t.label}))) : [];
-    const alerts = allCoins.filter(c => (coinStock[c.id] !== undefined ? coinStock[c.id] : 10) <= 3)
-      .sort((a,b) => (coinStock[a.id]||0) - (coinStock[b.id]||0));
+    const allCoins = COIN_THEMES.flatMap(t => t.coins.map(c => ({...c, themeLabel: t.label})));
+    // Only show coins that are actually in the database and low/out
+    const alerts = allCoins
+      .filter(c => coinStock[c.id] !== undefined && coinStock[c.id] <= 3)
+      .sort((a,b) => coinStock[a.id] - coinStock[b.id]);
     if (coinCountEl) coinCountEl.textContent = alerts.length + ' alert' + (alerts.length !== 1 ? 's' : '');
     if (!alerts.length) {
       coinEl.innerHTML = '<div style="font-style:italic;color:var(--green);font-size:14px;padding:6px 0;">All coins well stocked.</div>';
     } else {
       coinEl.innerHTML = alerts.map(c => {
-        const s = coinStock[c.id] || 0;
+        const s = coinStock[c.id];
         const cls = s === 0 ? 'out' : 'low';
         const label = s === 0 ? 'OUT OF STOCK' : s + ' LEFT';
         return `<div class="low-stock-row">
