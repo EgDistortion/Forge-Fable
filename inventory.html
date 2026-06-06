@@ -535,8 +535,8 @@
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
 const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -1388,21 +1388,36 @@ async function savePrintStatus() {
   }
 }
 
-function initPrintStatus() {
-  // Load saved status
+async function initPrintStatus() {
+  // Try Supabase first, fall back to localStorage
+  let saved = null;
   try {
-    const saved = JSON.parse(localStorage.getItem(PS_KEY) || 'null');
-    if(saved) {
-      psStatus = saved.status || 'idle';
-      if(document.getElementById('ps-item')) document.getElementById('ps-item').value = saved.item || '';
-      if(document.getElementById('ps-eta'))  document.getElementById('ps-eta').value  = saved.eta  || '';
-      // Activate the right status button
-      document.querySelectorAll('#ps-status-opts .calc-type-btn').forEach(b => {
-        b.classList.toggle('active', b.textContent.includes(PS_LABELS[psStatus]));
-      });
-      updatePsPreview();
-    }
+    const rows = await sb('print_status?select=status,item,eta&limit=1');
+    if(rows && rows.length) saved = rows[0];
   } catch(e) {}
+
+  // Fall back to localStorage
+  if(!saved) {
+    try { saved = JSON.parse(localStorage.getItem(PS_KEY) || 'null'); } catch(e) {}
+  }
+
+  if(saved) {
+    psStatus = saved.status || 'idle';
+    const itemEl = document.getElementById('ps-item');
+    const etaEl  = document.getElementById('ps-eta');
+    if(itemEl) itemEl.value = saved.item || '';
+    if(etaEl)  etaEl.value  = saved.eta  || '';
+
+    // Highlight the correct status button
+    document.querySelectorAll('#ps-status-opts .calc-type-btn').forEach(b => {
+      // Match by the data status value we set in onclick
+      const onclickAttr = b.getAttribute('onclick') || '';
+      const match = onclickAttr.match(/setPrintStatus\('([^']+)'/);
+      if(match) b.classList.toggle('active', match[1] === psStatus);
+    });
+
+    updatePsPreview();
+  }
 }
 
 if(sessionStorage.getItem(SK)==='1') loadInventory();
