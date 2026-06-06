@@ -19,6 +19,16 @@
     .cart-badge.show{display:flex;}
 
     /* ── CART DRAWER ── */
+    /* ── PRINT STATUS BANNER ── */
+    .print-banner{display:none;background:rgba(201,168,76,0.08);border-bottom:1px solid rgba(201,168,76,0.2);padding:10px 0;}
+    .print-banner.visible{display:block;}
+    .print-banner-inner{display:flex;align-items:center;justify-content:center;gap:12px;font-family:var(--serif);font-size:11px;letter-spacing:0.1em;color:var(--soft);flex-wrap:wrap;}
+    .print-banner-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;flex-shrink:0;}
+    .print-banner-dot.curing{background:var(--ember);}
+    .print-banner-dot.ready{background:var(--green);animation:none;}
+    .print-banner-dot.idle{background:var(--muted);animation:none;}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.3);}}
+
     .cart-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;}
     .cart-overlay.open{display:block;}
     .cart-drawer{position:fixed;top:0;right:-440px;width:420px;max-width:100vw;height:100vh;background:var(--surface);border-left:1px solid var(--border2);z-index:301;display:flex;flex-direction:column;transition:right 0.3s ease;}
@@ -239,6 +249,14 @@
   </nav>
 
   <!-- CART DRAWER -->
+  <!-- PRINT STATUS BANNER -->
+  <div class="print-banner" id="print-banner">
+    <div class="container print-banner-inner">
+      <div class="print-banner-dot" id="print-banner-dot"></div>
+      <span id="print-banner-text"></span>
+    </div>
+  </div>
+
   <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
   <div class="cart-drawer" id="cart-drawer">
     <div class="cart-head">
@@ -479,8 +497,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1130,6 +1148,39 @@
     });
   }
 
+  // ── PRINT STATUS BANNER ──
+  async function loadPrintStatus() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/print_status?select=status,item,eta&limit=1`, {
+        headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+      });
+      if(!res.ok) return;
+      const rows = await res.json();
+      if(!rows.length) return;
+      const ps = rows[0];
+      if(ps.status === 'idle') return; // don't show banner when idle
+
+      const icons = { printing:'🖨️', curing:'⚗️', ready:'✅' };
+      const labels = { printing:'Printing Now', curing:'Curing / Washing', ready:'Order Ready' };
+      const icon = icons[ps.status] || '';
+      const label = labels[ps.status] || ps.status;
+
+      let text = `${icon} ${label}`;
+      if(ps.item) text += ` — ${ps.item}`;
+      if(ps.eta)  text += ` · ${ps.eta}`;
+
+      const banner = document.getElementById('print-banner');
+      const dot    = document.getElementById('print-banner-dot');
+      const textEl = document.getElementById('print-banner-text');
+
+      textEl.textContent = text;
+      dot.className = `print-banner-dot ${ps.status}`;
+      banner.classList.add('visible');
+    } catch(e) {
+      // Silently fail — banner just won't show
+    }
+  }
+
   // ── INIT ──
   document.getElementById('hamburger').addEventListener('click',function(){
     document.getElementById('nav-links').classList.toggle('open');
@@ -1139,6 +1190,7 @@
   updateBadge();
   populateCoinSelect();
   loadReviews();
+  loadPrintStatus();
   window.addEventListener('load',renderPayPalButton);
 
   if(window.location.search.includes('reviewed=true')){
