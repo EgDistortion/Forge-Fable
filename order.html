@@ -591,18 +591,17 @@
 
           <div class="order-section">
             <div class="order-section-title">YOUR STL FILE</div>
-            <div class="upload-box" onclick="document.getElementById('file-input').click()">
-              <div class="upload-icon">DRAG &amp; DROP YOUR STL FILE</div>
-              <div class="upload-sub">or <span class="upload-link">click to browse</span> — .stl or .obj, max 50MB</div>
-              <div id="file-name"></div>
+            <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:1rem;">
+              <div style="font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.15em;margin-bottom:6px;">EMAIL YOUR STL FILE</div>
+              <p style="font-size:15px;color:var(--soft);line-height:1.7;margin:0;">
+                After submitting this form, email your STL or OBJ file to
+                <a href="mailto:forgeandfable3d@gmail.com" style="color:var(--gold);text-decoration:none;">forgeandfable3d@gmail.com</a>
+                with your name in the subject line. Or share a link (Google Drive, MyMiniFactory, Thingiverse) in the notes field below.
+              </p>
             </div>
-            <input type="file" id="file-input" name="stl_file" accept=".stl,.obj">
-            <div style="margin-top:10px;font-size:15px;color:var(--muted);font-style:italic;">
-              No file yet? <a href="stl-sources.html" style="color:var(--gold);">Browse our recommended STL sources →</a>
+            <div style="margin-top:6px;font-size:15px;color:var(--muted);font-style:italic;">
+              Don't have a file? <a href="stl-sources.html" style="color:var(--gold);">Browse our recommended STL sources →</a>
             </div>
-            <p style="font-size:15px;color:var(--muted);font-style:italic;margin-top:6px;line-height:1.6;">
-              Note: Formspree free tier doesn't support file uploads — if your file is large, you can email it to us after submitting, or share a link (Google Drive, MyMiniFactory, etc.) in the notes field above.
-            </p>
           </div>
 
           <!-- LICENSE CONFIRMATION -->
@@ -693,8 +692,8 @@
     // ════════════════════════════════════════════
     //  SUPABASE CONFIG — paste your credentials
     // ════════════════════════════════════════════
-    const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
     // ── COLOR DEFINITIONS (hex values — stock loaded live from Supabase) ──
     const COLOR_DEFS = {
@@ -843,12 +842,6 @@
     // ── HAMBURGER ──
     document.getElementById('hamburger').addEventListener('click', function() {
       document.getElementById('nav-links').classList.toggle('open');
-    });
-
-    // ── FILE INPUT LABEL ──
-    document.getElementById('file-input').addEventListener('change', function() {
-      const name = this.files[0] ? this.files[0].name : '';
-      document.getElementById('file-name').textContent = name ? '✓ ' + name : '';
     });
 
     // ── LICENSE GATE ──

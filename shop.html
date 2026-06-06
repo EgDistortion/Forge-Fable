@@ -270,11 +270,15 @@
         <div class="lightbox-name" id="lb-name"></div>
         <div class="lightbox-desc" id="lb-desc"></div>
         <div class="lightbox-material">
-          <div class="lightbox-opt-label">MATERIAL</div>
+          <div class="lightbox-opt-label">RESIN COLOR</div>
+          <div style="font-size:13px;color:var(--muted);font-style:italic;margin-bottom:10px;line-height:1.6;">Printed in grey by default — perfect for painting. Limited stock of other colors available.</div>
           <div class="lightbox-opts">
-            <button class="lightbox-opt sel" onclick="selectLbOpt(this,'mat')">Resin — fine detail</button>
-            <button class="lightbox-opt" onclick="selectLbOpt(this,'mat')">PLA — durable</button>
+            <button class="lightbox-opt sel" onclick="selectLbOpt(this,'mat')">Grey (default)</button>
+            <button class="lightbox-opt" onclick="selectLbOpt(this,'mat')">Red Clay</button>
+            <button class="lightbox-opt" onclick="selectLbOpt(this,'mat')">Black</button>
+            <button class="lightbox-opt" onclick="selectLbOpt(this,'mat')">Natural (cream)</button>
           </div>
+          <div style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-top:8px;">Non-grey colors subject to stock availability — we'll confirm before printing.</div>
         </div>
         <div class="lightbox-price" id="lb-price"></div>
         <button class="lightbox-add-btn" id="lb-add-btn" onclick="addFromLightbox()">+ ADD TO CART</button>
@@ -300,7 +304,7 @@
           <div class="cat-card-img">🪙</div>
           <div class="cat-card-body">
             <div class="cat-card-name">COIN PROPS</div>
-            <div class="cat-card-desc">Over 200 designs across 7 themes — mythical creatures, dragons, elemental forces, skulls, weapons and more.</div>
+            <div class="cat-card-desc">Over 200 designs across 12 themes — all printed in resin for maximum detail. Grey by default, perfect for painting. Limited color stock available.</div>
             <div class="cat-card-count">12 THEMES · 160+ DESIGNS</div>
             <div class="cat-card-link">BROWSE COINS →</div>
           </div>
@@ -474,8 +478,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -786,7 +790,7 @@
     document.getElementById('view-coins').classList.add('active');
     document.getElementById('shop-breadcrumb').textContent = 'Shop → Coins';
     document.getElementById('shop-hero-title').textContent = 'Coin Props';
-    document.getElementById('shop-hero-desc').textContent = 'Over 200 designs across 7 themes. Click a theme in the sidebar or browse all.';
+    document.getElementById('shop-hero-desc').textContent = 'Over 200 designs across 12 themes. All resin printed — grey by default for easy painting, limited stock of other colors available.';
     if(Object.keys(coinStock).length===0) loadCoinStock();
     else { buildSidebar(); showAllCoins(); }
   }
@@ -853,7 +857,7 @@
       </div>
       <div class="coin-info">
         <div class="coin-name">${coin.name}</div>
-        <div class="coin-material">RESIN OR PLA · $${COIN_PRICE}</div>
+        <div class="coin-material">RESIN PRINT · $${COIN_PRICE}</div>
         <div class="coin-footer">
           <div class="coin-price">$${COIN_PRICE}</div>
           <button class="coin-add-btn" id="btn-${coin.id}"
@@ -876,7 +880,7 @@
     // Populate
     document.getElementById('lb-theme').textContent = themeLabel;
     document.getElementById('lb-name').textContent  = coin.name;
-    document.getElementById('lb-desc').textContent  = coin.desc || 'A beautifully detailed 3D printed coin prop, available in resin or PLA.';
+    document.getElementById('lb-desc').textContent  = coin.desc || 'A beautifully detailed resin printed coin prop. Printed in grey resin by default — ideal for painting. Other colors available on request.';
     document.getElementById('lb-price').textContent = `$${COIN_PRICE}`;
 
     // Image
