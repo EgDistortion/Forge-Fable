@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — The Forge &amp; Fable</title>
+  <meta name="description" content="The Forge & Fable is a small 3D printing shop in Lima, OH specializing in resin miniatures and PLA terrain for tabletop RPG players.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start;padding:3rem 0;}
+    .about-body h2{font-family:var(--serif);font-size:26px;color:var(--gold);letter-spacing:0.06em;margin-bottom:1.25rem;}
+    .about-body p{font-size:17px;color:var(--soft);line-height:1.85;margin-bottom:1.25rem;font-style:italic;}
+    .about-body p strong{font-style:normal;color:var(--text);font-weight:400;}
+    .about-img-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;}
+    .about-img-placeholder{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.15em;text-align:center;padding:2rem;line-height:2;}
+    .about-img-box img{width:100%;height:100%;object-fit:cover;}
+    .about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:3rem 0;}
+    .about-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;text-align:center;}
+    .about-stat-val{font-family:var(--serif);font-size:32px;color:var(--gold2);line-height:1;margin-bottom:6px;}
+    .about-stat-label{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.15em;}
+    .printer-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;}
+    .printer-name{font-family:var(--serif);font-size:14px;color:var(--gold);letter-spacing:0.1em;margin-bottom:6px;}
+    .printer-desc{font-size:15px;color:var(--muted);font-style:italic;line-height:1.65;}
+    .printer-tag{display:inline-block;font-family:var(--serif);font-size:9px;letter-spacing:0.12em;padding:3px 9px;border:1px solid var(--border);border-radius:var(--radius);color:var(--muted);margin-top:8px;margin-right:4px;}
+    .values-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;margin-top:1.5rem;}
+    .value-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;}
+    .value-icon{font-size:24px;margin-bottom:10px;}
+    .value-title{font-family:var(--serif);font-size:12px;color:var(--gold);letter-spacing:0.12em;margin-bottom:6px;}
+    .value-text{font-size:14px;color:var(--muted);font-style:italic;line-height:1.65;}
+    @media(max-width:760px){.about-grid{grid-template-columns:1fr;}.about-stats{grid-template-columns:repeat(3,1fr);}}
+
+    /* Cart drawer */
+    .cart-icon-wrap{position:relative;cursor:pointer;background:none;border:1px solid var(--border);border-radius:var(--radius);padding:7px 14px;display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.12em;transition:color 0.2s,border-color 0.2s;flex-shrink:0;}
+    .cart-icon-wrap:hover{color:var(--gold);border-color:var(--border2);}
+    .cart-badge{display:none;background:var(--ember);color:#fff;font-family:var(--serif);font-size:9px;font-weight:700;border-radius:50%;width:18px;height:18px;align-items:center;justify-content:center;position:absolute;top:-7px;right:-7px;}
+    .cart-badge.show{display:flex;}
+    .cart-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;}
+    .cart-overlay.open{display:block;}
+    .cart-drawer{position:fixed;top:0;right:-440px;width:420px;max-width:100vw;height:100vh;background:var(--surface);border-left:1px solid var(--border2);z-index:301;display:flex;flex-direction:column;transition:right 0.3s ease;}
+    .cart-drawer.open{right:0;}
+    .cart-head{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);flex-shrink:0;}
+    .cart-head-title{font-family:var(--serif);font-size:14px;color:var(--gold);letter-spacing:0.18em;}
+    .cart-close{font-family:var(--serif);font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;letter-spacing:0.1em;}
+    .cart-items{flex:1;overflow-y:auto;padding:1rem 1.5rem;}
+    .cart-empty{text-align:center;padding:4rem 0;font-style:italic;color:var(--muted);font-size:16px;}
+    .cart-foot{padding:1.25rem 1.5rem;border-top:1px solid var(--border2);flex-shrink:0;background:var(--surface2);}
+    .cart-subtotal{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+    .cart-subtotal-label{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.15em;}
+    .cart-subtotal-val{font-family:var(--serif);font-size:22px;color:var(--gold2);}
+    .cart-note{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:1.25rem;line-height:1.5;}
+    .checkout-stripe{width:100%;padding:13px;font-family:var(--serif);font-size:11px;letter-spacing:0.16em;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:var(--radius);margin-bottom:8px;transition:background 0.2s;}
+    .checkout-stripe:hover{background:var(--gold2);}
+    .checkout-stripe:disabled{background:var(--surface3);color:var(--muted);cursor:not-allowed;}
+  </style>
+  <style id="page-map">
+    html {
+      background-color: #0d0f14;
+      background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAwIiBoZWlnaHQ9IjkwMCIgdmlld0JveD0iMCAwIDE0MDAgOTAwIj4KPGRlZnM+PHN0eWxlPnBhdGgsY2lyY2xlLGxpbmUsZWxsaXBzZSxwb2x5Z29uLHJlY3R7ZmlsbDpub25lO3N0cm9rZTojYzlhODRjO3N0cm9rZS1vcGFjaXR5OjAuMTg7c3Ryb2tlLWxpbmVjYXA6cm91bmR9PC9zdHlsZT48L2RlZnM+CjxwYXRoIHN0cm9rZS13aWR0aD0iMiIgZD0iTTQ4MCAxNTAgTDc2MCAxMzAgTDk2MCAxNjAgTDEwNDAgMjQwIEwxMDUwIDQ0MCBMMTAyMCA2MjAgTDg4MCA3MjAgTDY0MCA3NDAgTDQ0MCA3MDAgTDM0MCA2MDAgTDMzMCA0MDAgTDM2MCAyNDBaIi8+CjxwYXRoIHN0cm9rZS13aWR0aD0iMS40IiBkPSJNNTIwIDIxMCBMNzQwIDE5MiBMOTAwIDIxOCBMOTY4IDI4OCBMOTc1IDQ1MCBMOTQ4IDU5OCBMODMyIDY3OCBMNjQ4IDY5NCBMNDgyIDY2MCBMNDAwIDU2OCBMMzkyIDQwOCBMNDE4IDI5MloiLz4KPHJlY3QgeD0iNTYwIiB5PSIyODAiIHdpZHRoPSIxMjAiIGhlaWdodD0iOTAiIHN0cm9rZS13aWR0aD0iMSIgcng9IjIiLz48cmVjdCB4PSI3MDAiIHk9IjI4MCIgd2lkdGg9IjExMCIgaGVpZ2h0PSI5MCIgc3Ryb2tlLXdpZHRoPSIxIiByeD0iMiIvPgo8cmVjdCB4PSI1NjAiIHk9IjM5MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI5NSIgc3Ryb2tlLXdpZHRoPSIxIiByeD0iMiIvPjxyZWN0IHg9IjcwMCIgeT0iMzkwIiB3aWR0aD0iMTEwIiBoZWlnaHQ9Ijk1IiBzdHJva2Utd2lkdGg9IjEiIHJ4PSIyIi8+CjxyZWN0IHg9IjU2MCIgeT0iNTA1IiB3aWR0aD0iMTIwIiBoZWlnaHQ9Ijg1IiBzdHJva2Utd2lkdGg9IjEiIHJ4PSIyIi8+PHJlY3QgeD0iNzAwIiB5PSI1MDUiIHdpZHRoPSIxMTAiIGhlaWdodD0iODUiIHN0cm9rZS13aWR0aD0iMSIgcng9IjIiLz4KPHJlY3QgeD0iODMwIiB5PSIzMDAiIHdpZHRoPSI5NSIgaGVpZ2h0PSI4MCIgc3Ryb2tlLXdpZHRoPSIxIiByeD0iMiIvPjxyZWN0IHg9IjgzMCIgeT0iNDAwIiB3aWR0aD0iOTUiIGhlaWdodD0iODAiIHN0cm9rZS13aWR0aD0iMSIgcng9IjIiLz4KPHJlY3QgeD0iODMwIiB5PSI1MDAiIHdpZHRoPSI5NSIgaGVpZ2h0PSI3NSIgc3Ryb2tlLXdpZHRoPSIxIiByeD0iMiIvPgo8cmVjdCB4PSI0NTAiIHk9IjMxMCIgd2lkdGg9Ijg4IiBoZWlnaHQ9IjgwIiBzdHJva2Utd2lkdGg9IjEiIHJ4PSIyIi8+PHJlY3QgeD0iNDUwIiB5PSI0MTAiIHdpZHRoPSI4OCIgaGVpZ2h0PSI4MCIgc3Ryb2tlLXdpZHRoPSIxIiByeD0iMiIvPgo8cmVjdCB4PSI0NTAiIHk9IjUxMCIgd2lkdGg9Ijg4IiBoZWlnaHQ9Ijc1IiBzdHJva2Utd2lkdGg9IjEiIHJ4PSIyIi8+CjxyZWN0IHg9IjYzMCIgeT0iMzkwIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjExMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHJ4PSIzIi8+PHJlY3QgeD0iNjQ1IiB5PSI0MDUiIHdpZHRoPSIxMTAiIGhlaWdodD0iODAiIHN0cm9rZS13aWR0aD0iMSIgcng9IjIiLz4KPHJlY3QgeD0iNjI1IiB5PSIzODIiIHdpZHRoPSIyMiIgaGVpZ2h0PSIyMiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48cmVjdCB4PSI3NTMiIHk9IjM4MiIgd2lkdGg9IjIyIiBoZWlnaHQ9IjIyIiBzdHJva2Utd2lkdGg9IjEuMiIvPgo8cmVjdCB4PSI2MjUiIHk9IjQ5MiIgd2lkdGg9IjIyIiBoZWlnaHQ9IjIyIiBzdHJva2Utd2lkdGg9IjEuMiIvPjxyZWN0IHg9Ijc1MyIgeT0iNDkyIiB3aWR0aD0iMjIiIGhlaWdodD0iMjIiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxsaW5lIHgxPSI3MDAiIHkxPSI0NDUiIHgyPSI3MDAiIHkyPSIyODAiIHN0cm9rZS13aWR0aD0iMC44Ii8+PGxpbmUgeDE9IjcwMCIgeTE9IjUwMCIgeDI9IjcwMCIgeTI9IjYyMCIgc3Ryb2tlLXdpZHRoPSIwLjgiLz4KPGxpbmUgeDE9IjYzMCIgeTE9IjQ0NSIgeDI9IjQ1MCIgeTI9IjQ0NSIgc3Ryb2tlLXdpZHRoPSIwLjgiLz48bGluZSB4MT0iNzcwIiB5MT0iNDQ1IiB4Mj0iOTUwIiB5Mj0iNDQ1IiBzdHJva2Utd2lkdGg9IjAuOCIvPgo8Y2lyY2xlIGN4PSI0ODAiIGN5PSIxNTAiIHI9IjE4IiBzdHJva2Utd2lkdGg9IjEuMiIvPjxjaXJjbGUgY3g9Ijc2MCIgY3k9IjEzMCIgcj0iMTgiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxjaXJjbGUgY3g9Ijk2MCIgY3k9IjE2MCIgcj0iMTgiIHN0cm9rZS13aWR0aD0iMS4yIi8+PGNpcmNsZSBjeD0iMTA0MCIgY3k9IjI0MCIgcj0iMTgiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxjaXJjbGUgY3g9IjEwNTAiIGN5PSI0NDAiIHI9IjE4IiBzdHJva2Utd2lkdGg9IjEuMiIvPjxjaXJjbGUgY3g9IjEwMjAiIGN5PSI2MjAiIHI9IjE4IiBzdHJva2Utd2lkdGg9IjEuMiIvPgo8Y2lyY2xlIGN4PSI4ODAiIGN5PSI3MjAiIHI9IjE4IiBzdHJva2Utd2lkdGg9IjEuMiIvPjxjaXJjbGUgY3g9IjY0MCIgY3k9Ijc0MCIgcj0iMTgiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxjaXJjbGUgY3g9IjQ0MCIgY3k9IjcwMCIgcj0iMTgiIHN0cm9rZS13aWR0aD0iMS4yIi8+PGNpcmNsZSBjeD0iMzQwIiBjeT0iNjAwIiByPSIxOCIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPGNpcmNsZSBjeD0iMzMwIiBjeT0iNDAwIiByPSIxOCIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48Y2lyY2xlIGN4PSIzNjAiIGN5PSIyNDAiIHI9IjE4IiBzdHJva2Utd2lkdGg9IjEuMiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEiIGQ9Ik0xNTAgMzgwIFEyNjAgMzYwIDMzMCA0MDAgUTM4MCA0MjUgMzkyIDQ4MCBRNDA0IDUzNSAzNjAgNTgwIFEzMjAgNjIwIDI4MCA2ODAgUTI0MCA3NDAgMjAwIDgwMCIvPgo8Y2lyY2xlIGN4PSIxODAiIGN5PSIxNjAiIHI9IjQyIiBzdHJva2Utd2lkdGg9IjAuOSIvPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE2MCIgcj0iMjgiIHN0cm9rZS13aWR0aD0iMC42Ii8+CjxsaW5lIHgxPSIxODAiIHkxPSIxMTgiIHgyPSIxODAiIHkyPSIyMDIiIHN0cm9rZS13aWR0aD0iMS4yIi8+PGxpbmUgeDE9IjEzOCIgeTE9IjE2MCIgeDI9IjIyMiIgeTI9IjE2MCIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPGxpbmUgeDE9IjE1MiIgeTE9IjEzMiIgeDI9IjIwOCIgeTI9IjE4OCIgc3Ryb2tlLXdpZHRoPSIwLjYiLz48bGluZSB4MT0iMjA4IiB5MT0iMTMyIiB4Mj0iMTUyIiB5Mj0iMTg4IiBzdHJva2Utd2lkdGg9IjAuNiIvPgo8cmVjdCB4PSIzMCIgeT0iMzAiIHdpZHRoPSIxMzQwIiBoZWlnaHQ9Ijg0MCIgc3Ryb2tlLXdpZHRoPSIwLjgiIHJ4PSI0Ii8+CjxyZWN0IHg9IjQ2IiB5PSI0NiIgd2lkdGg9IjEzMDgiIGhlaWdodD0iODA4IiBzdHJva2Utd2lkdGg9IjAuNCIgcng9IjIiLz4KPC9zdmc+');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-main">THE FORGE &amp; FABLE</span>
+      <span class="nav-logo-sub">MINIATURE PRINTING · LIMA, OH</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="order.html">Order</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="stl-sources.html">STL Guide</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+    </ul>
+    <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
+    <button class="cart-icon-wrap" onclick="openCart()" aria-label="Cart">
+      🛒 CART <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- CART DRAWER -->
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-head">
+      <div class="cart-head-title">YOUR CART</div>
+      <button class="cart-close" onclick="closeCart()">✕ CLOSE</button>
+    </div>
+    <div class="cart-items" id="cart-items">
+      <div class="cart-empty">Your cart is empty — <a href="shop.html" style="color:var(--gold);">browse the shop</a> to add items.</div>
+    </div>
+    <div class="cart-foot" id="cart-foot" style="display:none;">
+      <div class="cart-subtotal">
+        <span class="cart-subtotal-label">TOTAL</span>
+        <span class="cart-subtotal-val" id="cart-total">$0.00</span>
+      </div>
+      <p class="cart-note">We'll confirm your order within 24 hours.</p>
+      <button class="checkout-stripe" id="stripe-btn" onclick="checkoutStripe()">💳 CHECKOUT WITH CARD</button>
+    </div>
+  </div>
+
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="section-tag">The Story</div>
+      <h1>About The Forge &amp; Fable</h1>
+      <p>A hobby that got serious — and a printer that never stops running.</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="about-grid">
+      <div class="about-body">
+        <h2>From the hobby room to your table</h2>
+        <p>
+          The Forge &amp; Fable started the way most things like this do — a <strong>dungeon master who couldn't find the minis he needed</strong> and decided to print them himself. One printer became two. Two became a small operation. And somewhere along the way, other people started asking if they could order too.
+        </p>
+        <p>
+          We're based in <strong>Lima, OH</strong> and we print everything ourselves — no outsourcing, no dropshipping. When you order from us, a real person in a real workshop is running your file and packaging your order. We know what a bad print looks like and we don't ship them.
+        </p>
+        <p>
+          We specialize in <strong>TTRPG miniatures and terrain</strong> — the stuff that makes your table look like the world you're imagining. Resin for detail minis, PLA for terrain and props. We also offer over 200 <strong>coin prop designs</strong> in resin — great for loot drops, campaign rewards, or just looking cool on the shelf.
+        </p>
+        <p>
+          If you have an STL, we'll print it. If you don't, we can help you find one. And if you're in Lima, come pick it up — we like meeting the people who actually play these games.
+        </p>
+        <a href="order.html" class="btn-primary" style="display:inline-block;margin-top:0.5rem;">REQUEST A PRINT</a>
+      </div>
+
+      <div>
+        <div class="about-img-box">
+          <!-- Replace with a real photo of your setup when you have one -->
+          <div class="about-img-placeholder">
+            PHOTO OF YOUR SETUP<br>GOES HERE<br><br>
+            <span style="font-size:9px;opacity:0.6;">Upload to images/ and update src</span>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);font-style:italic;text-align:center;margin-top:8px;">The workshop — Lima, OH</p>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="about-stats">
+      <div class="about-stat">
+        <div class="about-stat-val">200+</div>
+        <div class="about-stat-label">COIN DESIGNS</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-val">4K</div>
+        <div class="about-stat-label">RESIN RESOLUTION</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-val">3–5d</div>
+        <div class="about-stat-label">TYPICAL TURNAROUND</div>
+      </div>
+    </div>
+
+    <!-- THE SETUP -->
+    <div class="section">
+      <div class="section-tag">The Equipment</div>
+      <h2 style="margin-bottom:1.5rem;">What We Print On</h2>
+
+      <div class="printer-card">
+        <div class="printer-name">RESIN PRINTER — 4K LCD</div>
+        <div class="printer-desc">Our resin printer handles miniatures, coin props, and display pieces. 4K resolution at 0.03–0.05mm layer height means surface detail that rivals injection molding. Every resin print is washed and UV cured before it ships.</div>
+        <span class="printer-tag">RESIN</span>
+        <span class="printer-tag">MINIS</span>
+        <span class="printer-tag">COIN PROPS</span>
+        <span class="printer-tag">DISPLAY PIECES</span>
+      </div>
+
+      <div class="printer-card">
+        <div class="printer-name">BAMBU LAB FDM — WITH AMS</div>
+        <div class="printer-desc">Our Bambu Lab FDM printer with the AMS (Automatic Material System) handles terrain, scatter pieces, and large builds. The AMS lets us print up to 4 filament colors in a single job — no painting required for base terrain colors. PLA Basic and PLA Matte in 56 colors.</div>
+        <span class="printer-tag">PLA BASIC</span>
+        <span class="printer-tag">PLA MATTE</span>
+        <span class="printer-tag">TERRAIN</span>
+        <span class="printer-tag">MULTICOLOR AMS</span>
+        <span class="printer-tag">56 COLORS</span>
+      </div>
+    </div>
+
+    <!-- VALUES -->
+    <div class="section">
+      <div class="section-tag">How We Work</div>
+      <h2 style="margin-bottom:0.5rem;">What We Stand Behind</h2>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">🎯</div>
+          <div class="value-title">NO SURPRISES</div>
+          <div class="value-text">Every order starts as a free quote. You see the price before we print anything. No payment until you approve.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🔁</div>
+          <div class="value-title">PRINT FAILURES ON US</div>
+          <div class="value-text">If a print fails because of our equipment or process, we reprint at no charge. Full stop.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">⚖️</div>
+          <div class="value-title">LICENSED ONLY</div>
+          <div class="value-text">We only print files that permit commercial third-party printing. We check so you don't have to worry about it.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">📍</div>
+          <div class="value-title">LOCAL PICKUP</div>
+          <div class="value-text">Based in Lima, OH. Local pickup available — and preferred for fragile resin minis that don't love shipping.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🎁</div>
+          <div class="value-title">LITTLE EXTRAS</div>
+          <div class="value-text">Orders over $20 include a free mystery coin from our catalog. Small token of appreciation for ordering with us.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">💬</div>
+          <div class="value-title">REAL COMMUNICATION</div>
+          <div class="value-text">You're talking to the person who's actually printing your order. Questions get real answers, fast.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:2rem 0 4rem;">
+      <p style="font-size:18px;font-style:italic;color:var(--muted);margin-bottom:1.5rem;">Ready to bring your campaign to life?</p>
+      <a href="order.html" class="btn-primary" style="margin-right:12px;">REQUEST A PRINT</a>
+      <a href="shop.html" class="btn-ghost">BROWSE THE SHOP</a>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-brand">THE FORGE &amp; FABLE · EST. 2025 · LIMA, OH</div>
+      <ul class="footer-links">
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="order.html">Contact</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="ALZJ6EDJLKNUL"></script>
+  <script>
+    const STRIPE_KEY = 'pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
+    let cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
+    function saveCart(){ localStorage.setItem('ff_cart', JSON.stringify(cart)); }
+    function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); saveCart(); renderCartDrawer(); updateBadge(); }
+    function changeQty(id,delta){ const item=cart.find(i=>i.id===id); if(!item) return; item.qty=Math.max(0,item.qty+delta); if(item.qty===0) cart=cart.filter(i=>i.id!==id); saveCart(); renderCartDrawer(); updateBadge(); }
+    function updateBadge(){
+      const total=cart.reduce((s,i)=>s+i.qty,0);
+      const badge=document.getElementById('cart-badge');
+      if(badge){badge.textContent=total;badge.classList.toggle('show',total>0);}
+    }
+    function renderCartDrawer(){
+      const container=document.getElementById('cart-items');
+      const foot=document.getElementById('cart-foot');
+      if(!container) return;
+      if(cart.length===0){ container.innerHTML='<div class="cart-empty">Your cart is empty — <a href="shop.html" style="color:var(--gold);">browse the shop</a> to add items.</div>'; if(foot) foot.style.display='none'; return; }
+      if(foot) foot.style.display='block';
+      let total=0;
+      container.innerHTML=cart.map(item=>{ const line=item.price*item.qty; total+=line; return `<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-meta">${item.theme} · $${item.price.toFixed(2)} each</div><div class="cart-item-qty"><button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button><span class="qty-num">${item.qty}</span><button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button><button class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</button></div></div><div class="cart-item-price">$${line.toFixed(2)}</div></div>`; }).join('');
+      document.getElementById('cart-total').textContent='$'+total.toFixed(2);
+    }
+    function openCart(){ document.getElementById('cart-overlay').classList.add('open'); document.getElementById('cart-drawer').classList.add('open'); document.body.style.overflow='hidden'; }
+    function closeCart(){ document.getElementById('cart-overlay').classList.remove('open'); document.getElementById('cart-drawer').classList.remove('open'); document.body.style.overflow=''; }
+    async function checkoutStripe(){
+      if(!cart.length) return;
+      const btn=document.getElementById('stripe-btn');
+      btn.textContent='PREPARING...'; btn.disabled=true;
+      try{ const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart})}); const data=await res.json(); if(data.url){ window.location.href=data.url; } else throw new Error(data.error||'No URL'); }
+      catch(err){ btn.textContent='💳 CHECKOUT WITH CARD'; btn.disabled=false; alert('Checkout failed — please try again.'); }
+    }
+    document.getElementById('hamburger').addEventListener('click',function(){ document.getElementById('nav-links').classList.toggle('open'); });
+    updateBadge(); renderCartDrawer();
+  </script>
+</body>
+</html>

@@ -170,6 +170,26 @@
     .filament-toggle-label{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.15em;}
     .filament-body{display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:0.75rem 1.1rem;margin-bottom:1rem;}
     .filament-body.open{display:block;}
+
+    /* ── COST CALCULATOR ── */
+    .calc-group{margin-bottom:1rem;}
+    .calc-label{display:block;font-family:var(--serif);font-size:10px;color:var(--soft);letter-spacing:0.15em;margin-bottom:5px;}
+    .calc-input{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:var(--serif);font-size:15px;padding:8px 12px;outline:none;border-radius:var(--radius);width:160px;}
+    .calc-input:focus{border-color:var(--border2);}
+    .calc-type-btn{font-family:var(--serif);font-size:10px;letter-spacing:0.1em;padding:7px 16px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);cursor:pointer;border-radius:var(--radius);transition:all 0.15s;}
+    .calc-type-btn:hover{color:var(--gold);border-color:var(--border2);}
+    .calc-type-btn.active{background:var(--gold);color:#0d0f14;border-color:var(--gold);}
+    .calc-result-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:1rem;}
+    .calc-result-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border);}
+    .calc-result-row:last-child{border-bottom:none;}
+    .calc-result-row.subtotal{border-top:1px solid var(--border2);padding-top:8px;margin-top:4px;}
+    .calc-result-row.profit .calc-result-val{color:var(--green);}
+    .calc-result-label{font-size:13px;color:var(--muted);}
+    .calc-result-val{font-family:var(--serif);font-size:14px;color:var(--text);}
+    .calc-result-row.subtotal .calc-result-val{color:var(--gold2);font-size:16px;}
+    .calc-charge-box{background:var(--surface);border:2px solid var(--border2);border-radius:var(--radius);padding:1.25rem;text-align:center;}
+    .calc-charge-val{font-family:var(--serif);font-size:42px;color:var(--gold2);line-height:1;}
+    @media(max-width:700px){#pane-calculator>div{grid-template-columns:1fr!important;}}
   </style>
 </head>
 <body>
@@ -198,6 +218,8 @@
         <button class="inv-tab active" onclick="switchInvTab('filament',this)">FILAMENT</button>
         <button class="inv-tab" onclick="switchInvTab('coins',this)">COIN STOCK</button>
         <button class="inv-tab" onclick="switchInvTab('dashboard',this)">DASHBOARD</button>
+        <button class="inv-tab" onclick="switchInvTab('calculator',this)">COST CALC</button>
+        <button class="inv-tab" onclick="switchInvTab('printstatus',this)">PRINT STATUS</button>
       </div>
 
       <!-- FILAMENT PANE -->
@@ -337,6 +359,171 @@
 
       </div>
 
+      <!-- COST CALCULATOR PANE -->
+      <div class="inv-pane" id="pane-calculator">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+
+          <!-- INPUTS LEFT -->
+          <div>
+            <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1.25rem;">PRINT DETAILS</div>
+
+            <div class="calc-group">
+              <label class="calc-label">PRINT TYPE</label>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;" id="calc-type-opts">
+                <button class="calc-type-btn active" onclick="setCalcType('resin',this)">Resin</button>
+                <button class="calc-type-btn" onclick="setCalcType('pla',this)">PLA FDM</button>
+              </div>
+            </div>
+
+            <div class="calc-group">
+              <label class="calc-label">MATERIAL WEIGHT (grams) <span style="color:var(--muted);font-style:italic;font-family:var(--body);letter-spacing:0;">— from your slicer</span></label>
+              <input type="number" class="calc-input" id="calc-weight" value="15" min="0.1" step="0.1" oninput="calcCost()">
+            </div>
+
+            <div class="calc-group">
+              <label class="calc-label">PRINT TIME (hours) <span style="color:var(--muted);font-style:italic;font-family:var(--body);letter-spacing:0;">— from your slicer</span></label>
+              <input type="number" class="calc-input" id="calc-time" value="3" min="0.1" step="0.1" oninput="calcCost()">
+            </div>
+
+            <div class="calc-group">
+              <label class="calc-label">QUANTITY</label>
+              <input type="number" class="calc-input" id="calc-qty" value="1" min="1" step="1" oninput="calcCost()">
+            </div>
+
+            <div class="calc-group">
+              <label class="calc-label">POST-PROCESSING TIME (minutes)</label>
+              <input type="number" class="calc-input" id="calc-post" value="15" min="0" step="5" oninput="calcCost()">
+            </div>
+
+            <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin:1.5rem 0 1.25rem;">RATES <span style="font-size:9px;color:var(--muted);font-style:italic;font-family:var(--body);letter-spacing:0;text-transform:none;">— saved to this device</span></div>
+
+            <div class="calc-group">
+              <label class="calc-label">MATERIAL COST ($/kg) <span id="calc-mat-hint" style="color:var(--muted);font-style:italic;font-family:var(--body);letter-spacing:0;">— resin ~$30-50/kg</span></label>
+              <input type="number" class="calc-input" id="calc-mat-cost" value="40" min="1" step="1" oninput="calcCost();saveCalcRates()">
+            </div>
+
+            <div class="calc-group">
+              <label class="calc-label">ELECTRICITY ($/kWh) <span style="color:var(--muted);font-style:italic;font-family:var(--body);letter-spacing:0;">— your rate: ~$0.256</span></label>
+              <input type="number" class="calc-input" id="calc-kwh" value="0.256" min="0.01" step="0.001" oninput="calcCost();saveCalcRates()">
+            </div>
+
+            <div class="calc-group">
+              <label class="calc-label">PRINTER WATTAGE (W) <span style="color:var(--muted);font-style:italic;font-family:var(--body);letter-spacing:0;">— resin ~100W, FDM ~250W</span></label>
+              <input type="number" class="calc-input" id="calc-watts" value="100" min="10" step="10" oninput="calcCost();saveCalcRates()">
+            </div>
+
+            <div class="calc-group">
+              <label class="calc-label">LABOR RATE ($/hr)</label>
+              <input type="number" class="calc-input" id="calc-labor" value="20" min="1" step="1" oninput="calcCost();saveCalcRates()">
+            </div>
+
+            <div class="calc-group">
+              <label class="calc-label">MACHINE DEPRECIATION ($/hr)</label>
+              <input type="number" class="calc-input" id="calc-depr" value="15" min="1" step="1" oninput="calcCost();saveCalcRates()">
+            </div>
+
+            <div class="calc-group">
+              <label class="calc-label">FAILURE RATE (%)</label>
+              <input type="number" class="calc-input" id="calc-fail" value="10" min="0" max="50" step="1" oninput="calcCost();saveCalcRates()">
+            </div>
+
+            <div class="calc-group">
+              <label class="calc-label">PROFIT MARGIN (%)</label>
+              <input type="number" class="calc-input" id="calc-margin" value="40" min="0" max="200" step="5" oninput="calcCost();saveCalcRates()">
+            </div>
+          </div>
+
+          <!-- RESULT RIGHT -->
+          <div>
+            <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1.25rem;">COST BREAKDOWN</div>
+
+            <div class="calc-result-card">
+              <div class="calc-result-row">
+                <span class="calc-result-label">Material cost</span>
+                <span class="calc-result-val" id="cr-material">—</span>
+              </div>
+              <div class="calc-result-row">
+                <span class="calc-result-label">Electricity</span>
+                <span class="calc-result-val" id="cr-electric">—</span>
+              </div>
+              <div class="calc-result-row">
+                <span class="calc-result-label">Machine time</span>
+                <span class="calc-result-val" id="cr-machine">—</span>
+              </div>
+              <div class="calc-result-row">
+                <span class="calc-result-label">Labor</span>
+                <span class="calc-result-val" id="cr-labor">—</span>
+              </div>
+              <div class="calc-result-row">
+                <span class="calc-result-label">Failure buffer</span>
+                <span class="calc-result-val" id="cr-failure">—</span>
+              </div>
+              <div class="calc-result-row subtotal">
+                <span class="calc-result-label">Cost to produce</span>
+                <span class="calc-result-val" id="cr-subtotal">—</span>
+              </div>
+              <div class="calc-result-row profit">
+                <span class="calc-result-label">Profit margin</span>
+                <span class="calc-result-val" id="cr-profit">—</span>
+              </div>
+            </div>
+
+            <div class="calc-charge-box">
+              <div style="font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.15em;margin-bottom:6px;">SUGGESTED CHARGE</div>
+              <div class="calc-charge-val" id="cr-total">$0.00</div>
+              <div style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.1em;margin-top:4px;" id="cr-per-unit"></div>
+            </div>
+
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-top:1rem;">
+              <div style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.15em;margin-bottom:8px;">MARKET CHECK</div>
+              <div id="cr-market" style="font-size:13px;color:var(--soft);line-height:1.7;font-style:italic;"></div>
+            </div>
+
+            <div style="margin-top:1rem;font-size:12px;color:var(--muted);font-style:italic;line-height:1.6;">
+              Rates auto-save to this device. All values editable — adjust to match your actual costs.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRINT STATUS PANE -->
+      <div class="inv-pane" id="pane-printstatus">
+        <div style="max-width:600px;">
+          <div style="font-family:var(--serif);font-size:11px;color:var(--ember);letter-spacing:0.2em;margin-bottom:1.25rem;">LIVE PRINT STATUS</div>
+          <p style="font-size:15px;color:var(--muted);font-style:italic;line-height:1.75;margin-bottom:1.5rem;">
+            What you set here shows as a live banner on your shop page, so customers can see what's currently on the build plate.
+          </p>
+
+          <div class="calc-group">
+            <label class="calc-label">STATUS</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;" id="ps-status-opts">
+              <button class="calc-type-btn active" onclick="setPrintStatus('printing',this)">🖨️ Printing Now</button>
+              <button class="calc-type-btn" onclick="setPrintStatus('curing',this)">⚗️ Curing / Washing</button>
+              <button class="calc-type-btn" onclick="setPrintStatus('ready',this)">✅ Order Ready</button>
+              <button class="calc-type-btn" onclick="setPrintStatus('idle',this)">💤 Printer Idle</button>
+            </div>
+          </div>
+
+          <div class="calc-group">
+            <label class="calc-label">WHAT'S ON THE BUILD PLATE</label>
+            <input type="text" class="calc-input" id="ps-item" placeholder="e.g. Dragon mini × 3 for J. Merrick — Resin" style="width:100%;">
+          </div>
+
+          <div class="calc-group">
+            <label class="calc-label">ESTIMATED COMPLETION</label>
+            <input type="text" class="calc-input" id="ps-eta" placeholder="e.g. Ready by 5pm today" style="width:100%;">
+          </div>
+
+          <button onclick="savePrintStatus()" style="font-family:var(--serif);font-size:11px;letter-spacing:0.15em;padding:11px 28px;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:var(--radius);margin-top:0.5rem;transition:background 0.2s;">SAVE &amp; PUBLISH</button>
+          <span id="ps-save-msg" style="font-family:var(--serif);font-size:11px;color:var(--green);letter-spacing:0.1em;margin-left:12px;display:none;">PUBLISHED ✓</span>
+
+          <div style="margin-top:2rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+            <div style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.15em;margin-bottom:8px;">PREVIEW — WHAT CUSTOMERS SEE</div>
+            <div id="ps-preview" style="font-size:14px;color:var(--soft);font-style:italic;line-height:1.7;">Set a status above to preview.</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -348,8 +535,8 @@
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
 const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -538,6 +725,8 @@ function switchInvTab(tab, el){
   document.getElementById('pane-'+tab).classList.add('active');
   if(tab==='coins' && Object.keys(coinStock).length===0) loadCoinStock();
   if(tab==='dashboard') loadDashboard();
+  if(tab==='calculator') initCalc();
+  if(tab==='printstatus') initPrintStatus();
 }
 
 // ── COIN THEMES (same as shop.html) ──
@@ -1021,6 +1210,199 @@ async function loadDashReviews() {
   } catch(e) {
     el.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">Reviews table not set up yet.</div>';
   }
+}
+
+// ════════════════════════════════════════════════════
+// COST CALCULATOR
+// ════════════════════════════════════════════════════
+const CALC_STORAGE = 'ff_calc_rates';
+let calcType = 'resin';
+
+const MARKET_BENCHMARKS = {
+  resin: { small:[8,15],  medium:[15,30], large:[30,65],  unit:'mini/display piece' },
+  pla:   { small:[5,12],  medium:[12,30], large:[30,80],  unit:'terrain piece/set' },
+};
+
+function setCalcType(type, btn) {
+  calcType = type;
+  btn.closest('#calc-type-opts').querySelectorAll('.calc-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  // Update hints
+  const matHint = document.getElementById('calc-mat-hint');
+  const watts = document.getElementById('calc-watts');
+  if(type === 'resin') {
+    matHint.textContent = '— resin ~$30-50/kg';
+    document.getElementById('calc-mat-cost').value = 40;
+    watts.value = 100;
+  } else {
+    matHint.textContent = '— PLA Basic ~$20-25/kg';
+    document.getElementById('calc-mat-cost').value = 22;
+    watts.value = 250;
+  }
+  calcCost();
+}
+
+function getCalcVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+function calcCost() {
+  const weight    = getCalcVal('calc-weight');   // grams
+  const hours     = getCalcVal('calc-time');     // hours
+  const qty       = Math.max(1, getCalcVal('calc-qty'));
+  const postMins  = getCalcVal('calc-post');     // minutes
+  const matPerKg  = getCalcVal('calc-mat-cost'); // $/kg
+  const kwh       = getCalcVal('calc-kwh');      // $/kWh
+  const watts     = getCalcVal('calc-watts');    // W
+  const laborRate = getCalcVal('calc-labor');    // $/hr
+  const deprRate  = getCalcVal('calc-depr');     // $/hr
+  const failPct   = getCalcVal('calc-fail') / 100;
+  const marginPct = getCalcVal('calc-margin') / 100;
+
+  // Per unit costs
+  const matCost    = (weight / 1000) * matPerKg;
+  const electricCost = (watts / 1000) * hours * kwh;
+  const machineCost  = hours * deprRate;
+  const totalHours   = hours + (postMins / 60);
+  const laborCost    = totalHours * laborRate;
+  const subtotal1    = matCost + electricCost + machineCost + laborCost;
+  const failBuffer   = subtotal1 * failPct;
+  const subtotal     = subtotal1 + failBuffer;
+  const profit       = subtotal * marginPct;
+  const total        = subtotal + profit;
+
+  // Total for quantity
+  const totalAll = total * qty;
+
+  // Update display
+  const fmt = v => '$' + v.toFixed(2);
+  document.getElementById('cr-material').textContent  = fmt(matCost);
+  document.getElementById('cr-electric').textContent  = fmt(electricCost);
+  document.getElementById('cr-machine').textContent   = fmt(machineCost);
+  document.getElementById('cr-labor').textContent     = fmt(laborCost);
+  document.getElementById('cr-failure').textContent   = fmt(failBuffer);
+  document.getElementById('cr-subtotal').textContent  = fmt(subtotal);
+  document.getElementById('cr-profit').textContent    = '+' + fmt(profit);
+  document.getElementById('cr-total').textContent     = '$' + totalAll.toFixed(2);
+  document.getElementById('cr-per-unit').textContent  = qty > 1 ? `$${total.toFixed(2)} per unit × ${qty}` : 'single unit';
+
+  // Market check
+  const bench = MARKET_BENCHMARKS[calcType];
+  let sizeLabel = 'medium';
+  if (weight < 10) sizeLabel = 'small';
+  else if (weight > 50) sizeLabel = 'large';
+  const [mktLow, mktHigh] = bench[sizeLabel];
+  const mktEl = document.getElementById('cr-market');
+  let verdict = '';
+  if (total < mktLow * 0.9) verdict = `<span style="color:var(--ember)">⚠ Below market — consider raising your margin.</span>`;
+  else if (total > mktHigh * 1.1) verdict = `<span style="color:var(--muted)">ℹ Above typical range — may be harder to sell at this price.</span>`;
+  else verdict = `<span style="color:var(--green)">✓ Within typical market range ($${mktLow}–$${mktHigh} for ${sizeLabel} ${bench.unit}).</span>`;
+  mktEl.innerHTML = `Similar ${calcType === 'resin' ? 'resin print' : 'PLA terrain'} typically sells for $${mktLow}–$${mktHigh} (${sizeLabel} size).<br>${verdict}`;
+}
+
+function saveCalcRates() {
+  const rates = {
+    matCost: getCalcVal('calc-mat-cost'),
+    kwh:     getCalcVal('calc-kwh'),
+    watts:   getCalcVal('calc-watts'),
+    labor:   getCalcVal('calc-labor'),
+    depr:    getCalcVal('calc-depr'),
+    fail:    getCalcVal('calc-fail'),
+    margin:  getCalcVal('calc-margin'),
+  };
+  localStorage.setItem(CALC_STORAGE, JSON.stringify(rates));
+}
+
+function initCalc() {
+  // Load saved rates
+  try {
+    const saved = JSON.parse(localStorage.getItem(CALC_STORAGE) || '{}');
+    if(saved.kwh)    document.getElementById('calc-kwh').value    = saved.kwh;
+    if(saved.watts)  document.getElementById('calc-watts').value  = saved.watts;
+    if(saved.labor)  document.getElementById('calc-labor').value  = saved.labor;
+    if(saved.depr)   document.getElementById('calc-depr').value   = saved.depr;
+    if(saved.fail)   document.getElementById('calc-fail').value   = saved.fail;
+    if(saved.margin) document.getElementById('calc-margin').value = saved.margin;
+    if(saved.matCost)document.getElementById('calc-mat-cost').value = saved.matCost;
+  } catch(e) {}
+  calcCost();
+}
+
+// ════════════════════════════════════════════════════
+// PRINT STATUS
+// ════════════════════════════════════════════════════
+const PS_KEY = 'ff_print_status';
+let psStatus = 'idle';
+
+const PS_ICONS = { printing:'🖨️', curing:'⚗️', ready:'✅', idle:'💤' };
+const PS_LABELS = { printing:'Printing Now', curing:'Curing / Washing', ready:'Order Ready', idle:'Printer Idle' };
+
+function setPrintStatus(status, btn) {
+  psStatus = status;
+  btn.closest('#ps-status-opts').querySelectorAll('.calc-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updatePsPreview();
+}
+
+function updatePsPreview() {
+  const item = document.getElementById('ps-item').value;
+  const eta  = document.getElementById('ps-eta').value;
+  const icon = PS_ICONS[psStatus];
+  const label = PS_LABELS[psStatus];
+  let preview = `<strong style="color:var(--gold)">${icon} ${label}</strong>`;
+  if(item) preview += ` — ${item}`;
+  if(eta)  preview += ` · ${eta}`;
+  document.getElementById('ps-preview').innerHTML = preview;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const psItem = document.getElementById('ps-item');
+  const psEta  = document.getElementById('ps-eta');
+  if(psItem) psItem.addEventListener('input', updatePsPreview);
+  if(psEta)  psEta.addEventListener('input', updatePsPreview);
+});
+
+async function savePrintStatus() {
+  const item = document.getElementById('ps-item').value;
+  const eta  = document.getElementById('ps-eta').value;
+  const data = { status: psStatus, item, eta, updated: new Date().toISOString() };
+
+  // Save to Supabase as a single-row settings record
+  try {
+    // Try update first, then insert
+    const check = await sb('print_status?select=id&limit=1');
+    if(check && check.length) {
+      await sb(`print_status?id=eq.${check[0].id}`, {method:'PATCH', body:JSON.stringify(data)});
+    } else {
+      await sb('print_status', {method:'POST', body:JSON.stringify({...data, id:1})});
+    }
+    const msg = document.getElementById('ps-save-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => msg.style.display = 'none', 2500);
+    showInd('ok','STATUS PUBLISHED');
+  } catch(e) {
+    // Fallback to localStorage if Supabase table not set up
+    localStorage.setItem(PS_KEY, JSON.stringify(data));
+    const msg = document.getElementById('ps-save-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => msg.style.display = 'none', 2500);
+    showInd('ok','STATUS SAVED LOCALLY');
+  }
+}
+
+function initPrintStatus() {
+  // Load saved status
+  try {
+    const saved = JSON.parse(localStorage.getItem(PS_KEY) || 'null');
+    if(saved) {
+      psStatus = saved.status || 'idle';
+      if(document.getElementById('ps-item')) document.getElementById('ps-item').value = saved.item || '';
+      if(document.getElementById('ps-eta'))  document.getElementById('ps-eta').value  = saved.eta  || '';
+      // Activate the right status button
+      document.querySelectorAll('#ps-status-opts .calc-type-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent.includes(PS_LABELS[psStatus]));
+      });
+      updatePsPreview();
+    }
+  } catch(e) {}
 }
 
 if(sessionStorage.getItem(SK)==='1') loadInventory();

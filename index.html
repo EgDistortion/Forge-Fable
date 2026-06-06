@@ -456,6 +456,49 @@
     </div>
   </section>
 
+  <!-- HOW IT WORKS -->
+  <section style="padding:4rem 0;border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:3rem;">
+        <div class="section-tag">Simple Process</div>
+        <h2>How It Works</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;position:relative;">
+        <div style="text-align:center;padding:1.5rem;">
+          <div style="font-family:var(--serif);font-size:42px;color:var(--gold);opacity:0.4;line-height:1;margin-bottom:1rem;">01</div>
+          <div style="font-family:var(--serif);font-size:13px;color:var(--gold);letter-spacing:0.15em;margin-bottom:10px;">SEND YOUR FILE</div>
+          <p style="font-size:16px;color:var(--muted);font-style:italic;line-height:1.7;">Submit the order form with your STL link or description. Email your file to forgeandfable3d@gmail.com. No account needed.</p>
+        </div>
+        <div style="text-align:center;padding:1.5rem;border-left:1px solid var(--border);border-right:1px solid var(--border);">
+          <div style="font-family:var(--serif);font-size:42px;color:var(--gold);opacity:0.4;line-height:1;margin-bottom:1rem;">02</div>
+          <div style="font-family:var(--serif);font-size:13px;color:var(--gold);letter-spacing:0.15em;margin-bottom:10px;">GET YOUR QUOTE</div>
+          <p style="font-size:16px;color:var(--muted);font-style:italic;line-height:1.7;">We review your file and send a quote within 24 hours. You approve it — or don't. No payment until you say go.</p>
+        </div>
+        <div style="text-align:center;padding:1.5rem;">
+          <div style="font-family:var(--serif);font-size:42px;color:var(--gold);opacity:0.4;line-height:1;margin-bottom:1rem;">03</div>
+          <div style="font-family:var(--serif);font-size:13px;color:var(--gold);letter-spacing:0.15em;margin-bottom:10px;">WE PRINT &amp; SHIP</div>
+          <p style="font-size:16px;color:var(--muted);font-style:italic;line-height:1.7;">Once approved, your order goes on the build plate. Ready in 3–5 days. Ship anywhere or pick up locally in Lima, OH.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF / REVIEWS TEASER -->
+  <section id="homepage-reviews" style="padding:4rem 0;border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <div class="section-tag">What Customers Say</div>
+          <h2>Reviews</h2>
+        </div>
+        <a href="shop.html#reviews" style="font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.12em;">ALL REVIEWS →</a>
+      </div>
+      <div id="homepage-reviews-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+        <div style="font-style:italic;color:var(--muted);font-size:16px;padding:2rem 0;">Loading reviews...</div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA BAND -->
   <section>
     <div class="container">
@@ -474,9 +517,11 @@
     <div class="site-footer-inner">
       <div class="footer-brand">THE FORGE &amp; FABLE · LIMA, OHIO · EST. 2025</div>
       <ul class="footer-links">
+        <li><a href="shop.html">Shop</a></li>
         <li><a href="gallery.html">Gallery</a></li>
         <li><a href="pricing.html">Pricing</a></li>
         <li><a href="stl-sources.html">STL Guide</a></li>
+        <li><a href="about.html">About</a></li>
         <li><a href="order.html">Contact</a></li>
       </ul>
     </div>
@@ -568,6 +613,40 @@
     // Init
     updateBadge();
     renderCartDrawer();
+
+    // ── HOMEPAGE REVIEWS ──
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+    async function loadHomepageReviews() {
+      const grid = document.getElementById('homepage-reviews-grid');
+      if(!grid) return;
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=reviewer_name,coin_ordered,review_text,rating&order=created_at.desc&limit=3`, {
+          headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+        });
+        if(!res.ok) throw new Error();
+        const reviews = await res.json();
+        if(!reviews.length){
+          grid.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:16px;padding:1rem 0;grid-column:1/-1;">No reviews yet — be the first to <a href="shop.html" style="color:var(--gold);">place an order</a>!</div>';
+          return;
+        }
+        grid.innerHTML = reviews.map(r=>`
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <div style="font-family:var(--serif);font-size:12px;color:var(--text);letter-spacing:0.08em;">${r.reviewer_name||'Anonymous'}</div>
+              <div style="font-size:14px;color:var(--gold2)">${'★'.repeat(r.rating||5)}${'☆'.repeat(5-(r.rating||5))}</div>
+            </div>
+            <div style="font-family:var(--serif);font-size:9px;color:var(--gold);letter-spacing:0.12em;margin-bottom:8px;">${r.coin_ordered||''}</div>
+            <div style="font-size:15px;color:var(--muted);font-style:italic;line-height:1.7;">${(r.review_text||'').substring(0,120)}${(r.review_text||'').length>120?'...':''}</div>
+          </div>`).join('');
+      } catch(e) {
+        grid.innerHTML = '';
+        document.getElementById('homepage-reviews').style.display = 'none';
+      }
+    }
+
+    loadHomepageReviews();
   </script>
 
 </body>
