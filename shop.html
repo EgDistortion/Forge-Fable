@@ -295,7 +295,6 @@
             <button class="lightbox-opt sel" onclick="selectLbOpt(this,'mat')">Grey (default)</button>
             <button class="lightbox-opt" onclick="selectLbOpt(this,'mat')">Red Clay</button>
             <button class="lightbox-opt" onclick="selectLbOpt(this,'mat')">Black</button>
-            <button class="lightbox-opt" onclick="selectLbOpt(this,'mat')">Natural (cream)</button>
           </div>
           <div style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-top:8px;">Non-grey colors subject to stock availability — we'll confirm before printing.</div>
         </div>
@@ -491,14 +490,14 @@
   // ════════════════════════════════════════════════════════════
   //  PRICE CONFIG
   // ════════════════════════════════════════════════════════════
-  const COIN_PRICE = 3;
-  const SET_PRICE  = 20;
+  const COIN_PRICE = 1.50;
+  const SET_PRICE  = 12;
 
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -514,7 +513,6 @@
       {id:'myth-007',name:'Hydra',desc:'Multiple serpent heads strike outward from a single body — cut one down, two more take its place.'},
       {id:'myth-008',name:'Serpent Tangle',desc:'A mass of intertwined serpents fills the coin face, ancient and hypnotic in their coiling pattern.'},
       {id:'myth-009',name:'Dragon Hydra',desc:'A draconic multi-headed beast — part dragon, part hydra, entirely terrifying.'},
-      {id:'myth-010',name:'Three-Headed Drake',desc:'Three dragon heads on one body, a creature of rare and terrifying power.'},
       {id:'myth-011',name:'King Ghidorah',desc:'Three-headed winged titan looming large — unmistakably the king of mythical destroyers.'},
       {id:'myth-012',name:'Cerberus',desc:'The three-headed hound of the underworld stands guard, a warning to all who would pass.'},
       {id:'myth-013',name:'Hellbound Cerberus',desc:'Cerberus wreathed in hellfire, chains broken — the guardian of the underworld unleashed.'},
