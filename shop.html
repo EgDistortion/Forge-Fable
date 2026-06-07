@@ -490,14 +490,14 @@
   // ════════════════════════════════════════════════════════════
   //  PRICE CONFIG
   // ════════════════════════════════════════════════════════════
-  const COIN_PRICE = 1.50;
+  const COIN_PRICE = 1.50; // display as $1.50
   const SET_PRICE  = 12;
 
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -869,9 +869,9 @@
       </div>
       <div class="coin-info">
         <div class="coin-name">${coin.name}</div>
-        <div class="coin-material">RESIN PRINT · $${COIN_PRICE}</div>
+        <div class="coin-material">RESIN PRINT · $${COIN_PRICE.toFixed(2)}</div>
         <div class="coin-footer">
-          <div class="coin-price">$${COIN_PRICE}</div>
+          <div class="coin-price">$${COIN_PRICE.toFixed(2)}</div>
           <button class="coin-add-btn" id="btn-${coin.id}"
             onclick="addToCart('${coin.id}','${coin.name}','${themeLabel}',${COIN_PRICE},this)"
             ${isOut?'disabled':''}>
@@ -893,7 +893,7 @@
     document.getElementById('lb-theme').textContent = themeLabel;
     document.getElementById('lb-name').textContent  = coin.name;
     document.getElementById('lb-desc').textContent  = coin.desc || 'A beautifully detailed resin printed coin prop. Printed in grey resin by default — ideal for painting. Other colors available on request.';
-    document.getElementById('lb-price').textContent = `$${COIN_PRICE}`;
+    document.getElementById('lb-price').textContent = `$${COIN_PRICE.toFixed(2)}`;
 
     // Image
     const imgEl = document.getElementById('lb-img');
