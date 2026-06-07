@@ -497,8 +497,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -616,27 +616,24 @@
       {id:'drag-019',name:'Dragon Silhouette Coin',desc:"A dragon against a full moon — the shadow of doom on the horizon."},
       {id:'drag-020',name:'Dragon Rampant Coin',desc:"Rearing up in the heraldic pose — the dragon as noble sigil."},
     ]},
-    { id:'weapons', label:'WEAPONS', coins:[
-      {id:'weap-001',name:'Longsword Coin',desc:"The knight blade — balanced, noble, and deadly in trained hands."},
-      {id:'weap-002',name:'Battle Axe Coin',desc:"A heavy double-headed axe — favored by warriors and berserkers alike."},
-      {id:'weap-003',name:'Longbow Coin',desc:"The archer weapon of choice — patient, precise, and lethal at range."},
-      {id:'weap-004',name:'Staff and Orb Coin',desc:"A mage staff topped with a glowing orb — conduit for arcane power."},
-      {id:'weap-005',name:'Dagger Pair Coin',desc:"Twin blades for the rogue who prefers to work up close."},
-      {id:'weap-006',name:'Warhammer Coin',desc:"A heavy maul that crushes armor — the paladin weapon of divine justice."},
-      {id:'weap-007',name:'Crossbow Coin',desc:"Mechanical precision — the crossbow needs little training to be deadly."},
-      {id:'weap-008',name:'Spear and Shield Coin',desc:"The soldier classic combination — reach and defense in equal measure."},
-      {id:'weap-009',name:'Scythe Coin',desc:"The reaper instrument — not just a tool, a symbol of inevitable death."},
-      {id:'weap-010',name:'Flail Coin',desc:"A spiked ball on a chain — unpredictable and devastating."},
-      {id:'weap-011',name:'Trident Coin',desc:"The weapon of sea gods — three tines that command the ocean depths."},
-      {id:'weap-012',name:'Katana Coin',desc:"The samurai blade — a lifetime of discipline in a single edge."},
-      {id:'weap-013',name:'Halberd Coin',desc:"Spear, axe, and hook in one weapon — the ultimate polearm."},
-      {id:'weap-014',name:'Whip Coin',desc:"Reach, speed, and pain — the whip demands skill to wield effectively."},
-      {id:'weap-015',name:'Gauntlet Coin',desc:"An armored fist — the weapon that is always with you."},
-      {id:'weap-016',name:'Throwing Stars Coin',desc:"Four-pointed blades spinning through the air — silent and deadly."},
-      {id:'weap-017',name:'Greatsword Coin',desc:"A two-handed blade requiring immense strength — for those who commit fully."},
-      {id:'weap-018',name:'Magic Sword Coin',desc:"A blade glowing with enchantment — forged with purpose, destined for legend."},
-      {id:'weap-019',name:'Dwarven Pick Coin',desc:"Miner tool and warrior weapon — equally effective against rock and bone."},
-      {id:'weap-020',name:'Elven Bow Coin',desc:"A graceful curve of living wood — accurate beyond mortal understanding."},
+        { id:'weapons', label:'WEAPONS', coins:[
+      {id:'weap-001',name:'Arsenal of War Coin',desc:"Every weapon of war gathered in one place — axe, dagger, mace, sword, and arrows radiating from a skull shield. The ultimate warrior's coin."},
+      {id:'weap-002',name:'Legendary Arms Coin',desc:"Labeled LEGENDARY ARMS — a central sword surrounded by axe, hammer, mace, dagger, and arrows. Celtic knotwork border."},
+      {id:'weap-003',name:'Forged in Steel Coin',desc:"A Viking skull in horned helm flanked by crossed axe and sword, laurel wreath border. Reads FORGED IN STEEL."},
+      {id:'weap-004',name:'Lion Crest Arms Coin',desc:"Heraldic lion shield with sword through it and hammer crossed behind, Celtic knotwork wreath, skull accents at four points."},
+      {id:'weap-005',name:'Warrior Crest Coin',desc:"Flaming horned helm above a griffin heraldic shield, crossed hammer and battle axe, skull crown at bottom, rope twist border."},
+      {id:'weap-006',name:'Runic Warhammer Coin',desc:"Large warhammer with Celtic knotwork and beast face on the head, flanked by an axe, full runic alphabet border with shield motifs."},
+      {id:'weap-007',name:'Runic Battle Axe Coin',desc:"Double-headed battle axe with spiked top and intricate knotwork, braided handle, runic inscription tablets at four points."},
+      {id:'weap-008',name:'Forged in Steel II Coin',desc:"Second variant of the Forged in Steel design — Viking skull in horned helm, crossed axe and sword, darker render with laurel border."},
+      {id:'weap-009',name:'Deaths Hammer Coin',desc:"Massive ornate warhammer with skull and crossbones on the head, twisted handle, surrounded by elaborate baroque scrollwork border."},
+      {id:'weap-010',name:'Shield Hammer Coin',desc:"Spiked warhammer centered on a heraldic shield with runic inscriptions, braided chain wreath border, hammered edge outer ring."},
+      {id:'weap-011',name:'Thors Hammer Coin',desc:"Clean ornate Mjolnir with decorative knotwork on the head, twisted grip, hanging loop at top, elegant scrollwork and floral border."},
+      {id:'weap-012',name:'Celtic Sword Coin',desc:"Single sword with Celtic knotwork crossguard plunged into a rough stone texture. Reads SWORD WEAPON along the top."},
+      {id:'weap-013',name:'Sword in Stone Coin',desc:"Ornate longsword with lion crossguard thrust into rocky stone, shield-shaped inner frame, rivet dot border. Clean no-text design."},
+      {id:'weap-014',name:'Knights Blade Coin',desc:"Single elegant longsword with ornate crossguard and pommel, angled diagonally on a clean smooth background, fine serrated border."},
+      {id:'weap-015',name:'Battlefield Cannon Coin',desc:"Side-profile cannon on a wheeled carriage with cannonballs, powder barrel, and fort walls in background. Reads CANNON WEAPON UNIT."},
+      {id:'weap-016',name:'Lion Cannon Coin',desc:"Ornate cannon with a roaring lion head at the muzzle, decorative scrollwork carriage, cannonballs at the base, gear-tooth border."},
+      {id:'weap-017',name:'Cannon Front Coin',desc:"Front-facing view looking directly down the barrel of a cannon, wooden wheeled carriage, crossed cannons and cannonballs at the bottom."},
     ]},
     { id:'dwarven', label:'DWARVEN', coins:[
       {id:'dwav-001',name:'Dwarven Forge Coin',desc:"The master forge — heart of the mountain hold, where legends are made."},
