@@ -78,7 +78,19 @@
     .cat-card.disabled{opacity:0.55;cursor:default;}
     .cat-card.disabled:hover{transform:none;border-color:var(--border);}
 
-    /* ── VIEW 2: COINS with sidebar ── */
+    /* ── THEME PICKER ── */
+    .theme-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;padding:0.5rem 0;}
+    .theme-picker-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color 0.15s,transform 0.15s;background:var(--surface);}
+    .theme-picker-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+    .theme-picker-thumb{width:100%;aspect-ratio:1;overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;}
+    .theme-picker-thumb img{width:100%;height:100%;object-fit:cover;}
+    .theme-picker-info{padding:0.6rem 0.75rem;border-top:1px solid var(--border);}
+    .theme-picker-name{font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.12em;margin-bottom:2px;}
+    .theme-picker-count{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.08em;}
+    .theme-picker-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.25rem;}
+    .theme-picker-title{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.2em;}
+    #view-theme-picker{display:none;}
+    #view-theme-picker.active{display:block;}
     .coins-layout{display:grid;grid-template-columns:200px 1fr;gap:0;min-height:60vh;}
     .coins-sidebar{border-right:1px solid var(--border2);padding:1.5rem 0;}
     .coins-sidebar-title{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.2em;padding:0 1.25rem 0.75rem;border-bottom:1px solid var(--border);margin-bottom:0.5rem;}
@@ -365,38 +377,50 @@
 
     <!-- VIEW 2: COINS with sidebar -->
     <div class="shop-view" id="view-coins">
-      <div style="padding:1.5rem 0 0.5rem;display:flex;align-items:center;gap:12px;">
-        <button class="back-btn" onclick="goToCategories()">← ALL CATEGORIES</button>
+      <div style="padding:1.5rem 0 0.5rem;">
+        <button class="back-btn" id="coins-back-btn" onclick="handleCoinsBack()">← ALL CATEGORIES</button>
       </div>
-      <div class="coins-layout">
 
-        <!-- SIDEBAR -->
-        <div class="coins-sidebar">
-          <div class="coins-sidebar-title">COIN THEMES</div>
-          <div id="sidebar-themes"></div>
-          <hr class="sb-divider">
-          <div class="sb-all" onclick="showAllCoins()">SHOW ALL THEMES</div>
+      <!-- THEME PICKER -->
+      <div id="view-theme-picker">
+        <div class="theme-picker-header">
+          <div class="theme-picker-title">CHOOSE A THEME</div>
+          <div id="theme-picker-count" style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.08em;"></div>
         </div>
+        <div class="theme-picker-grid" id="theme-picker-grid"></div>
+      </div>
 
-        <!-- COIN CONTENT -->
-        <div class="coins-content">
-          <div class="coins-content-title">
-            <span id="coins-section-title">ALL COINS</span>
-            <span id="coins-section-count" style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.1em;"></span>
+      <!-- COIN BROWSER (shown after theme selected) -->
+      <div id="view-coin-browser" style="display:none;">
+        <div class="coins-layout">
+
+          <!-- SIDEBAR -->
+          <div class="coins-sidebar">
+            <div class="coins-sidebar-title">COIN THEMES</div>
+            <div id="sidebar-themes"></div>
+            <hr class="sb-divider">
+            <div class="sb-all" onclick="showThemePicker()">← ALL THEMES</div>
           </div>
 
-          <!-- FILTER BAR -->
-          <div class="coin-filter-bar">
-            <div class="coin-filter-pills">
-              <button class="coin-fpill active" onclick="setCoinShopFilter('all',this)">All</button>
-              <button class="coin-fpill" onclick="setCoinShopFilter('in',this)">In stock</button>
-              <button class="coin-fpill" onclick="setCoinShopFilter('low',this)">Low stock</button>
-              <button class="coin-fpill" onclick="setCoinShopFilter('out',this)">Out of stock</button>
+          <!-- COIN CONTENT -->
+          <div class="coins-content">
+            <div class="coins-content-title">
+              <span id="coins-section-title">ALL COINS</span>
+              <span id="coins-section-count" style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.1em;"></span>
             </div>
-            <div class="coin-toggle-wrap" onclick="toggleHideOut()">
-              <div class="coin-toggle" id="hide-out-toggle"><div class="coin-toggle-knob"></div></div>
-              <span class="coin-toggle-label">HIDE OUT OF STOCK</span>
-            </div>
+
+            <!-- FILTER BAR -->
+            <div class="coin-filter-bar">
+              <div class="coin-filter-pills">
+                <button class="coin-fpill active" onclick="setCoinShopFilter('all',this)">All</button>
+                <button class="coin-fpill" onclick="setCoinShopFilter('in',this)">In stock</button>
+                <button class="coin-fpill" onclick="setCoinShopFilter('low',this)">Low stock</button>
+                <button class="coin-fpill" onclick="setCoinShopFilter('out',this)">Out of stock</button>
+              </div>
+              <div class="coin-toggle-wrap" onclick="toggleHideOut()">
+                <div class="coin-toggle" id="hide-out-toggle"><div class="coin-toggle-knob"></div></div>
+                <span class="coin-toggle-label">HIDE OUT OF STOCK</span>
+              </div>
           </div>
 
           <!-- ASSET SMITHS CREDIT -->
@@ -408,7 +432,8 @@
         </div>
 
       </div>
-    </div>
+      </div><!-- end view-coin-browser -->
+    </div><!-- end view-coins -->
 
   </div>
 
@@ -496,8 +521,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -717,8 +742,7 @@
       });
       if(res.ok){ const rows=await res.json(); rows.forEach(r=>coinStock[r.coin_id]=r.stock); }
     } catch(e){ console.warn('Stock load failed — using defaults'); }
-    buildSidebar();
-    showAllCoins();
+    buildThemePicker();
     subscribeToStock();
   }
 
@@ -797,14 +821,23 @@
   // ── VIEW NAVIGATION ──
   let currentTheme = null;
 
+  function handleCoinsBack(){
+    if(document.getElementById('view-coin-browser').style.display !== 'none'){
+      showThemePicker();
+    } else {
+      goToCategories();
+    }
+  }
+
   function goToCoins(){
     document.getElementById('view-categories').classList.remove('active');
     document.getElementById('view-coins').classList.add('active');
     document.getElementById('shop-breadcrumb').textContent = 'Shop → Coins';
     document.getElementById('shop-hero-title').textContent = 'Coin Props';
-    document.getElementById('shop-hero-desc').textContent = 'Over 200 designs across 12 themes. All resin printed — grey by default for easy painting, limited stock of other colors available.';
-    if(Object.keys(coinStock).length===0) loadCoinStock();
-    else { buildSidebar(); showAllCoins(); }
+    document.getElementById('shop-hero-desc').textContent = 'Over 159 designs across 12 themes. All resin printed — grey by default for easy painting, limited stock of other colors available.';
+    document.getElementById('coins-back-btn').textContent = '← ALL CATEGORIES';
+    if(Object.keys(coinStock).length===0) loadCoinStock().then(()=>buildThemePicker());
+    else buildThemePicker();
   }
 
   function goToCategories(){
@@ -813,6 +846,50 @@
     document.getElementById('shop-breadcrumb').textContent = 'The Shop';
     document.getElementById('shop-hero-title').textContent = 'Browse Our Catalog';
     document.getElementById('shop-hero-desc').textContent = 'No STL needed — everything here is ready to print and ship.';
+  }
+
+  function showThemePicker(){
+    currentTheme = null;
+    document.getElementById('view-theme-picker').style.display = 'block';
+    document.getElementById('view-coin-browser').style.display = 'none';
+    document.getElementById('coins-back-btn').textContent = '← ALL CATEGORIES';
+    document.getElementById('shop-hero-title').textContent = 'Coin Props';
+    document.getElementById('shop-hero-desc').textContent = 'Over 159 designs across 12 themes. All resin printed — grey by default for easy painting.';
+  }
+
+  function buildThemePicker(){
+    const grid = document.getElementById('theme-picker-grid');
+    const totalCoins = THEMES.reduce((s,t)=>s+t.coins.length,0);
+    document.getElementById('theme-picker-count').textContent = THEMES.length+' THEMES · '+totalCoins+' DESIGNS';
+    grid.innerHTML = THEMES.map(t=>{
+      const firstCoin = t.coins[0];
+      const imgId = firstCoin ? firstCoin.id : '';
+      return `<div class="theme-picker-card" onclick="pickTheme('${t.id}')">
+        <div class="theme-picker-thumb">
+          <img src="images/shop/${imgId}.jpg"
+            onerror="this.src='images/shop/${imgId}.png';this.onerror=null;"
+            alt="${t.label}" loading="lazy">
+        </div>
+        <div class="theme-picker-info">
+          <div class="theme-picker-name">${t.label}</div>
+          <div class="theme-picker-count">${t.coins.length} DESIGNS</div>
+        </div>
+      </div>`;
+    }).join('');
+    showThemePicker();
+  }
+
+  function pickTheme(themeId){
+    currentTheme = themeId;
+    const theme = THEMES.find(t=>t.id===themeId);
+    if(!theme) return;
+    document.getElementById('view-theme-picker').style.display = 'none';
+    document.getElementById('view-coin-browser').style.display = 'block';
+    document.getElementById('coins-back-btn').textContent = '← ALL THEMES';
+    document.getElementById('shop-hero-title').textContent = theme.label;
+    document.getElementById('shop-hero-desc').textContent = theme.coins.length+' designs — resin printed, grey by default.';
+    buildSidebar();
+    showTheme(themeId);
   }
 
   function buildSidebar(){
@@ -835,11 +912,7 @@
   }
 
   function showAllCoins(){
-    currentTheme = null;
-    document.querySelectorAll('.sb-theme').forEach(s=>s.classList.remove('active'));
-    document.getElementById('coins-section-title').textContent = 'ALL COINS';
-    const all = THEMES.flatMap(t=>t.coins.map(c=>({...c,themeLabel:t.label})));
-    renderCoinsAll(all);
+    showThemePicker();
   }
 
   function renderCoins(coins, themeLabel){
