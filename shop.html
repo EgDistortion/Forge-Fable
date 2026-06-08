@@ -475,10 +475,8 @@
             <input type="text" name="reviewer_name" placeholder="Jane D." required>
           </div>
           <div class="review-form-group">
-            <label>COIN ORDERED *</label>
-            <select name="coin_ordered" required id="review-coin-select">
-              <option value="">— Select coin —</option>
-            </select>
+            <label>WHAT DID YOU ORDER? <span style="color:var(--muted);font-style:italic;font-family:var(--body);letter-spacing:0;text-transform:none;">— optional</span></label>
+            <input type="text" name="coin_ordered" id="review-coin-select" placeholder="e.g. Arsenal of War, character mini...">
           </div>
         </div>
 
@@ -521,8 +519,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1143,20 +1141,7 @@
     return '★'.repeat(Math.max(0,Math.min(5,rating||5))) + '☆'.repeat(5-Math.max(0,Math.min(5,rating||5)));
   }
 
-  function populateCoinSelect() {
-    const select = document.getElementById('review-coin-select');
-    if (!select) return;
-    THEMES.forEach(theme => {
-      const group = document.createElement('optgroup');
-      group.label = theme.label;
-      theme.coins.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.name; opt.textContent = c.name;
-        group.appendChild(opt);
-      });
-      select.appendChild(group);
-    });
-  }
+  function populateCoinSelect() { /* replaced with text input — no longer needed */ }
 
   async function loadReviews() {
     try {
