@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — The Forge &amp; Fable</title>
+  <meta name="description" content="Frequently asked questions about The Forge & Fable's 3D printed TTRPG miniatures, terrain, and coin props — turnaround, shipping, materials, and how coins are used at the table.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .faq-intro{font-size:18px;font-style:italic;color:var(--muted);line-height:1.8;max-width:640px;margin-bottom:2.5rem;}
+    .faq-section{margin-bottom:2.5rem;}
+    .faq-section-title{font-family:var(--serif);font-size:13px;color:var(--gold);letter-spacing:0.18em;margin-bottom:1.25rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+    .faq-item{border-bottom:1px solid var(--border);}
+    .faq-q{width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:1.1rem 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:var(--serif);font-size:16px;color:var(--text);letter-spacing:0.02em;}
+    .faq-q:hover{color:var(--gold);}
+    .faq-q-icon{flex-shrink:0;font-size:18px;color:var(--gold);transition:transform 0.2s;font-family:var(--serif);}
+    .faq-q.open .faq-q-icon{transform:rotate(45deg);}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height 0.25s ease;}
+    .faq-a.open{max-height:500px;}
+    .faq-a-inner{padding:0 0 1.25rem;font-size:16px;color:var(--soft);line-height:1.8;}
+    .faq-a-inner strong{color:var(--text);font-weight:400;}
+    .faq-a-inner a{color:var(--gold);}
+    .faq-cta{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:2rem;text-align:center;margin-top:1rem;}
+
+    /* Cart drawer */
+    .cart-icon-wrap{position:relative;cursor:pointer;background:none;border:1px solid var(--border);border-radius:var(--radius);padding:7px 14px;display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.12em;transition:color 0.2s,border-color 0.2s;flex-shrink:0;}
+    .cart-icon-wrap:hover{color:var(--gold);border-color:var(--border2);}
+    .cart-badge{display:none;background:var(--ember);color:#fff;font-family:var(--serif);font-size:9px;font-weight:700;border-radius:50%;width:18px;height:18px;align-items:center;justify-content:center;position:absolute;top:-7px;right:-7px;}
+    .cart-badge.show{display:flex;}
+    .cart-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;}
+    .cart-overlay.open{display:block;}
+    .cart-drawer{position:fixed;top:0;right:-440px;width:420px;max-width:100vw;height:100vh;background:var(--surface);border-left:1px solid var(--border2);z-index:301;display:flex;flex-direction:column;transition:right 0.3s ease;}
+    .cart-drawer.open{right:0;}
+    .cart-head{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);flex-shrink:0;}
+    .cart-head-title{font-family:var(--serif);font-size:14px;color:var(--gold);letter-spacing:0.18em;}
+    .cart-close{font-family:var(--serif);font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;letter-spacing:0.1em;}
+    .cart-items{flex:1;overflow-y:auto;padding:1rem 1.5rem;}
+    .cart-empty{text-align:center;padding:4rem 0;font-style:italic;color:var(--muted);font-size:16px;}
+    .cart-foot{padding:1.25rem 1.5rem;border-top:1px solid var(--border2);flex-shrink:0;background:var(--surface2);}
+    .cart-subtotal{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+    .cart-subtotal-label{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.15em;}
+    .cart-subtotal-val{font-family:var(--serif);font-size:22px;color:var(--gold2);}
+    .cart-note{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:1.25rem;line-height:1.5;}
+    .checkout-stripe{width:100%;padding:13px;font-family:var(--serif);font-size:11px;letter-spacing:0.16em;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:var(--radius);margin-bottom:8px;transition:background 0.2s;}
+    .checkout-stripe:hover{background:var(--gold2);}
+    .cart-item{display:flex;justify-content:space-between;gap:10px;padding:0.85rem 0;border-bottom:1px solid var(--border);}
+    .cart-item-name{font-size:14px;color:var(--text);margin-bottom:3px;}
+    .cart-item-meta{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:6px;}
+    .cart-item-qty{display:flex;align-items:center;gap:8px;}
+    .qty-btn{width:22px;height:22px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;border-radius:3px;font-size:14px;line-height:1;}
+    .qty-num{font-family:var(--serif);font-size:13px;min-width:18px;text-align:center;}
+    .cart-item-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;margin-left:4px;}
+    .cart-item-price{font-family:var(--serif);font-size:14px;color:var(--gold2);flex-shrink:0;}
+  </style>
+  <style id="page-map">
+    html {
+      background-color: #0d0f14;
+      background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAwIiBoZWlnaHQ9IjkwMCIgdmlld0JveD0iMCAwIDE0MDAgOTAwIj4KPGRlZnM+PHN0eWxlPnBhdGgsY2lyY2xlLGxpbmUsZWxsaXBzZSxwb2x5Z29uLHJlY3R7ZmlsbDpub25lO3N0cm9rZTojYzlhODRjO3N0cm9rZS1vcGFjaXR5OjAuMTg7c3Ryb2tlLWxpbmVjYXA6cm91bmR9PC9zdHlsZT48L2RlZnM+CjxwYXRoIHN0cm9rZS13aWR0aD0iMS44IiBkPSJNMjgwIDE2MCBRMzQwIDEyMCA0MjAgMTMwIFE1MDAgMTQwIDU2NSAxMTUgUTYzMCA5MCA3MDAgMTA1IFE3NzAgMTIwIDgzNSAxMDAgUTkwMCA4MCA5NjUgMTA4IFExMDI1IDEzNSAxMDY1IDE3NSBRMTEwMCAyMTIgMTEwOCAyNjUgUTExMTUgMzE4IDExMDAgMzY4IFExMDg1IDQxOCAxMDk1IDQ2OCBRMTEwNSA1MTggMTA4NSA1NjUgUTEwNjUgNjEyIDEwMzAgNjQ4IFE5OTUgNjg0IDk1MCA3MDggUTkwNSA3MzIgODUyIDc0NSBRNzk5IDc1OCA3NDIgNzYwIFE2ODUgNzYyIDYyOCA3NTIgUTU3MSA3NDIgNTE4IDcyOCBRNDY1IDcxNCA0MjAgNjkwIFEzNzUgNjY2IDM0MCA2MzIgUTMwNSA1OTggMjg2IDU1NiBRMjY3IDUxNCAyNjggNDY4IFEyNjkgNDIyIDI1NSAzNzYgUTI0MSAzMzAgMjUyIDI4NCBRMjYzIDIzOCAyODAgMTYwWiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEiIGQ9Ik0zMjAgMTk1IFEzNzIgMTU4IDQ0MiAxNjYgUTUxMiAxNzQgNTY4IDE1MiBRNjI0IDEzMCA2ODggMTQzIFE3NTIgMTU2IDgxMCAxMzggUTg2OCAxMjAgOTIyIDE0NSBROTcyIDE2OCAxMDA2IDIwNCBRMTAzNiAyMzggMTA0MiAyODQgUTEwNDggMzMwIDEwMzUgMzc0IFExMDIyIDQxOCAxMDMwIDQ2MiBRMTAzOCA1MDYgMTAyMCA1NDggUTEwMDIgNTkwIDk3MCA2MjIgUTkzOCA2NTQgODk2IDY3NiBRODU0IDY5OCA4MDYgNzEwIFE3NTggNzIyIDcwOCA3MjQgUTY1OCA3MjYgNjA4IDcxNiBRNTU4IDcwNiA1MTIgNjkyIFE0NjYgNjc4IDQyOCA2NTYgUTM5MCA2MzQgMzYyIDYwMiBRMzM0IDU3MCAzMTggNTMyIFEzMDIgNDk0IDMwNCA0NTIgUTMwNiA0MTAgMjk0IDM2OCBRMjgyIDMyNiAyOTQgMjg0IFEzMDYgMjQyIDMyMCAxOTVaIi8+CjxjaXJjbGUgY3g9IjM4MCIgY3k9IjI4MCIgcj0iMzIiLz48Y2lyY2xlIGN4PSI0MTgiIGN5PSIyNjAiIHI9IjI2Ii8+PGNpcmNsZSBjeD0iMzU0IiBjeT0iMzEyIiByPSIyMyIvPjxjaXJjbGUgY3g9IjQ0NiIgY3k9IjI5NiIgcj0iMjkiLz48Y2lyY2xlIGN4PSI0MDAiIGN5PSIzMzIiIHI9IjI1Ii8+CjxjaXJjbGUgY3g9IjY1MCIgY3k9IjIxMCIgcj0iMzQiLz48Y2lyY2xlIGN4PSI2ODgiIGN5PSIxOTQiIHI9IjI3Ii8+PGNpcmNsZSBjeD0iNjI0IiBjeT0iMjQwIiByPSIyNSIvPjxjaXJjbGUgY3g9IjcxNCIgY3k9IjIyNiIgcj0iMjkiLz48Y2lyY2xlIGN4PSI2NjgiIGN5PSIyNTAiIHI9IjIzIi8+CjxjaXJjbGUgY3g9Ijk1MCIgY3k9IjI2NiIgcj0iMzIiLz48Y2lyY2xlIGN4PSI5ODgiIGN5PSIyNDgiIHI9IjI1Ii8+PGNpcmNsZSBjeD0iOTI0IiBjeT0iMjk0IiByPSIyNyIvPjxjaXJjbGUgY3g9IjEwMTIiIGN5PSIyODAiIHI9IjIzIi8+CjxjaXJjbGUgY3g9IjMyMCIgY3k9IjQ5MiIgcj0iMjkiLz48Y2lyY2xlIGN4PSIzNDgiIGN5PSI0NzAiIHI9IjI1Ii8+PGNpcmNsZSBjeD0iMjk3IiBjeT0iNTIwIiByPSIyMyIvPjxjaXJjbGUgY3g9IjM2MSIgY3k9IjUwNyIgcj0iMjciLz4KPGNpcmNsZSBjeD0iMTA1OCIgY3k9IjQ2MiIgcj0iMzEiLz48Y2lyY2xlIGN4PSIxMDgyIiBjeT0iNDQxIiByPSIyNSIvPjxjaXJjbGUgY3g9IjEwMzkiIGN5PSI0OTAiIHI9IjI3Ii8+PGNpcmNsZSBjeD0iMTA3MyIgY3k9IjQ5NCIgcj0iMjMiLz4KPGNpcmNsZSBjeD0iMzkwIiBjeT0iNjYyIiByPSIyOSIvPjxjaXJjbGUgY3g9IjQyNSIgY3k9IjY0MyIgcj0iMjUiLz48Y2lyY2xlIGN4PSIzNjciIGN5PSI2ODciIHI9IjIzIi8+PGNpcmNsZSBjeD0iNDQ5IiBjeT0iNjc0IiByPSIyNyIvPgo8Y2lyY2xlIGN4PSI2OTUiIGN5PSI3MDIiIHI9IjMxIi8+PGNpcmNsZSBjeD0iNzMwIiBjeT0iNjgzIiByPSIyNiIvPjxjaXJjbGUgY3g9IjY2NyIgY3k9IjcyNiIgcj0iMjUiLz48Y2lyY2xlIGN4PSI3NTYiIGN5PSI3MTQiIHI9IjIzIi8+CjxjaXJjbGUgY3g9Ijk3MCIgY3k9IjY1NyIgcj0iMjkiLz48Y2lyY2xlIGN4PSIxMDA2IiBjeT0iNjM5IiByPSIyNSIvPjxjaXJjbGUgY3g9Ijk0NyIgY3k9IjY4MiIgcj0iMjMiLz48Y2lyY2xlIGN4PSIxMDIyIiBjeT0iNjcwIiByPSIyNyIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjAuOSIgc3Ryb2tlLWRhc2hhcnJheT0iNSw4IiBkPSJNNDgwIDMxMiBRNTYwIDMzMiA2MzAgMzIxIFE3MDAgMzExIDc3MCAzMzAgUTg0MCAzNDggOTEwIDMzMSIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjAuOSIgc3Ryb2tlLWRhc2hhcnJheT0iNSw4IiBkPSJNNDIwIDQ1MiBRNTAwIDQzNyA1ODAgNDQ3IFE2NjAgNDU3IDc0MCA0NDIgUTgyMCA0MjcgOTAwIDQ0NCBROTYwIDQ1NyAxMDEwIDQ0MiIvPgo8cGF0aCBzdHJva2Utd2lkdGg9IjAuOSIgc3Ryb2tlLWRhc2hhcnJheT0iNSw4IiBkPSJNNTUwIDU4MiBRNjIwIDU2NyA2OTUgNTc0IFE3NzAgNTgxIDg0MCA1NjQiLz4KPHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBkPSJNNzAwIDEwNSBRNjg4IDE4MCA2OTUgMjUwIFE3MDIgMzIwIDY4OCAzOTAgUTY3NCA0NjAgNjgwIDUzMCBRNjg2IDYwMCA2NzAgNjcwIFE2NTUgNzM1IDY0OCA4MDAiLz4KPHJlY3QgeD0iNjQ2IiB5PSI0MTYiIHdpZHRoPSI2NCIgaGVpZ2h0PSI1MiIgc3Ryb2tlLXdpZHRoPSIxLjEiIHJ4PSIxIi8+CjxsaW5lIHgxPSI2NDYiIHkxPSI0NDIiIHgyPSI3MTAiIHkyPSI0NDIiIHN0cm9rZS13aWR0aD0iMC44Ii8+PGxpbmUgeDE9IjY3OCIgeTE9IjQxNiIgeDI9IjY3OCIgeTI9IjQ2OCIgc3Ryb2tlLXdpZHRoPSIwLjgiLz4KPGNpcmNsZSBjeD0iMTI0MCIgY3k9Ijc4MCIgcj0iNDIiIHN0cm9rZS13aWR0aD0iMC45Ii8+PGNpcmNsZSBjeD0iMTI0MCIgY3k9Ijc4MCIgcj0iMjgiIHN0cm9rZS13aWR0aD0iMC42Ii8+CjxsaW5lIHgxPSIxMjQwIiB5MT0iNzM4IiB4Mj0iMTI0MCIgeTI9IjgyMiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48bGluZSB4MT0iMTE5OCIgeTE9Ijc4MCIgeDI9IjEyODIiIHkyPSI3ODAiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxsaW5lIHgxPSIxMjEyIiB5MT0iNzUyIiB4Mj0iMTI2OCIgeTI9IjgwOCIgc3Ryb2tlLXdpZHRoPSIwLjYiLz48bGluZSB4MT0iMTI2OCIgeTE9Ijc1MiIgeDI9IjEyMTIiIHkyPSI4MDgiIHN0cm9rZS13aWR0aD0iMC42Ii8+CjxyZWN0IHg9IjMwIiB5PSIzMCIgd2lkdGg9IjEzNDAiIGhlaWdodD0iODQwIiBzdHJva2Utd2lkdGg9IjAuOCIgcng9IjQiLz4KPHJlY3QgeD0iNDYiIHk9IjQ2IiB3aWR0aD0iMTMwOCIgaGVpZ2h0PSI4MDgiIHN0cm9rZS13aWR0aD0iMC40IiByeD0iMiIvPgo8L3N2Zz4=');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-main">THE FORGE &amp; FABLE</span>
+      <span class="nav-logo-sub">MINIATURE PRINTING · LIMA, OH</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="order.html">Order</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="stl-sources.html">STL Guide</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faq.html" class="active">FAQ</a></li>
+    </ul>
+    <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
+    <button class="cart-icon-wrap" onclick="openCart()" aria-label="Cart">
+      🛒 CART <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- CART DRAWER -->
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-head">
+      <div class="cart-head-title">YOUR CART</div>
+      <button class="cart-close" onclick="closeCart()">✕ CLOSE</button>
+    </div>
+    <div class="cart-items" id="cart-items">
+      <div class="cart-empty">Your cart is empty — <a href="shop.html" style="color:var(--gold);">browse the shop</a> to add items.</div>
+    </div>
+    <div class="cart-foot" id="cart-foot" style="display:none;">
+      <div class="cart-subtotal">
+        <span class="cart-subtotal-label">TOTAL</span>
+        <span class="cart-subtotal-val" id="cart-total">$0.00</span>
+      </div>
+      <p class="cart-note">We'll confirm your order within 24 hours.</p>
+      <button class="checkout-stripe" id="stripe-btn" onclick="checkoutStripe()">💳 CHECKOUT WITH CARD</button>
+    </div>
+  </div>
+
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="section-tag">Questions &amp; Answers</div>
+      <h1>Frequently Asked Questions</h1>
+      <p>Everything you need to know before you order.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <p class="faq-intro">
+      Can't find what you're looking for? Just <a href="order.html" style="color:var(--gold);">reach out</a> or email
+      <a href="mailto:forgeandfable3d@gmail.com" style="color:var(--gold);">forgeandfable3d@gmail.com</a> — happy to help.
+    </p>
+
+    <!-- ORDERING -->
+    <div class="faq-section">
+      <div class="faq-section-title">ORDERING &amp; TURNAROUND</div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How long does an order take? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Most orders ship within <strong>3–5 business days</strong>. Larger or multicolor terrain builds can take a little longer — we'll always give you a time estimate when we confirm your order. Need it fast? Rush orders (1–2 days) are available for a 50% surcharge when our print schedule allows.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How do I order a custom print? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Head to the <a href="order.html">order page</a> and fill out the form. After you submit, email your STL or OBJ file to <a href="mailto:forgeandfable3d@gmail.com">forgeandfable3d@gmail.com</a> with your name in the subject, or drop a link (Google Drive, MyMiniFactory, Thingiverse) in the notes. We'll review it and send a quote within 24 hours. You only pay once you approve.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Do I have to pay before I get a quote? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Never. Custom orders always start as a <strong>free quote</strong>. We review your file, assess print time and material, and send you a price. No payment until you say go. Shop items (coins, ready-made pieces) are priced upfront and paid at checkout.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Can I send you any STL file? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Almost — the one rule is that the file must <strong>permit commercial third-party printing</strong>. Many designers sell commercial licenses; some don't allow it at all. If you're not sure, send it over and we'll check the license before printing. We won't print anything that violates a creator's terms.</div></div>
+      </div>
+    </div>
+
+    <!-- COINS -->
+    <div class="faq-section">
+      <div class="faq-section-title">COIN PROPS</div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How are these coins actually used in a game? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Lots of ways! Most DMs use them as <strong>loot drops and quest rewards</strong> — hand a player a physical Kraken's Seal when they raid a sea temple, or a Dragon Egg when they loot a wyrm's hoard. They also make great <strong>inspiration tokens</strong>, faction favors ("you've earned the Thieves' Guild's trust — here's their mark"), or condition markers on the battle map. They're the kind of physical detail that makes a moment stick. Some folks just collect them because they look great on a shelf.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How much are the coins? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Single coins are <strong>$2 each</strong>, and you save when you bundle: <strong>3 for $5, 5 for $8, or 10 for $15</strong>. Mix and match any designs across any themes — the discount applies automatically in your cart based on how many coins you add.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What size are the coins? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Round coins are printed at roughly <strong>half-dollar size</strong> (around 30mm) — big enough to show off the detail, small enough to handle and stack like real coins. The square dragon egg and fire dragon coins are a bit larger (35–40mm) since they're more ornate display pieces.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What color are the coins? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">All coins are printed in <strong>resin</strong> for maximum detail. The default is grey, which is perfect if you plan to paint them. We keep limited stock of red clay and black resin as well — just pick your color in the shop, and we'll confirm availability before printing.</div></div>
+      </div>
+    </div>
+
+    <!-- MATERIALS -->
+    <div class="faq-section">
+      <div class="faq-section-title">MATERIALS &amp; QUALITY</div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Resin or PLA — what's the difference? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner"><strong>Resin</strong> captures incredibly fine detail — it's what we use for miniatures, coins, and display pieces where crisp features matter. It's a little more brittle, so it's best for pieces that sit on a shelf or the table rather than getting tossed in a bag. <strong>PLA</strong> (printed on our Bambu FDM) is tougher and better for terrain, large builds, and anything that takes handling. We pick the right material for each job.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What's multicolor terrain? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Our Bambu printer has an AMS (Automatic Material System) that can print <strong>up to 4 filament colors in a single piece</strong> — no painting required for base colors. Most print shops only do single-color terrain, so this is something we're genuinely excited to offer. Dungeon tiles, scatter terrain, and props can come ready to play right off the plate.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Do prints come painted? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Right now prints come <strong>unpainted</strong> — raw resin or PLA, ready for you to prime and paint. Coins default to grey resin which takes paint beautifully, but also looks great as-is. Multicolor terrain comes with its base colors printed in. (A painting service may come down the road!)</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What if my print arrives damaged or flawed? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">We stand behind every print. If something fails because of our equipment or process, or arrives damaged, <strong>we'll reprint it at no charge</strong>. Just send us a photo and we'll make it right.</div></div>
+      </div>
+    </div>
+
+    <!-- SHIPPING -->
+    <div class="faq-section">
+      <div class="faq-section-title">SHIPPING &amp; PICKUP</div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Do you offer local pickup? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Yes! We're based in <strong>Lima, OH</strong> and local pickup is available — and actually preferred for fragile resin minis that don't always love the trip through the mail. We'll coordinate a pickup time when your order's ready.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Do you ship? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">We do. Shipping is calculated at checkout based on your order. We package carefully — especially resin pieces — but for very delicate or large orders, local pickup is the safest bet if you're nearby.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Is there a free coin with my order? <span class="faq-q-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Orders over $20 include a <strong>free mystery coin</strong> from our catalog — a little thank-you for ordering with us. You never know which one you'll get.</div></div>
+      </div>
+    </div>
+
+    <div class="faq-cta">
+      <p style="font-size:18px;font-style:italic;color:var(--muted);margin-bottom:1.5rem;">Still have a question?</p>
+      <a href="order.html" class="btn-primary" style="margin-right:12px;">GET IN TOUCH</a>
+      <a href="shop.html" class="btn-ghost">BROWSE THE SHOP</a>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-brand">THE FORGE &amp; FABLE · EST. 2025 · LIMA, OH</div>
+      <ul class="footer-links">
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="order.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="ALZJ6EDJLKNUL"></script>
+  <script>
+    function toggleFaq(btn){
+      const ans = btn.nextElementSibling;
+      const isOpen = btn.classList.contains('open');
+      btn.classList.toggle('open', !isOpen);
+      ans.classList.toggle('open', !isOpen);
+    }
+
+    const STRIPE_KEY = 'pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
+    let cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
+    const COIN_PRICE = 2.00;
+    const COIN_BUNDLES = [{min:10,total:15},{min:5,total:8},{min:3,total:5}];
+    function coinBundlePrice(n){
+      if(n<=0)return 0;
+      for(const t of COIN_BUNDLES){
+        if(n>=t.min){const b=Math.floor(n/t.min),r=n%t.min;return b*t.total+coinBundlePrice(r);}
+      }
+      return n*COIN_PRICE;
+    }
+    function saveCart(){ localStorage.setItem('ff_cart', JSON.stringify(cart)); }
+    function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); saveCart(); renderCart(); updateBadge(); }
+    function changeQty(id,delta){ const item=cart.find(i=>i.id===id); if(!item)return; item.qty=Math.max(0,item.qty+delta); if(item.qty===0) cart=cart.filter(i=>i.id!==id); saveCart(); renderCart(); updateBadge(); }
+    function updateBadge(){
+      const total=cart.reduce((s,i)=>s+i.qty,0);
+      const badge=document.getElementById('cart-badge');
+      if(badge){badge.textContent=total;badge.classList.toggle('show',total>0);}
+    }
+    function renderCart(){
+      const container=document.getElementById('cart-items');
+      const foot=document.getElementById('cart-foot');
+      if(!container)return;
+      if(cart.length===0){ container.innerHTML='<div class="cart-empty">Your cart is empty — <a href="shop.html" style="color:var(--gold);">browse the shop</a> to add items.</div>'; if(foot)foot.style.display='none'; return; }
+      if(foot)foot.style.display='block';
+      const coinCount=cart.filter(i=>i.isCoin).reduce((s,i)=>s+i.qty,0);
+      const coinTotal=coinBundlePrice(coinCount);
+      const nonCoinTotal=cart.filter(i=>!i.isCoin).reduce((s,i)=>s+i.price*i.qty,0);
+      const total=coinTotal+nonCoinTotal;
+      const effCoinPrice=coinCount>0?coinTotal/coinCount:COIN_PRICE;
+      container.innerHTML=cart.map(item=>{
+        const unit=item.isCoin?effCoinPrice:item.price;
+        const line=unit*item.qty;
+        return `<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-meta">${item.theme} · $${unit.toFixed(2)} each</div><div class="cart-item-qty"><button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button><span class="qty-num">${item.qty}</span><button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button><button class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</button></div></div><div class="cart-item-price">$${line.toFixed(2)}</div></div>`;
+      }).join('');
+      document.getElementById('cart-total').textContent='$'+total.toFixed(2);
+    }
+    function openCart(){ document.getElementById('cart-overlay').classList.add('open'); document.getElementById('cart-drawer').classList.add('open'); document.body.style.overflow='hidden'; }
+    function closeCart(){ document.getElementById('cart-overlay').classList.remove('open'); document.getElementById('cart-drawer').classList.remove('open'); document.body.style.overflow=''; }
+    async function checkoutStripe(){
+      if(!cart.length)return;
+      const btn=document.getElementById('stripe-btn');
+      btn.textContent='PREPARING...'; btn.disabled=true;
+      try{
+        const coinCount=cart.filter(i=>i.isCoin).reduce((s,i)=>s+i.qty,0);
+        const effCoinPrice=coinCount>0?coinBundlePrice(coinCount)/coinCount:COIN_PRICE;
+        const items=cart.map(i=>({name:i.name,theme:i.theme,qty:i.qty,price:i.isCoin?Math.round(effCoinPrice*100)/100:i.price}));
+        const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items})});
+        const data=await res.json();
+        if(data.url){window.location.href=data.url;} else throw new Error(data.error||'No URL');
+      }catch(err){ btn.textContent='💳 CHECKOUT WITH CARD'; btn.disabled=false; alert('Checkout failed — please try again.'); }
+    }
+    document.getElementById('hamburger').addEventListener('click',function(){ document.getElementById('nav-links').classList.toggle('open'); });
+    updateBadge(); renderCart();
+  </script>
+</body>
+</html>

@@ -250,6 +250,7 @@
       <li><a href="pricing.html">Pricing</a></li>
       <li><a href="stl-sources.html">STL Guide</a></li>
       <li><a href="about.html">About</a></li>
+      <li><a href="faq.html">FAQ</a></li>
     </ul>
     <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
     <button class="cart-icon-wrap" onclick="openCart()" aria-label="Cart">
@@ -311,6 +312,7 @@
           <div style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-top:8px;">Non-grey colors subject to stock availability — we'll confirm before printing.</div>
         </div>
         <div class="lightbox-price" id="lb-price"></div>
+        <div style="font-family:var(--body);font-size:13px;color:var(--muted);font-style:italic;margin-top:-0.75rem;margin-bottom:1.25rem;">Bundle &amp; save: 3 for $5 · 5 for $8 · 10 for $15</div>
         <button class="lightbox-add-btn" id="lb-add-btn" onclick="addFromLightbox()">+ ADD TO CART</button>
         <div class="lightbox-stock" id="lb-stock"></div>
       </div>
@@ -383,6 +385,12 @@
 
       <!-- THEME PICKER -->
       <div id="view-theme-picker">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem;">
+          <div style="font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.15em;margin-bottom:8px;">LOOT DROPS · QUEST REWARDS · INSPIRATION TOKENS</div>
+          <p style="font-size:15px;color:var(--soft);line-height:1.7;margin:0;font-style:italic;">
+            These aren't just currency — they're the physical moments your table remembers. Hand a player a Kraken's Seal when they raid a sea temple, a Dragon Egg when they loot a wyrm's hoard, or a skull coin as an inspiration token. Mix any designs into a pack: <strong style="font-style:normal;color:var(--gold2);">$2 each · 3 for $5 · 5 for $8 · 10 for $15.</strong>
+          </p>
+        </div>
         <div class="theme-picker-header">
           <div class="theme-picker-title">CHOOSE A THEME</div>
           <div id="theme-picker-count" style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.08em;"></div>
@@ -409,8 +417,11 @@
               <span id="coins-section-count" style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.1em;"></span>
             </div>
 
-            <!-- FILTER BAR -->
-            <div class="coin-filter-bar">
+            <!-- BUNDLE BANNER -->
+            <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius);padding:0.85rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+              <div style="font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.12em;">BUILD A COIN PACK · MIX ANY DESIGNS</div>
+              <div style="font-family:var(--body);font-size:13px;color:var(--soft);font-style:italic;">$2 each · 3 for $5 · 5 for $8 · 10 for $15</div>
+            </div>
               <div class="coin-filter-pills">
                 <button class="coin-fpill active" onclick="setCoinShopFilter('all',this)">All</button>
                 <button class="coin-fpill" onclick="setCoinShopFilter('in',this)">In stock</button>
@@ -513,14 +524,36 @@
   // ════════════════════════════════════════════════════════════
   //  PRICE CONFIG
   // ════════════════════════════════════════════════════════════
-  const COIN_PRICE = 1.50; // display as $1.50
+  const COIN_PRICE = 2.00;  // single coin price
   const SET_PRICE  = 12;
+
+  // ── BUNDLE TIERS — auto-applied based on coin count in cart ──
+  // Buy more coins, the per-coin price drops automatically
+  const COIN_BUNDLES = [
+    { min: 10, total: 15, label: '10+ coins — $15' },   // $1.50/ea
+    { min: 5,  total: 8,  label: '5 coins — $8' },       // $1.60/ea
+    { min: 3,  total: 5,  label: '3 coins — $5' },       // $1.67/ea
+  ];
+
+  // Returns the effective price for the coins in the cart given the count
+  function coinBundlePrice(coinCount){
+    if(coinCount <= 0) return 0;
+    // Apply the best tier that fits, then remaining coins at single price
+    for(const tier of COIN_BUNDLES){
+      if(coinCount >= tier.min){
+        const bundles = Math.floor(coinCount / tier.min);
+        const remainder = coinCount % tier.min;
+        return bundles * tier.total + coinBundlePrice(remainder);
+      }
+    }
+    return coinCount * COIN_PRICE;
+  }
 
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1024,7 +1057,7 @@
 
   function addToCart(id,name,theme,price,btn){
     const ex=cart.find(i=>i.id===id);
-    if(ex){ex.qty++;}else{cart.push({id,name,theme,price,qty:1});}
+    if(ex){ex.qty++;}else{cart.push({id,name,theme,price,qty:1,isCoin:true});}
     saveCart();renderCart();updateBadge();renderPayPalButton();
     if(btn){
       btn.textContent='✓ ADDED';btn.classList.add('added');
@@ -1055,13 +1088,23 @@
       if(foot)foot.style.display='none';return;
     }
     if(foot)foot.style.display='block';
-    let total=0;
+
+    // Count total coins (items flagged isCoin) for bundle pricing
+    const coinCount = cart.filter(i=>i.isCoin).reduce((s,i)=>s+i.qty,0);
+    const coinTotal = coinBundlePrice(coinCount);
+    const nonCoinTotal = cart.filter(i=>!i.isCoin).reduce((s,i)=>s+i.price*i.qty,0);
+    const total = coinTotal + nonCoinTotal;
+
+    // Effective per-coin price for display
+    const effCoinPrice = coinCount>0 ? coinTotal/coinCount : COIN_PRICE;
+
     container.innerHTML=cart.map(item=>{
-      const line=item.price*item.qty;total+=line;
+      const unit = item.isCoin ? effCoinPrice : item.price;
+      const line = unit*item.qty;
       return `<div class="cart-item">
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
-          <div class="cart-item-meta">${item.theme} · $${item.price.toFixed(2)} each</div>
+          <div class="cart-item-meta">${item.theme} · $${unit.toFixed(2)} each</div>
           <div class="cart-item-qty">
             <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
             <span class="qty-num">${item.qty}</span>
@@ -1072,7 +1115,31 @@
         <div class="cart-item-price">$${line.toFixed(2)}</div>
       </div>`;
     }).join('');
+
+    // Bundle savings hint
+    let savingsNote = '';
+    if(coinCount>0){
+      const fullPrice = coinCount*COIN_PRICE;
+      const saved = fullPrice - coinTotal;
+      if(saved > 0){
+        savingsNote = `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:4px;">BUNDLE SAVINGS: −$${saved.toFixed(2)}</div>`;
+      } else if(coinCount < 3){
+        const need = 3 - coinCount;
+        savingsNote = `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ${need} MORE COIN${need>1?'S':''} FOR $5 BUNDLE</div>`;
+      }
+    }
+
     document.getElementById('cart-total').textContent='$'+total.toFixed(2);
+    const totalRow = document.getElementById('cart-total').closest('.cart-subtotal');
+    // Insert/update savings note after total row
+    let noteEl = document.getElementById('cart-savings-note');
+    if(!noteEl && totalRow){
+      noteEl = document.createElement('div');
+      noteEl.id = 'cart-savings-note';
+      totalRow.parentNode.insertBefore(noteEl, totalRow.nextSibling);
+    }
+    if(noteEl) noteEl.innerHTML = savingsNote;
+
     renderPayPalButton();
   }
 
@@ -1094,7 +1161,14 @@
     const btn=document.getElementById('stripe-btn');
     btn.textContent='PREPARING...';btn.disabled=true;
     try{
-      const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart})});
+      // Apply bundle pricing: spread coin total evenly across coin items
+      const coinCount=cart.filter(i=>i.isCoin).reduce((s,i)=>s+i.qty,0);
+      const effCoinPrice=coinCount>0?coinBundlePrice(coinCount)/coinCount:COIN_PRICE;
+      const items=cart.map(i=>({
+        name:i.name, theme:i.theme, qty:i.qty,
+        price: i.isCoin ? Math.round(effCoinPrice*100)/100 : i.price
+      }));
+      const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items})});
       const data=await res.json();
       if(data.url){window.location.href=data.url;}
       else throw new Error(data.error||'No URL');
@@ -1108,8 +1182,10 @@
   function renderPayPalButton(){
     const container=document.getElementById('paypal-cart-button-container');
     if(!container||!cart.length){if(container)container.innerHTML='';return;}
-    const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
-    const items=cart.map(i=>({name:i.name,quantity:i.qty,unitPrice:i.price.toFixed(2),currency:'USD'}));
+    const coinCount=cart.filter(i=>i.isCoin).reduce((s,i)=>s+i.qty,0);
+    const effCoinPrice=coinCount>0?coinBundlePrice(coinCount)/coinCount:COIN_PRICE;
+    const total=cart.reduce((s,i)=>s+(i.isCoin?effCoinPrice:i.price)*i.qty,0);
+    const items=cart.map(i=>({name:i.name,quantity:i.qty,unitPrice:(i.isCoin?effCoinPrice:i.price).toFixed(2),currency:'USD'}));
     try{
       if(window.paypal&&window.paypal.CartButton){
         container.innerHTML='';
