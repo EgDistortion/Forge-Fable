@@ -139,6 +139,39 @@
     .photo-note-text { font-size: 17px; color: var(--muted); font-style: italic; line-height: 1.65; }
     .photo-note-text strong { font-style: normal; color: var(--gold2); font-weight: 400; }
 
+    /* ── GALLERY LIGHTBOX ── */
+    .g-card { cursor: pointer; }
+    .g-lightbox {
+      display: none; position: fixed; inset: 0; z-index: 400;
+      background: rgba(8,9,12,0.92); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 2rem;
+    }
+    .g-lightbox.open { display: flex; }
+    .g-lightbox-inner {
+      position: relative; max-width: 900px; width: 100%;
+      max-height: 88vh; background: var(--surface);
+      border: 1px solid var(--border2); border-radius: var(--radius);
+      overflow: hidden; display: grid; grid-template-columns: 1.3fr 1fr;
+    }
+    .g-lightbox-close {
+      position: absolute; top: 12px; right: 14px; z-index: 2;
+      background: rgba(0,0,0,0.5); border: 1px solid var(--border2);
+      color: var(--soft); width: 34px; height: 34px; border-radius: 50%;
+      cursor: pointer; font-size: 15px; line-height: 1;
+    }
+    .g-lightbox-close:hover { color: var(--gold); border-color: var(--gold); }
+    .g-lightbox-img { background: var(--bg); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .g-lightbox-img img { width: 100%; height: 100%; object-fit: contain; max-height: 88vh; }
+    .g-lightbox-info { padding: 2rem; display: flex; flex-direction: column; justify-content: center; }
+    .g-lb-name { font-family: var(--serif); font-size: 24px; color: var(--gold2); margin-bottom: 0.85rem; letter-spacing: 0.02em; }
+    .g-lb-pills { display: flex; gap: 6px; margin-bottom: 1.1rem; flex-wrap: wrap; }
+    .g-lb-desc { font-size: 15px; line-height: 1.8; color: var(--soft); }
+    @media (max-width: 700px) {
+      .g-lightbox-inner { grid-template-columns: 1fr; max-height: 90vh; overflow-y: auto; }
+      .g-lightbox-img img { max-height: 50vh; }
+      .g-lightbox-info { padding: 1.5rem; }
+    }
+
     @media (max-width: 900px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 540px) { .gallery-grid { grid-template-columns: 1fr; } }
 
@@ -251,152 +284,7 @@
 
   <div class="container">
 
-    <!-- HOW TO ADD PHOTOS — delete this block once real photos are added -->
-    <div class="photo-note" id="photo-note">
-      <div class="photo-note-icon">📷</div>
-      <div class="photo-note-text">
-        <strong>Adding your photos:</strong> For each card below, replace the placeholder div with
-        <code style="font-style:normal;color:var(--gold2);">&lt;img src="images/gallery/your-photo.jpg" alt="Mini description"&gt;</code>.
-        Save your photos into the <code style="font-style:normal;color:var(--gold2);">images/gallery/</code> folder.
-        Delete this note box once you're done. Recommended photo size: 800×800px or larger, square crop looks best.
-      </div>
-    </div>
-
-    <div class="filter-bar">
-      <span class="filter-label">FILTER:</span>
-      <button class="filter-btn active" data-filter="all">ALL WORK</button>
-      <button class="filter-btn" data-filter="hero">HEROES</button>
-      <button class="filter-btn" data-filter="monster">MONSTERS</button>
-      <button class="filter-btn" data-filter="terrain">TERRAIN</button>
-      <button class="filter-btn" data-filter="display">DISPLAY</button>
-      <button class="filter-btn" data-filter="resin">RESIN</button>
-      <button class="filter-btn" data-filter="pla">PLA</button>
-    </div>
-
-    <div class="gallery-grid" id="gallery-grid">
-
-      <!-- ══════════════════════════════════════════════
-           HOW TO ADD A NEW CARD:
-           1. Copy one of the cards below
-           2. Replace the .g-img-placeholder div with:
-              <img src="images/gallery/filename.jpg" alt="description">
-           3. Update the name, meta, tags, and data-tags
-           4. data-tags controls which filter buttons show it
-              Options: hero | monster | terrain | display | resin | pla
-      ══════════════════════════════════════════════ -->
-
-      <div class="g-card" data-tags="hero resin">
-        <div class="g-img">
-          <!-- <img src="images/gallery/halforc-barbarian.jpg" alt="Half-orc barbarian miniature"> -->
-          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
-          <div class="g-badge-wrap">
-            <span class="pill pill-resin">RESIN</span>
-          </div>
-        </div>
-        <div class="g-info">
-          <div class="g-name">Half-orc barbarian</div>
-          <div class="g-meta">32MM · 4K RESIN · 0.05MM LAYER</div>
-          <div class="g-tags">
-            <span class="g-tag">HERO</span>
-            <span class="g-tag">D&amp;D 5E</span>
-            <span class="g-tag">32MM</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="g-card" data-tags="monster resin">
-        <div class="g-img">
-          <!-- <img src="images/gallery/dragon-wyrmling.jpg" alt="Dragon wyrmling miniature"> -->
-          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
-          <div class="g-badge-wrap">
-            <span class="pill pill-resin">RESIN</span>
-          </div>
-        </div>
-        <div class="g-info">
-          <div class="g-name">Dragon wyrmling</div>
-          <div class="g-meta">54MM · 4K RESIN · 0.05MM LAYER</div>
-          <div class="g-tags">
-            <span class="g-tag">MONSTER</span>
-            <span class="g-tag">PATHFINDER</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="g-card" data-tags="terrain pla">
-        <div class="g-img">
-          <!-- <img src="images/gallery/dungeon-entrance.jpg" alt="Dungeon entrance terrain piece"> -->
-          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
-          <div class="g-badge-wrap">
-            <span class="pill pill-pla">PLA</span>
-          </div>
-        </div>
-        <div class="g-info">
-          <div class="g-name">Dungeon entrance, modular</div>
-          <div class="g-meta">TERRAIN · PLA BASIC · 0.2MM LAYER</div>
-          <div class="g-tags">
-            <span class="g-tag">TERRAIN</span>
-            <span class="g-tag">MODULAR</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="g-card" data-tags="display hero resin">
-        <div class="g-img">
-          <!-- <img src="images/gallery/tiefling-warlock.jpg" alt="Tiefling warlock display piece"> -->
-          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
-          <div class="g-badge-wrap">
-            <span class="pill pill-resin">RESIN</span>
-            <span class="pill" style="border-color:rgba(212,84,26,0.4);color:var(--ember2);">DISPLAY</span>
-          </div>
-        </div>
-        <div class="g-info">
-          <div class="g-name">Tiefling warlock, 75mm</div>
-          <div class="g-meta">75MM DISPLAY · 4K RESIN · 0.03MM LAYER</div>
-          <div class="g-tags">
-            <span class="g-tag">DISPLAY</span>
-            <span class="g-tag">75MM</span>
-            <span class="g-tag">HERO</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="g-card" data-tags="terrain pla">
-        <div class="g-img">
-          <!-- <img src="images/gallery/stone-archway.jpg" alt="Stone archway scatter terrain"> -->
-          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
-          <div class="g-badge-wrap">
-            <span class="pill pill-pla">PLA</span>
-          </div>
-        </div>
-        <div class="g-info">
-          <div class="g-name">Stone archway, scatter</div>
-          <div class="g-meta">TERRAIN · PLA MATTE · 0.15MM LAYER</div>
-          <div class="g-tags">
-            <span class="g-tag">TERRAIN</span>
-            <span class="g-tag">SCATTER</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="g-card" data-tags="display resin">
-        <div class="g-img">
-          <!-- <img src="images/gallery/spellbook-prop.jpg" alt="Spellbook prop display piece"> -->
-          <div class="g-img-placeholder">YOUR PHOTO HERE</div>
-          <div class="g-badge-wrap">
-            <span class="pill pill-resin">RESIN</span>
-          </div>
-        </div>
-        <div class="g-info">
-          <div class="g-name">Spellbook prop, 1:1 scale</div>
-          <div class="g-meta">PROP · 4K RESIN · 0.05MM LAYER</div>
-          <div class="g-tags">
-            <span class="g-tag">PROP</span>
-            <span class="g-tag">DISPLAY</span>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /gallery-grid -->
+    <div class="gallery-grid" id="gallery-grid"></div>
 
     <div class="rune-divider">
       <div class="rune-divider-line"></div>
@@ -409,6 +297,19 @@
       <a href="order.html" class="btn-primary">REQUEST A PRINT</a>
     </div>
 
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="g-lightbox" id="g-lightbox" onclick="closeGLightbox(event)">
+    <div class="g-lightbox-inner">
+      <button class="g-lightbox-close" onclick="closeGLightbox()">✕</button>
+      <div class="g-lightbox-img"><img id="g-lb-img" src="" alt=""></div>
+      <div class="g-lightbox-info">
+        <div class="g-lb-name" id="g-lb-name"></div>
+        <div class="g-lb-pills" id="g-lb-pills"></div>
+        <div class="g-lb-desc" id="g-lb-desc"></div>
+      </div>
+    </div>
   </div>
 
   <footer class="site-footer">
@@ -430,36 +331,96 @@
       document.getElementById('nav-links').classList.toggle('open');
     });
 
-    // Gallery filter
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.g-card');
-    const grid = document.getElementById('gallery-grid');
+    // ══════════════════════════════════════════════
+    //  GALLERY DATA — add new pieces here
+    //  Save photos to images/gallery/ then add an entry below.
+    //  material: 'resin' or 'pla' (controls the badge color)
+    // ══════════════════════════════════════════════
+    const GALLERY = [
+      {
+        img: 'gallery-01.jpg',
+        name: 'Antlered Owlbear',
+        material: 'resin',
+        pills: ['RESIN', 'DISPLAY'],
+        desc: "A massive antlered owlbear caught mid-roar, wings flared and claws bared on a detailed rune-carved base. Printed in 4K resin to capture every feather and scale — a true centerpiece miniature for any campaign's boss encounter."
+      },
+      {
+        img: 'gallery-02.jpg',
+        name: 'Viking Longhouse',
+        material: 'resin',
+        pills: ['RESIN', 'TERRAIN'],
+        desc: "A timber-framed Viking longhouse with open stable bays, shingled roof, and a fully detailed groundwork base — complete with grass tufts, fencing, a well, and coiled rope. Tabletop-ready terrain that anchors any Norse or medieval village setting."
+      },
+      {
+        img: 'gallery-03.jpg',
+        name: 'SR-71 Blackbird',
+        material: 'pla',
+        pills: ['PLA', 'DISPLAY'],
+        desc: "The legendary SR-71 Blackbird reconnaissance jet, printed in black PLA with crisp red detailing. A large-scale display model with sharp panel lines and that unmistakable silhouette — a showpiece for any aviation fan's shelf."
+      },
+      {
+        img: 'gallery-04.jpg',
+        name: 'F-15 Eagle',
+        material: 'pla',
+        pills: ['PLA', 'DISPLAY'],
+        desc: "An F-15 Eagle fighter jet in grey, captured in full detail from the twin tails to the swept wings. A solid display-scale model that shows off clean FDM printing on a complex aircraft profile."
+      },
+      {
+        img: 'gallery-05.jpg',
+        name: 'Articulated Crab Bots',
+        material: 'pla',
+        pills: ['PLA', 'ARTICULATED'],
+        desc: "A trio of print-in-place articulated crab bots — every leg joint moves straight off the build plate with no assembly required. Printed in white and grey PLA, these make great fidget pieces, desk companions, or quirky tabletop critters."
+      },
+    ];
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const filter = btn.dataset.filter;
-        let visible = 0;
-        cards.forEach(card => {
-          const tags = card.dataset.tags || '';
-          const show = filter === 'all' || tags.includes(filter);
-          card.style.display = show ? '' : 'none';
-          if (show) visible++;
-        });
-        // Show no-results message if needed
-        let noRes = document.getElementById('no-results');
-        if (visible === 0) {
-          if (!noRes) {
-            noRes = document.createElement('div');
-            noRes.id = 'no-results';
-            noRes.className = 'no-results';
-            noRes.textContent = 'No pieces in this category yet — check back soon.';
-            grid.appendChild(noRes);
-          }
-        } else if (noRes) { noRes.remove(); }
-      });
-    });
+    function renderGallery(){
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = GALLERY.map((p, i) => {
+        const pillsHTML = p.pills.map(pl => {
+          const cls = pl === 'RESIN' ? 'pill-resin' : pl === 'PLA' ? 'pill-pla' : '';
+          const style = (pl !== 'RESIN' && pl !== 'PLA') ? 'style="border-color:rgba(212,84,26,0.4);color:var(--ember2);"' : '';
+          return `<span class="pill ${cls}" ${style}>${pl}</span>`;
+        }).join('');
+        return `<div class="g-card" onclick="openGLightbox(${i})">
+          <div class="g-img">
+            <img src="images/gallery/${p.img}"
+              onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'g-img-placeholder\\'>PHOTO COMING SOON</div>'+this.parentElement.querySelector('.g-badge-wrap').outerHTML;"
+              alt="${p.name}">
+            <div class="g-badge-wrap">${pillsHTML}</div>
+          </div>
+          <div class="g-info">
+            <div class="g-name">${p.name}</div>
+            <div class="g-tags">${p.pills.map(pl=>`<span class="g-tag">${pl}</span>`).join('')}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function openGLightbox(i){
+      const p = GALLERY[i];
+      document.getElementById('g-lb-img').src = 'images/gallery/' + p.img;
+      document.getElementById('g-lb-img').alt = p.name;
+      document.getElementById('g-lb-name').textContent = p.name;
+      document.getElementById('g-lb-desc').textContent = p.desc;
+      document.getElementById('g-lb-pills').innerHTML = p.pills.map(pl => {
+        const cls = pl === 'RESIN' ? 'pill-resin' : pl === 'PLA' ? 'pill-pla' : '';
+        const style = (pl !== 'RESIN' && pl !== 'PLA') ? 'style="border-color:rgba(212,84,26,0.4);color:var(--ember2);"' : '';
+        return `<span class="pill ${cls}" ${style}>${pl}</span>`;
+      }).join('');
+      document.getElementById('g-lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeGLightbox(e){
+      if(e && e.target.id !== 'g-lightbox' && e.target.className !== 'g-lightbox-close') return;
+      document.getElementById('g-lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeGLightbox(); });
+
+    renderGallery();
   </script>
 
   <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="ALZJ6EDJLKNUL"></script>
