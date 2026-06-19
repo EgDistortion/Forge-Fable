@@ -49,6 +49,22 @@ module.exports = async (req, res) => {
       shipping_address_collection: {
         allowed_countries: ['US'], // add more if you ship internationally
       },
+      // ── FLAT-RATE SHIPPING ──
+      // Simple flat rate for now — revisit once you have real postage data
+      // from actual orders (weight varies a lot between coin bags and minis).
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: { amount: 600, currency: 'usd' }, // $6.00 flat
+            display_name: 'Standard Shipping (3–5 business days)',
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 3 },
+              maximum: { unit: 'business_day', value: 5 },
+            },
+          },
+        },
+      ],
       custom_text: {
         submit: {
           message: 'Orders are typically ready in 3–5 business days. We\'ll email you when your print is complete.',
