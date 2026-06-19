@@ -20,8 +20,8 @@
     .login-box{background:var(--surface);border:1px solid var(--border2);padding:2.5rem;width:100%;max-width:360px;text-align:center;}
     .login-title{font-family:var(--serif);font-size:18px;color:var(--gold);letter-spacing:0.15em;margin-bottom:6px;}
     .login-sub{font-size:15px;color:var(--muted);font-style:italic;margin-bottom:2rem;}
-    .login-box input[type=password]{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:var(--body);font-size:16px;padding:11px 14px;outline:none;text-align:center;letter-spacing:0.2em;margin-bottom:1rem;border-radius:4px;}
-    .login-box input[type=password]:focus{border-color:var(--border2);}
+    .login-box input[type=password],.login-box input[type=email]{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:var(--body);font-size:16px;padding:11px 14px;outline:none;text-align:center;letter-spacing:0.05em;margin-bottom:1rem;border-radius:4px;}
+    .login-box input[type=password]:focus,.login-box input[type=email]:focus{border-color:var(--border2);}
     .login-btn{width:100%;padding:13px;font-family:var(--serif);font-size:12px;letter-spacing:0.18em;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:4px;}
     .login-btn:hover{background:var(--gold2);}
     .login-error{font-size:14px;color:var(--red);font-style:italic;margin-top:10px;min-height:20px;}
@@ -198,7 +198,8 @@
   <div class="login-box">
     <div class="login-title">FORGE &amp; FABLE</div>
     <div class="login-sub">Inventory — Private Access</div>
-    <input type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPw()">
+    <input type="email" id="pw-email" placeholder="email" autocomplete="username" style="margin-bottom:10px;" onkeydown="if(event.key==='Enter')document.getElementById('pw-input').focus()">
+    <input type="password" id="pw-input" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')checkPw()">
     <button class="login-btn" onclick="checkPw()">ENTER</button>
     <div class="login-error" id="pw-error"></div>
   </div>
@@ -528,19 +529,19 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
 <div class="save-ind" id="save-ind"></div>
 
 <script>
 // ════════════════════════════════════════════
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
-const PASSWORD     = 'forgefable2025';       // change to your own password
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
-const SK    = 'ff_inv_auth';
 
 // ── SPOOL COUNTS (localStorage only — private to this device) ──
 const SPOOL_KEY = 'ff_spools';
@@ -552,23 +553,51 @@ function saveSpool(key, count) {
   showInd('ok', 'SPOOL COUNT SAVED');
 }
 
-// ── AUTH ──
-function checkPw(){
-  if(document.getElementById('pw-input').value === PASSWORD){
-    sessionStorage.setItem(SK,'1');
+// ── SUPABASE CLIENT + AUTH ──
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentSession = null;
+
+async function checkPw(){
+  const email = document.getElementById('pw-email').value.trim();
+  const password = document.getElementById('pw-input').value;
+  const btn = document.querySelector('.login-btn');
+  if(btn){ btn.disabled = true; btn.textContent = 'SIGNING IN...'; }
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+  if(btn){ btn.disabled = false; btn.textContent = 'ENTER'; }
+
+  if(error){
+    document.getElementById('pw-error').textContent = 'Incorrect — try again.';
+    document.getElementById('pw-input').value = '';
+    return;
+  }
+
+  currentSession = data.session;
+  document.getElementById('login-wrap').style.display = 'none';
+  document.getElementById('dash').classList.add('active');
+  loadInventory();
+}
+
+async function logout(){
+  await supabaseClient.auth.signOut();
+  location.reload();
+}
+
+// Restore session on page load (so refresh doesn't log you out)
+supabaseClient.auth.getSession().then(({ data: { session } }) => {
+  if(session){
+    currentSession = session;
     document.getElementById('login-wrap').style.display = 'none';
     document.getElementById('dash').classList.add('active');
     loadInventory();
-  } else {
-    document.getElementById('pw-error').textContent = 'Incorrect — try again.';
-    document.getElementById('pw-input').value = '';
   }
-}
-function logout(){ sessionStorage.removeItem(SK); location.reload(); }
-if(sessionStorage.getItem(SK)==='1'){
-  document.getElementById('login-wrap').style.display='none';
-  document.getElementById('dash').classList.add('active');
-}
+});
+
+// Keep currentSession fresh if Supabase auto-refreshes the token
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  currentSession = session;
+});
 
 // ── COLOR DATA ──
 const BASIC=[
@@ -599,11 +628,14 @@ const MATTE=[
 let stock = {};
 
 async function sb(path, opts={}){
+  // Use the logged-in session token if available (required for writes under RLS),
+  // otherwise fall back to the anon key (fine for public reads).
+  const token = currentSession ? currentSession.access_token : SUPABASE_KEY;
   const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{
     ...opts,
     headers:{
       'apikey':SUPABASE_KEY,
-      'Authorization':`Bearer ${SUPABASE_KEY}`,
+      'Authorization':`Bearer ${token}`,
       'Content-Type':'application/json',
       'Prefer':'return=minimal',
       ...opts.headers
