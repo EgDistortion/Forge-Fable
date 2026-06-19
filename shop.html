@@ -79,6 +79,28 @@
     .cat-card.disabled{opacity:0.55;cursor:default;}
     .cat-card.disabled:hover{transform:none;border-color:var(--border);}
 
+    /* ── GAME CURRENCY ── */
+    .currency-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
+    .curr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;flex-direction:column;}
+    .curr-card.mixed{border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.04);}
+    .curr-icon-row{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+    .curr-photo{width:52px;height:52px;border-radius:6px;object-fit:cover;border:1px solid var(--border2);flex-shrink:0;background:var(--surface2);}
+    .curr-icon{width:34px;height:34px;flex-shrink:0;}
+    .curr-name{font-family:var(--serif);font-size:15px;color:var(--gold);letter-spacing:0.08em;}
+    .curr-desc{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;margin-bottom:1.1rem;}
+    .curr-qty-row{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap;}
+    .curr-qty-btn{flex:1;min-width:56px;padding:8px 6px;text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:4px;cursor:pointer;font-family:var(--serif);font-size:11px;color:var(--soft);transition:border-color 0.15s,color 0.15s;}
+    .curr-qty-btn:hover{border-color:var(--border2);}
+    .curr-qty-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
+    .curr-qty-count{display:block;font-size:13px;}
+    .curr-qty-price{display:block;font-size:10px;color:var(--muted);margin-top:2px;}
+    .curr-qty-btn.active .curr-qty-price{color:var(--gold2);}
+    .curr-add-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:0.85rem;border-top:1px solid var(--border);}
+    .curr-current-price{font-family:var(--serif);font-size:20px;color:var(--gold2);}
+    .curr-add-btn{padding:9px 18px;font-family:var(--serif);font-size:11px;letter-spacing:0.1em;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:var(--radius);transition:background 0.2s;}
+    .curr-add-btn:hover{background:var(--gold2);}
+    .curr-add-btn.added{background:var(--green);}
+
     /* ── THEME PICKER ── */
     .theme-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;padding:0.5rem 0;}
     .theme-picker-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color 0.15s,transform 0.15s;background:var(--surface);}
@@ -349,6 +371,22 @@
             <div class="cat-card-link">BROWSE COINS →</div>
           </div>
         </div>
+        <div class="cat-card" onclick="goToCurrency()">
+          <div class="cat-card-img"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="60" cy="78" rx="30" ry="9" fill="none" stroke="#8a7038" stroke-width="2"/>
+            <ellipse cx="60" cy="68" rx="30" ry="9" fill="none" stroke="#c9a84c" stroke-width="2"/>
+            <ellipse cx="60" cy="58" rx="30" ry="9" fill="none" stroke="#8a7038" stroke-width="2"/>
+            <ellipse cx="60" cy="48" rx="30" ry="9" fill="none" stroke="#c9a84c" stroke-width="2.5"/>
+            <line x1="30" y1="48" x2="30" y2="78" stroke="#8a7038" stroke-width="1" opacity="0.5"/>
+            <line x1="90" y1="48" x2="90" y2="78" stroke="#8a7038" stroke-width="1" opacity="0.5"/>
+          </svg></div>
+          <div class="cat-card-body">
+            <div class="cat-card-name">GAME CURRENCY</div>
+            <div class="cat-card-desc">Copper, silver, and gold pieces for handing out treasure at the table — sold by the bag. Mix denominations or stock up on one.</div>
+            <div class="cat-card-count">3 DENOMINATIONS · UP TO 100-COUNT BAGS</div>
+            <div class="cat-card-link">BROWSE CURRENCY →</div>
+          </div>
+        </div>
         <div class="cat-card disabled">
           <div class="cat-card-img"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
             <path d="M 28 82 L 50 38 L 62 56 L 72 32 L 92 82 Z" fill="none" stroke="#c9a84c" stroke-width="2"/>
@@ -488,6 +526,23 @@
       </div><!-- end view-coin-browser -->
     </div><!-- end view-coins -->
 
+    <!-- ════════════ GAME CURRENCY VIEW ════════════ -->
+    <div class="shop-view" id="view-currency">
+      <div style="padding:1.5rem 0 0.5rem;">
+        <button class="back-btn" onclick="goToCategories()">← ALL CATEGORIES</button>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem;">
+        <div style="font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.15em;margin-bottom:8px;">FILL YOUR TREASURE HOARD</div>
+        <p style="font-size:15px;color:var(--soft);line-height:1.7;margin:0;font-style:italic;">
+          Functional FDM-printed currency for handing out treasure at the table — copper, silver, and gold pieces, each a different shape so players can tell them apart by feel. Pick a single denomination or grab the mixed DM bag.
+        </p>
+      </div>
+
+      <div class="currency-grid" id="currency-grid"></div>
+    </div>
+    <!-- ════════════ END GAME CURRENCY VIEW ════════════ -->
+
   </div>
 
   <div class="container reviews-section" id="reviews-section">
@@ -594,8 +649,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -915,10 +970,120 @@
 
   function goToCategories(){
     document.getElementById('view-coins').classList.remove('active');
+    document.getElementById('view-currency').classList.remove('active');
     document.getElementById('view-categories').classList.add('active');
     document.getElementById('shop-breadcrumb').textContent = 'The Shop';
     document.getElementById('shop-hero-title').textContent = 'Browse Our Catalog';
     document.getElementById('shop-hero-desc').textContent = 'No STL needed — everything here is ready to print and ship.';
+  }
+
+  // ── GAME CURRENCY ──
+  // Final pricing: flat $0.10/coin baseline with a light bulk discount curve,
+  // same price across copper/silver/gold/mixed. 100% infill, true cost ~$0.04/coin.
+  const CURRENCY_TIERS = [
+    { qty: 50,  price: 6.00  },
+    { qty: 100, price: 11.00 },
+    { qty: 150, price: 15.50 },
+    { qty: 200, price: 20.00 },
+    { qty: 250, price: 24.00 },
+    { qty: 300, price: 28.00 },
+    { qty: 350, price: 31.50 },
+    { qty: 400, price: 35.00 },
+  ];
+
+  const CURRENCY = [
+    {
+      id: 'cp', name: 'Copper Pieces', short: 'CP', img: 'currency-cp.jpg',
+      desc: 'Rounded oval shape, diagonal hatch texture. The most common coin at the table.',
+      icon: `<path d="M 8 4 L 26 4 L 26 12 L 30 16 L 30 28 L 26 32 L 26 30 L 8 30 L 8 32 L 4 28 L 4 16 L 8 12 Z" fill="none" stroke="#c9a84c" stroke-width="2"/>`
+    },
+    {
+      id: 'sp', name: 'Silver Pieces', short: 'SP', img: 'currency-sp.jpg',
+      desc: 'Rounded square, cross-hatched face with corner blade marks.',
+      icon: `<rect x="4" y="4" width="26" height="26" rx="5" fill="none" stroke="#c9a84c" stroke-width="2"/><line x1="9" y1="9" x2="25" y2="25" stroke="#8a7038" stroke-width="1"/><line x1="25" y1="9" x2="9" y2="25" stroke="#8a7038" stroke-width="1"/>`
+    },
+    {
+      id: 'gp', name: 'Gold Pieces', short: 'GP', img: 'currency-gp.jpg',
+      desc: 'Castle-shield shape with scalloped edges. The big payout coin.',
+      icon: `<rect x="3" y="9" width="28" height="16" rx="8" fill="none" stroke="#c9a84c" stroke-width="2"/><line x1="10" y1="12" x2="14" y2="22" stroke="#8a7038" stroke-width="1"/><line x1="18" y1="12" x2="22" y2="22" stroke="#8a7038" stroke-width="1"/>`
+    },
+    {
+      id: 'mixed', name: 'DM Bulk Bag — Mixed', short: 'MIX', mixed: true,
+      desc: 'An even mix of copper, silver, and gold — ready to dump out at the table for any treasure hoard.',
+      icon: `<circle cx="11" cy="20" r="9" fill="none" stroke="#c9a84c" stroke-width="2"/><circle cx="22" cy="20" r="9" fill="none" stroke="#8a7038" stroke-width="2"/><circle cx="16" cy="12" r="9" fill="none" stroke="#d4541a" stroke-width="2"/>`
+    },
+  ];
+
+  let currencySelections = {}; // id -> tier index
+
+  function goToCurrency(){
+    document.getElementById('view-categories').classList.remove('active');
+    document.getElementById('view-currency').classList.add('active');
+    document.getElementById('shop-breadcrumb').textContent = 'Shop → Game Currency';
+    document.getElementById('shop-hero-title').textContent = 'Game Currency';
+    document.getElementById('shop-hero-desc').textContent = 'Copper, silver, and gold pieces sold by the bag — functional FDM currency for treasure drops.';
+    buildCurrencyGrid();
+  }
+
+  function buildCurrencyGrid(){
+    const grid = document.getElementById('currency-grid');
+    grid.innerHTML = CURRENCY.map(c => {
+      if(currencySelections[c.id] === undefined) currencySelections[c.id] = 1; // default to 25-count tier
+      const selectedTier = currencySelections[c.id];
+      const tier = CURRENCY_TIERS[selectedTier];
+      const qtyButtons = CURRENCY_TIERS.map((t,i) => `
+        <div class="curr-qty-btn ${i===selectedTier?'active':''}" onclick="selectCurrencyTier('${c.id}',${i})">
+          <span class="curr-qty-count">${t.qty}</span>
+          <span class="curr-qty-price">$${t.price}</span>
+        </div>`).join('');
+      const thumb = c.img
+        ? `<img class="curr-photo" src="images/shop/${c.img}" alt="${c.name}" onerror="this.src='images/shop/${c.img.replace('.jpg','.png')}';this.onerror=null;">`
+        : `<svg class="curr-icon" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">${c.icon}</svg>`;
+      return `<div class="curr-card ${c.mixed?'mixed':''}" id="curr-card-${c.id}">
+        <div class="curr-icon-row">
+          ${thumb}
+          <div class="curr-name">${c.name}</div>
+        </div>
+        <div class="curr-desc">${c.desc}</div>
+        <div class="curr-qty-row">${qtyButtons}</div>
+        <div class="curr-add-row">
+          <div class="curr-current-price" id="curr-price-${c.id}">$${tier.price}</div>
+          <button class="curr-add-btn" id="curr-add-${c.id}" onclick="addCurrencyToCart('${c.id}',this)">+ CART</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function selectCurrencyTier(id, tierIndex){
+    currencySelections[id] = tierIndex;
+    document.querySelectorAll(`#curr-card-${id} .curr-qty-btn`).forEach((btn,i)=>{
+      btn.classList.toggle('active', i===tierIndex);
+    });
+    document.getElementById(`curr-price-${id}`).textContent = '$'+CURRENCY_TIERS[tierIndex].price;
+  }
+
+  function addCurrencyToCart(id, btn){
+    const c = CURRENCY.find(x=>x.id===id);
+    const tierIndex = currencySelections[id];
+    const tier = CURRENCY_TIERS[tierIndex];
+    const cartId = `currency-${id}-${tier.qty}`;
+    const ex = cart.find(i=>i.id===cartId);
+    if(ex){ ex.qty++; }
+    else {
+      cart.push({
+        id: cartId,
+        name: `${c.name} (${tier.qty}-count bag)`,
+        theme: 'Game Currency',
+        price: tier.price,
+        qty: 1,
+        isCoin: false
+      });
+    }
+    saveCart(); renderCart(); updateBadge(); renderPayPalButton();
+    if(btn){
+      btn.textContent = '✓ ADDED'; btn.classList.add('added');
+      setTimeout(()=>{ btn.textContent = '+ CART'; btn.classList.remove('added'); }, 1500);
+    }
   }
 
   function showThemePicker(){
