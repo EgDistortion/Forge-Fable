@@ -231,8 +231,9 @@
     .review-form-wrap{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:1.75rem;max-width:600px;}
     .review-form-title{font-family:var(--serif);font-size:14px;color:var(--gold);letter-spacing:0.15em;margin-bottom:1.25rem;}
     .review-star-pick{display:flex;gap:6px;margin-bottom:1rem;}
-    .star-btn{font-size:24px;cursor:pointer;opacity:0.3;transition:opacity 0.15s;background:none;border:none;padding:0;}
-    .star-btn.lit{opacity:1;}
+    .star-btn{font-size:24px;cursor:pointer;color:var(--muted);transition:color 0.15s,transform 0.1s;background:none;border:none;padding:0;}
+    .star-btn.lit{color:var(--gold2);}
+    .star-btn:hover{transform:scale(1.12);}
     .review-form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
     .review-form-group{margin-bottom:12px;}
     .review-form-group label{display:block;font-family:var(--serif);font-size:10px;color:var(--soft);letter-spacing:0.15em;margin-bottom:5px;}
@@ -649,8 +650,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1421,7 +1422,8 @@
   }
 
   function starsHTML(rating) {
-    return '★'.repeat(Math.max(0,Math.min(5,rating||5))) + '☆'.repeat(5-Math.max(0,Math.min(5,rating||5)));
+    const r = Math.max(0,Math.min(5,rating||5));
+    return `<span style="color:var(--gold2)">${'★'.repeat(r)}</span><span style="color:var(--muted)">${'☆'.repeat(5-r)}</span>`;
   }
 
   function populateCoinSelect() { /* replaced with text input — no longer needed */ }
