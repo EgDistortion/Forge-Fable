@@ -84,7 +84,8 @@
     .curr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;flex-direction:column;}
     .curr-card.mixed{border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.04);}
     .curr-icon-row{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
-    .curr-photo{width:52px;height:52px;border-radius:6px;object-fit:cover;border:1px solid var(--border2);flex-shrink:0;background:var(--surface2);}
+    .curr-photo{width:52px;height:52px;border-radius:6px;object-fit:cover;border:1px solid var(--border2);flex-shrink:0;background:var(--surface2);cursor:pointer;transition:border-color 0.15s;}
+    .curr-photo:hover{border-color:var(--gold);}
     .curr-icon{width:34px;height:34px;flex-shrink:0;}
     .curr-name{font-family:var(--serif);font-size:15px;color:var(--gold);letter-spacing:0.08em;}
     .curr-desc{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;margin-bottom:1.1rem;}
@@ -100,6 +101,30 @@
     .curr-add-btn{padding:9px 18px;font-family:var(--serif);font-size:11px;letter-spacing:0.1em;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:var(--radius);transition:background 0.2s;}
     .curr-add-btn:hover{background:var(--gold2);}
     .curr-add-btn.added{background:var(--green);}
+
+    /* ── CURRENCY LIGHTBOX ── */
+    .curr-lightbox{display:none;position:fixed;inset:0;z-index:400;background:rgba(8,9,12,0.92);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:2rem;}
+    .curr-lightbox.open{display:flex;}
+    .curr-lightbox-inner{position:relative;max-width:640px;width:100%;max-height:88vh;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;}
+    .curr-lb-close{position:absolute;top:12px;right:14px;z-index:2;background:rgba(0,0,0,0.5);border:1px solid var(--border2);color:var(--soft);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1;}
+    .curr-lb-close:hover{color:var(--gold);border-color:var(--gold);}
+    .curr-lb-img-wrap{position:relative;background:var(--bg);display:flex;align-items:center;justify-content:center;min-height:320px;max-height:55vh;overflow:hidden;}
+    .curr-lb-img-wrap img{width:100%;height:100%;object-fit:contain;max-height:55vh;}
+    .curr-lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);border:1px solid var(--border2);color:var(--soft);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;}
+    .curr-lb-nav:hover{color:var(--gold);border-color:var(--gold);}
+    .curr-lb-prev{left:14px;}
+    .curr-lb-next{right:14px;}
+    .curr-lb-dots{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:6px;}
+    .curr-lb-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);cursor:pointer;border:none;padding:0;transition:background 0.15s;}
+    .curr-lb-dot.active{background:var(--gold2);}
+    .curr-lb-info{padding:1.5rem 2rem;}
+    .curr-lb-name{font-family:var(--serif);font-size:20px;color:var(--gold2);margin-bottom:0.6rem;}
+    .curr-lb-desc{font-size:14px;color:var(--soft);line-height:1.7;}
+    @media (max-width:600px){
+      .curr-lightbox-inner{max-height:92vh;overflow-y:auto;}
+      .curr-lb-img-wrap{min-height:240px;max-height:40vh;}
+      .curr-lb-img-wrap img{max-height:40vh;}
+    }
 
     /* ── THEME PICKER ── */
     .theme-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;padding:0.5rem 0;}
@@ -541,6 +566,23 @@
       </div>
 
       <div class="currency-grid" id="currency-grid"></div>
+
+      <!-- CURRENCY LIGHTBOX -->
+      <div class="curr-lightbox" id="curr-lightbox" onclick="closeCurrencyLightbox(event)">
+        <div class="curr-lightbox-inner">
+          <button class="curr-lb-close" onclick="closeCurrencyLightbox()">✕</button>
+          <div class="curr-lb-img-wrap">
+            <img id="curr-lb-img" src="" alt="">
+            <button class="curr-lb-nav curr-lb-prev" onclick="navCurrencyLightbox(-1)">‹</button>
+            <button class="curr-lb-nav curr-lb-next" onclick="navCurrencyLightbox(1)">›</button>
+            <div class="curr-lb-dots" id="curr-lb-dots"></div>
+          </div>
+          <div class="curr-lb-info">
+            <div class="curr-lb-name" id="curr-lb-name"></div>
+            <div class="curr-lb-desc" id="curr-lb-desc"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- ════════════ END GAME CURRENCY VIEW ════════════ -->
 
@@ -650,8 +692,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -994,17 +1036,17 @@
 
   const CURRENCY = [
     {
-      id: 'cp', name: 'Copper Pieces', short: 'CP', img: 'currency-cp.jpg',
+      id: 'cp', name: 'Copper Pieces', short: 'CP', imgs: ['currency-cp-1.jpg','currency-cp-2.jpg'],
       desc: 'Rounded oval shape, diagonal hatch texture. The most common coin at the table.',
       icon: `<path d="M 8 4 L 26 4 L 26 12 L 30 16 L 30 28 L 26 32 L 26 30 L 8 30 L 8 32 L 4 28 L 4 16 L 8 12 Z" fill="none" stroke="#c9a84c" stroke-width="2"/>`
     },
     {
-      id: 'sp', name: 'Silver Pieces', short: 'SP', img: 'currency-sp.jpg',
+      id: 'sp', name: 'Silver Pieces', short: 'SP', imgs: ['currency-sp-1.jpg','currency-sp-2.jpg'],
       desc: 'Rounded square, cross-hatched face with corner blade marks.',
       icon: `<rect x="4" y="4" width="26" height="26" rx="5" fill="none" stroke="#c9a84c" stroke-width="2"/><line x1="9" y1="9" x2="25" y2="25" stroke="#8a7038" stroke-width="1"/><line x1="25" y1="9" x2="9" y2="25" stroke="#8a7038" stroke-width="1"/>`
     },
     {
-      id: 'gp', name: 'Gold Pieces', short: 'GP', img: 'currency-gp.jpg',
+      id: 'gp', name: 'Gold Pieces', short: 'GP', imgs: ['currency-gp-1.jpg','currency-gp-2.jpg'],
       desc: 'Castle-shield shape with scalloped edges. The big payout coin.',
       icon: `<rect x="3" y="9" width="28" height="16" rx="8" fill="none" stroke="#c9a84c" stroke-width="2"/><line x1="10" y1="12" x2="14" y2="22" stroke="#8a7038" stroke-width="1"/><line x1="18" y1="12" x2="22" y2="22" stroke="#8a7038" stroke-width="1"/>`
     },
@@ -1037,8 +1079,8 @@
           <span class="curr-qty-count">${t.qty}</span>
           <span class="curr-qty-price">$${t.price}</span>
         </div>`).join('');
-      const thumb = c.img
-        ? `<img class="curr-photo" src="images/shop/${c.img}" alt="${c.name}" onerror="this.src='images/shop/${c.img.replace('.jpg','.png')}';this.onerror=null;">`
+      const thumb = c.imgs
+        ? `<img class="curr-photo" src="images/shop/${c.imgs[0]}" alt="${c.name}" onclick="openCurrencyLightbox('${c.id}')" onerror="this.src='images/shop/${c.imgs[0].replace('.jpg','.png')}';this.onerror=null;">`
         : `<svg class="curr-icon" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">${c.icon}</svg>`;
       return `<div class="curr-card ${c.mixed?'mixed':''}" id="curr-card-${c.id}">
         <div class="curr-icon-row">
@@ -1062,6 +1104,62 @@
     });
     document.getElementById(`curr-price-${id}`).textContent = '$'+CURRENCY_TIERS[tierIndex].price;
   }
+
+  // ── CURRENCY LIGHTBOX ──
+  let curLbCoin = null;
+  let curLbIndex = 0;
+
+  function openCurrencyLightbox(id){
+    const c = CURRENCY.find(x=>x.id===id);
+    if(!c || !c.imgs) return;
+    curLbCoin = c;
+    curLbIndex = 0;
+    renderCurrencyLightbox();
+    document.getElementById('curr-lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function renderCurrencyLightbox(){
+    const c = curLbCoin;
+    const img = c.imgs[curLbIndex];
+    document.getElementById('curr-lb-img').src = 'images/shop/' + img;
+    document.getElementById('curr-lb-img').onerror = function(){ this.onerror=null; this.src = 'images/shop/' + img.replace('.jpg','.png'); };
+    document.getElementById('curr-lb-img').alt = c.name;
+    document.getElementById('curr-lb-name').textContent = c.name;
+    document.getElementById('curr-lb-desc').textContent = c.desc;
+    document.getElementById('curr-lb-dots').innerHTML = c.imgs.map((_,i)=>
+      `<button class="curr-lb-dot ${i===curLbIndex?'active':''}" onclick="goToCurrencyLightboxImg(${i})"></button>`
+    ).join('');
+    // Hide nav arrows if there's only 1 photo
+    const showNav = c.imgs.length > 1;
+    document.querySelector('.curr-lb-prev').style.display = showNav ? 'flex' : 'none';
+    document.querySelector('.curr-lb-next').style.display = showNav ? 'flex' : 'none';
+  }
+
+  function navCurrencyLightbox(dir){
+    if(!curLbCoin) return;
+    const len = curLbCoin.imgs.length;
+    curLbIndex = (curLbIndex + dir + len) % len;
+    renderCurrencyLightbox();
+  }
+
+  function goToCurrencyLightboxImg(i){
+    curLbIndex = i;
+    renderCurrencyLightbox();
+  }
+
+  function closeCurrencyLightbox(e){
+    if(e && e.target.id !== 'curr-lightbox' && !e.target.classList.contains('curr-lb-close')) return;
+    document.getElementById('curr-lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    if(!document.getElementById('curr-lightbox').classList.contains('open')) return;
+    if(e.key === 'Escape') closeCurrencyLightbox();
+    if(e.key === 'ArrowLeft') navCurrencyLightbox(-1);
+    if(e.key === 'ArrowRight') navCurrencyLightbox(1);
+  });
 
   function addCurrencyToCart(id, btn){
     const c = CURRENCY.find(x=>x.id===id);
