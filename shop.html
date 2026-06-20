@@ -531,6 +531,8 @@
               <div style="font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.12em;">BUILD A COIN PACK · MIX ANY DESIGNS</div>
               <div style="font-family:var(--body);font-size:13px;color:var(--soft);font-style:italic;">$2 each · 3 for $5 · 5 for $8 · 10 for $15</div>
             </div>
+            <!-- FILTER BAR -->
+            <div class="coin-filter-bar">
               <div class="coin-filter-pills">
                 <button class="coin-fpill active" onclick="setCoinShopFilter('all',this)">All</button>
                 <button class="coin-fpill" onclick="setCoinShopFilter('in',this)">In stock</button>
@@ -541,7 +543,7 @@
                 <div class="coin-toggle" id="hide-out-toggle"><div class="coin-toggle-knob"></div></div>
                 <span class="coin-toggle-label">HIDE OUT OF STOCK</span>
               </div>
-          </div>
+            </div>
 
           <!-- ASSET SMITHS CREDIT -->
           <div style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.12em;margin-bottom:1.25rem;">
@@ -695,8 +697,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
