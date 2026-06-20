@@ -128,6 +128,7 @@
 
     /* ── THEME PICKER ── */
     .theme-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;padding:0.5rem 0;}
+    .theme-picker-loading{grid-column:1/-1;text-align:center;padding:3rem 1rem;font-family:var(--serif);font-size:13px;color:var(--muted);letter-spacing:0.1em;font-style:italic;}
     .theme-picker-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color 0.15s,transform 0.15s;background:var(--surface);}
     .theme-picker-card:hover{border-color:var(--border2);transform:translateY(-2px);}
     .theme-picker-thumb{width:100%;aspect-ratio:1;overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;}
@@ -501,7 +502,9 @@
           <div class="theme-picker-title">CHOOSE A THEME</div>
           <div id="theme-picker-count" style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.08em;"></div>
         </div>
-        <div class="theme-picker-grid" id="theme-picker-grid"></div>
+        <div class="theme-picker-grid" id="theme-picker-grid">
+          <div class="theme-picker-loading" id="theme-picker-loading">Loading coin themes…</div>
+        </div>
       </div>
 
       <!-- COIN BROWSER (shown after theme selected) -->
@@ -692,8 +695,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -913,7 +916,6 @@
       });
       if(res.ok){ const rows=await res.json(); rows.forEach(r=>coinStock[r.coin_id]=r.stock); }
     } catch(e){ console.warn('Stock load failed — using defaults'); }
-    buildThemePicker();
     subscribeToStock();
   }
 
@@ -1007,6 +1009,10 @@
     document.getElementById('shop-hero-title').textContent = 'Coin Props';
     document.getElementById('shop-hero-desc').textContent = 'Over 159 designs across 12 themes. All resin printed — grey by default for easy painting, limited stock of other colors available.';
     document.getElementById('coins-back-btn').textContent = '← ALL CATEGORIES';
+    // Show the theme picker container right away (with its loading message)
+    // instead of waiting on the stock fetch to finish — avoids a blank gap.
+    document.getElementById('view-theme-picker').style.display = 'block';
+    document.getElementById('view-coin-browser').style.display = 'none';
     if(Object.keys(coinStock).length===0) loadCoinStock().then(()=>buildThemePicker());
     else buildThemePicker();
   }
