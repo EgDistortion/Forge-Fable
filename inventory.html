@@ -538,20 +538,27 @@
 // ════════════════════════════════════════════
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
 
-// ── SPOOL COUNTS (localStorage only — private to this device) ──
-const SPOOL_KEY = 'ff_spools';
-let spools = JSON.parse(localStorage.getItem(SPOOL_KEY) || '{}');
+// ── SPOOL COUNTS — synced through Supabase, same as in_stock ──
+// Whole numbers only (no half spools). Loaded alongside in_stock in loadInventory().
+let spools = {};
 
-function saveSpool(key, count) {
+async function saveSpool(key, count) {
   spools[key] = count;
-  localStorage.setItem(SPOOL_KEY, JSON.stringify(spools));
-  showInd('ok', 'SPOOL COUNT SAVED');
+  showInd('saving', 'SAVING...');
+  try {
+    await sb(`${TABLE}?color_name=eq.${encodeURIComponent(key)}`, {
+      method: 'PATCH', body: JSON.stringify({ spool_count: count })
+    });
+    showInd('ok', 'SPOOL COUNT SAVED');
+  } catch(e) {
+    showInd('error', 'SAVE FAILED');
+  }
 }
 
 // ── SUPABASE CLIENT + AUTH ──
@@ -660,17 +667,20 @@ async function sb(path, opts={}){
 
 async function loadInventory(){
   try{
-    const rows = await sb(`${TABLE}?select=color_name,in_stock`);
+    const rows = await sb(`${TABLE}?select=color_name,in_stock,spool_count`);
     if(rows && rows.length){
-      rows.forEach(r=>stock[r.color_name]=r.in_stock);
+      rows.forEach(r=>{
+        stock[r.color_name]=r.in_stock;
+        spools[r.color_name]=r.spool_count||0;
+      });
     } else {
       // First time — seed all colors
       const seed=[
-        ...BASIC.map(c=>({color_name:'B_'+c.name,in_stock:true,material:'PLA Basic'})),
-        ...MATTE.map(c=>({color_name:'M_'+c.name,in_stock:true,material:'PLA Matte'})),
+        ...BASIC.map(c=>({color_name:'B_'+c.name,in_stock:true,material:'PLA Basic',spool_count:0})),
+        ...MATTE.map(c=>({color_name:'M_'+c.name,in_stock:true,material:'PLA Matte',spool_count:0})),
       ];
       await sb(TABLE,{method:'POST',body:JSON.stringify(seed)});
-      seed.forEach(r=>stock[r.color_name]=true);
+      seed.forEach(r=>{ stock[r.color_name]=true; spools[r.color_name]=0; });
     }
     document.getElementById('loading-msg').style.display='none';
     document.getElementById('inv-content').style.display='block';
@@ -685,8 +695,8 @@ async function refreshFilamentStock(){
   const btn = document.getElementById('refresh-stock-btn');
   if(btn){ btn.disabled = true; btn.textContent = '↻ REFRESHING...'; }
   try{
-    const rows = await sb(`${TABLE}?select=color_name,in_stock`);
-    if(rows){ rows.forEach(r=>stock[r.color_name]=r.in_stock); }
+    const rows = await sb(`${TABLE}?select=color_name,in_stock,spool_count`);
+    if(rows){ rows.forEach(r=>{ stock[r.color_name]=r.in_stock; spools[r.color_name]=r.spool_count||0; }); }
     renderAll();
     populateStatAlerts();
     const alertPane = document.getElementById('dsp-alerts');
