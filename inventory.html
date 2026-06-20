@@ -240,6 +240,7 @@
             <button class="fbtn" onclick="setFilter('out',this)">OUT OF STOCK</button>
           </div>
           <button class="mark-all-btn" onclick="markAllInStock()">MARK ALL IN STOCK</button>
+          <button class="mark-all-btn" id="refresh-stock-btn" onclick="refreshFilamentStock()" style="background:var(--surface2);color:var(--gold);">↻ REFRESH</button>
         </div>
         <div class="inv-section" id="sec-basic">
           <div class="inv-section-head"><div class="inv-section-title">PLA BASIC — 30 COLORS</div><div class="inv-section-count" id="cnt-basic"></div></div>
@@ -537,8 +538,8 @@
 // ════════════════════════════════════════════
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -631,8 +632,15 @@ async function sb(path, opts={}){
   // Use the logged-in session token if available (required for writes under RLS),
   // otherwise fall back to the anon key (fine for public reads).
   const token = currentSession ? currentSession.access_token : SUPABASE_KEY;
-  const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{
+  const method = (opts.method || 'GET').toUpperCase();
+  // Cache-bust GET requests so stock changes made on another device show up
+  // immediately on reload, instead of getting served a stale cached response.
+  const url = method === 'GET'
+    ? `${SUPABASE_URL}/rest/v1/${path}${path.includes('?')?'&':'?'}_=${Date.now()}`
+    : `${SUPABASE_URL}/rest/v1/${path}`;
+  const r = await fetch(url,{
     ...opts,
+    cache: 'no-store',
     headers:{
       'apikey':SUPABASE_KEY,
       'Authorization':`Bearer ${token}`,
@@ -666,6 +674,23 @@ async function loadInventory(){
     document.getElementById('loading-msg').textContent='Could not connect — check your Supabase credentials in the file.';
     console.error(e);
   }
+}
+
+async function refreshFilamentStock(){
+  const btn = document.getElementById('refresh-stock-btn');
+  if(btn){ btn.disabled = true; btn.textContent = '↻ REFRESHING...'; }
+  try{
+    const rows = await sb(`${TABLE}?select=color_name,in_stock`);
+    if(rows){ rows.forEach(r=>stock[r.color_name]=r.in_stock); }
+    renderAll();
+    populateStatAlerts();
+    const alertPane = document.getElementById('dsp-alerts');
+    if(alertPane && alertPane.classList.contains('active')) populateAlerts();
+    showInd('ok','STOCK REFRESHED');
+  }catch(e){
+    showInd('error','REFRESH FAILED');
+  }
+  if(btn){ btn.disabled = false; btn.textContent = '↻ REFRESH'; }
 }
 
 async function toggleStock(key){
