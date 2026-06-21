@@ -781,8 +781,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1246,7 +1246,7 @@
       ]
     },
     {
-      id: 'pokemon', name: 'Pokémon', sub: '11 energy types',
+      id: 'pokemon', name: 'Pokémon', sub: 'Energy types & HueForge art',
       icon: `<circle r="34" fill="none" stroke="#c9a84c" stroke-width="2.5"/>
         <line x1="-34" y1="0" x2="34" y2="0" stroke="#c9a84c" stroke-width="2.5"/>
         <circle r="9" fill="none" stroke="#c9a84c" stroke-width="2.5"/>`,
@@ -1263,6 +1263,17 @@
         { name: 'Fairy', color: '#e89bc4' },
         { name: 'Dragon', color: '#7b6ad6' },
         { name: 'Colorless', color: '#cfc8b8' },
+      ],
+      // HueForge multicolor art pieces — separate from deck box energy types.
+      hueforgeItems: [
+        { name: 'Arcanine' },
+        { name: 'Espeon' },
+        { name: 'Gengar' },
+        { name: 'Lugia' },
+        { name: 'Lucario (close-up)' },
+        { name: 'Luxray' },
+        { name: 'Mew' },
+        { name: 'Halloween Pikachu' },
       ]
     },
     {
@@ -1443,6 +1454,9 @@
         g.items.forEach(item => flat.push({ ...item, group: g.name }));
       });
       return flat;
+    }
+    if(tcgCurrentType.id === 'hueforge' && tcgCurrentGame.hueforgeItems){
+      return tcgCurrentGame.hueforgeItems;
     }
     return tcgCurrentGame.subcats;
   }

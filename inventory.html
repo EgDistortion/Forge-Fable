@@ -217,7 +217,6 @@
       <!-- TABS -->
       <div class="inv-tabs">
         <button class="inv-tab active" onclick="switchInvTab('filament',this)">FILAMENT</button>
-        <button class="inv-tab" onclick="switchInvTab('coins',this)">COIN STOCK</button>
         <button class="inv-tab" onclick="switchInvTab('dashboard',this)">DASHBOARD</button>
         <button class="inv-tab" onclick="switchInvTab('calculator',this)">COST CALC</button>
         <button class="inv-tab" onclick="switchInvTab('printstatus',this)">PRINT STATUS</button>
@@ -253,25 +252,6 @@
       </div>
 
       <!-- COIN STOCK PANE -->
-      <div class="inv-pane" id="pane-coins">
-        <div class="coin-stats-row">
-          <div class="stat"><div class="stat-label">TOTAL COIN DESIGNS</div><div class="stat-value ok" id="cs-total">—</div></div>
-          <div class="stat"><div class="stat-label">IN STOCK</div><div class="stat-value ok" id="cs-in">—</div></div>
-          <div class="stat"><div class="stat-label">LOW STOCK (≤3)</div><div class="stat-value warn" id="cs-low">—</div></div>
-          <div class="stat"><div class="stat-label">OUT OF STOCK</div><div class="stat-value warn" id="cs-out">—</div></div>
-        </div>
-        <div class="toolbar" style="margin-bottom:1.25rem;">
-          <input class="inv-search" type="text" placeholder="Search coins..." oninput="filterCoins(this.value)" id="coin-search">
-          <div class="filter-btns">
-            <button class="fbtn active" onclick="setCoinFilter('all',this)">ALL</button>
-            <button class="fbtn" onclick="setCoinFilter('low',this)">LOW</button>
-            <button class="fbtn" onclick="setCoinFilter('out',this)">OUT</button>
-          </div>
-          <button class="mark-all-btn" onclick="setAllCoinStock(10)">SET ALL TO 10</button>
-        </div>
-        <div id="coin-sections"></div>
-      </div>
-
       <!-- DASHBOARD PANE -->
       <div class="inv-pane" id="pane-dashboard">
 
@@ -329,18 +309,6 @@
 
         <!-- ALERTS SUB PANE -->
         <div class="dash-subpane" id="dsp-alerts">
-          <!-- Coin Low Stock Dropdown -->
-          <div class="low-stock-toggle" onclick="toggleDropdown('coins-alert')">
-            <div class="low-stock-toggle-label">COIN STOCK ALERTS</div>
-            <div class="low-stock-toggle-right">
-              <span class="low-stock-count" id="coin-alert-count">— alerts</span>
-              <span class="low-stock-arrow" id="arrow-coins-alert">▼</span>
-            </div>
-          </div>
-          <div class="low-stock-body" id="body-coins-alert">
-            <div id="coin-alert-list" style="font-style:italic;color:var(--muted);font-size:14px;">Load Coin Stock tab first.</div>
-          </div>
-
           <!-- Filament Out of Stock Dropdown -->
           <div class="filament-toggle" onclick="toggleDropdown('filament-alert')">
             <div class="filament-toggle-label">FILAMENT OUT OF STOCK</div>
@@ -538,8 +506,8 @@
 // ════════════════════════════════════════════
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -795,292 +763,9 @@ function switchInvTab(tab, el){
   document.querySelectorAll('.inv-pane').forEach(p=>p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('pane-'+tab).classList.add('active');
-  if(tab==='coins' && Object.keys(coinStock).length===0) loadCoinStock();
   if(tab==='dashboard') loadDashboard();
   if(tab==='calculator') initCalc();
   if(tab==='printstatus') initPrintStatus();
-}
-
-// ── COIN THEMES (same as shop.html) ──
-const COIN_THEMES = [
-    { id:'mythical', label:'MYTHICAL CREATURES', coins:[
-    {id:'myth-001',name:'Phoenix Rising'},{id:'myth-002',name:'Griffin Rampant'},
-    {id:'myth-003',name:'Griffins Cry'},{id:'myth-004',name:'Kraken'},
-    {id:'myth-005',name:'Cthulhu'},{id:'myth-006',name:'Leviathan'},
-    {id:'myth-007',name:'Hydra'},{id:'myth-008',name:'Serpent Tangle'},
-    {id:'myth-009',name:'Dragon Hydra'},
-    {id:'myth-011',name:'King Ghidorah'},{id:'myth-012',name:'Cerberus'},
-    {id:'myth-013',name:'Hellbound Cerberus'},{id:'myth-014',name:'Cerberus Crest'},
-    {id:'myth-015',name:'Minotaur'},{id:'myth-016',name:'Labyrinth King'},
-    {id:'myth-017',name:'Minotaur Warrior'},{id:'myth-018',name:'Pegasus'},
-    {id:'myth-019',name:'Chimera'},{id:'myth-020',name:'Winged Chimera'},
-  ]},
-    { id:'elemental', label:'ELEMENTAL FORCES', coins:[
-    {id:'elem-001',name:'Wildfire'},{id:'elem-002',name:'Fire Element'},
-    {id:'elem-003',name:'Eternal Flame'},{id:'elem-004',name:'Tidal Wave'},
-    {id:'elem-005',name:'Water Element'},{id:'elem-006',name:'Ocean Surge'},
-    {id:'elem-007',name:'Earth and Moon'},{id:'elem-008',name:'World'},
-    {id:'elem-009',name:'Wind Spiral'},{id:'elem-010',name:'Storm Gale'},
-    {id:'elem-011',name:'Winged Tempest'},{id:'elem-012',name:'Desert Sun'},
-    {id:'elem-013',name:'Canyon Depths'},{id:'elem-014',name:'Stone Spire'},
-    {id:'elem-015',name:'Sol Invictus'},
-  ]},
-    { id:'gothic', label:'UNDEAD AND DARK GOTHIC', coins:[
-    {id:'goth-001',name:"Vampire Bat"},
-    {id:'goth-002',name:"Battle at Dark Castle"},
-    {id:'goth-003',name:"Vampire Lord"},
-    {id:'goth-004',name:"Skeleton Hand"},
-    {id:'goth-005',name:"Graveyard Tombstone"},
-    {id:'goth-006',name:"Gothic Arch Tombstone"},
-    {id:'goth-007',name:"Winged Skull Tomb"},
-    {id:'goth-008',name:"Grim Reaper's Gate"},
-    {id:'goth-009',name:"The Mummy"},
-    {id:'goth-010',name:"Pharaoh's Throne"},
-    {id:'goth-011',name:"Standing Mummy"},
-    {id:'goth-012',name:"Sarcophagus Pharaoh"},
-    {id:'goth-013',name:"Gods of Egypt"},
-    {id:'goth-014',name:"Death Mask"},
-    {id:'goth-015',name:"Undead Pharaoh"},
-    {id:'goth-016',name:"Mummy Warrior"},
-    {id:'goth-017',name:"Royal Sarcophagus"},
-    {id:'goth-018',name:"Ancient Sarcophagus"},
-    {id:'goth-019',name:"Skull Pharaoh"},
-    {id:'goth-020',name:"Cursed Pharaoh"},
-  ]},
-    { id:'skull', label:'SKULL', coins:[
-    {id:'skul-001',name:'Baroque Deaths Head'},{id:'skul-002',name:'Iron Skull'},
-    {id:'skul-003',name:'Shattered Skull'},{id:'skul-004',name:'Horned Helm Skull'},
-    {id:'skul-005',name:'Jolly Roger'},{id:'skul-006',name:'Day of the Dead'},
-    {id:'skul-007',name:'Crowned Skull'},{id:'skul-008',name:'Deaths Medal'},
-    {id:'skul-009',name:'Demon Skull'},{id:'skul-011',name:'Lich King'},
-    {id:'skul-012',name:'Deaths Head'},{id:'skul-013',name:'Hellfire Skull'},
-    {id:'skul-014',name:'Ancient Mariner'},{id:'skul-015',name:'Barbed Wire Skull'},
-  ]},
-    { id:'adventure', label:'FANTASY ADVENTURE AND TREASURE', coins:[
-    {id:'adve-001',name:"Dragon's Hoard Compass"},
-    {id:'adve-002',name:"The Quest"},
-    {id:'adve-003',name:"Explorer's Compass"},
-    {id:'adve-004',name:"Dragon Compass"},
-    {id:'adve-005',name:"Pirate King"},
-    {id:'adve-006',name:"Kraken's Seal"},
-    {id:'adve-007',name:"Noble House Crest"},
-    {id:'adve-008',name:"Crowned Dragon Head"},
-    {id:'adve-009',name:"Cthulhu"},
-    {id:'adve-010',name:"Skull Kraken"},
-  ]},
-    { id:'dragon', label:'DRAGONS', coins:[
-    {id:'drag-001',name:'Draco Regina'},{id:'drag-002',name:'Dragon and Blade'},
-    {id:'drag-003',name:'Celtic Dragon Crest'},{id:'drag-004',name:'Dragons Hoard'},
-    {id:'drag-005',name:'Coiled Dragon'},{id:'drag-006',name:'Horned Dragon Throne'},
-    {id:'drag-007',name:'Dragons Crossing'},{id:'drag-008',name:'Crown Fire Dragon'},
-    {id:'drag-009',name:'Dragons Hoard Guardian'},{id:'drag-010',name:'Dragons Maw'},
-    {id:'drag-011',name:'Dragon Shield'},{id:'drag-012',name:'Dragons Hoard 100'},
-    {id:'drag-013',name:'Dragon Lord'},{id:'drag-014',name:'Runic Dragon Visage'},
-    {id:'drag-015',name:'Dragons Gaze'},{id:'drag-016',name:'Ouroboros Dragon'},
-    {id:'drag-017',name:'Flame Mane Dragon'},{id:'drag-018',name:'Smokewreath Dragon'},
-    {id:'drag-019',name:'Dragons Fury'},{id:'drag-020',name:'Dragons Profile'},
-  ]},
-    { id:'weapons', label:'WEAPONS', coins:[
-    {id:'weap-001',name:'Arsenal of War'},
-    {id:'weap-002',name:'Legendary Arms'},
-    {id:'weap-003',name:'Forged in Steel'},
-    {id:'weap-004',name:'Lion Crest Arms'},
-    {id:'weap-005',name:'Warrior Crest'},
-    {id:'weap-006',name:'Runic Warhammer'},
-    {id:'weap-007',name:'Runic Battle Axe'},
-    {id:'weap-008',name:'Forged in Steel II'},
-    {id:'weap-009',name:'Deaths Hammer'},
-    {id:'weap-010',name:'Shield Hammer'},
-    {id:'weap-011',name:'Thors Hammer'},
-    {id:'weap-012',name:'Celtic Sword'},
-    {id:'weap-013',name:'Sword in Stone'},
-    {id:'weap-014',name:'Knights Blade'},
-    {id:'weap-015',name:'Battlefield Cannon'},
-    {id:'weap-016',name:'Lion Cannon'},
-    {id:'weap-017',name:'Cannon Front'},
-  ]},
-    { id:'dwarven', label:'DWARVEN', coins:[
-    {id:'dwav-001',name:'Deep Hold Anvil'},{id:'dwav-002',name:'Forgefire Mark'},
-    {id:'dwav-003',name:'Ten Weight Ingot'},{id:'dwav-005',name:'Elvish Leaf'},
-    {id:'dwav-006',name:'Star Rune'},{id:'dwav-007',name:'Mountain King'},
-    {id:'dwav-008',name:'Hammer and Pick'},
-  ]},
-    { id:'viking', label:'FANTASY VIKING', coins:[
-    {id:'vike-001',name:'Dragonship'},{id:'vike-002',name:'Knotwork Serpent'},
-    {id:'vike-003',name:'Ironclad Longship'},{id:'vike-004',name:'Vegvisir'},
-    {id:'vike-005',name:'Yggdrasil Voyage'},{id:'vike-006',name:'Nidhoggrs Root'},
-    {id:'vike-007',name:'Valknut'},{id:'vike-008',name:'Valknut Voyage'},
-    {id:'vike-009',name:'World Tree'},{id:'vike-010',name:'Mjolnirs Wake'},
-  ]},
-    { id:'mushroom', label:'MUSHROOM', coins:[
-    {id:'mush-001',name:'Toadstool Crown'},{id:'mush-002',name:'Mycelium Web'},
-    {id:'mush-003',name:'Fungal Grove'},{id:'mush-004',name:'Spore Drop'},
-    {id:'mush-005',name:'Elder Cap'},{id:'mush-006',name:'Spore Wing'},
-  ]},
-    { id:'sq-dragon-egg', label:'SQUARE DRAGON EGGS', coins:[
-    {id:'sqeg-001',name:"Guarded Dragon Egg Square"},
-    {id:'sqeg-002',name:"Dragon Egg Hatchling Square"},
-    {id:'sqeg-003',name:"Dragon Egg and Claw Square"},
-    {id:'sqeg-004',name:"Coiled Dragon Egg Square"},
-    {id:'sqeg-005',name:"Dragon Seal Egg Square"},
-    {id:'sqeg-006',name:"Serpent Nest Square"},
-    {id:'sqeg-007',name:"Dragon Scales Nest Square"},
-    {id:'sqeg-008',name:"Dragon Wrapped Egg Square"},
-  ]},
-    { id:'sq-fire-dragon', label:'SQUARE FIRE BREATHING DRAGON', coins:[
-    {id:'sqfr-001',name:"Celtic Fire Dragon Square"},
-    {id:'sqfr-002',name:"Inferno Dragon Square"},
-    {id:'sqfr-003',name:"Fire Breath Dragon Square"},
-    {id:'sqfr-004',name:"Dragon in Flames Square"},
-    {id:'sqfr-005',name:"Mountain Dragon Square"},
-    {id:'sqfr-006',name:"Rampant Fire Dragon Square"},
-    {id:'sqfr-007',name:"Celtic Dragon Circle Square"},
-    {id:'sqfr-008',name:"Twin Dragons Square"},
-  ]},
-];
-
-const COIN_TABLE = 'coin_inventory';
-let coinStock = {};
-let coinFilter = 'all';
-let coinSearch = '';
-
-async function loadCoinStock(){
-  showInd('saving','LOADING COINS...');
-  try {
-    const rows = await sb(`${COIN_TABLE}?select=coin_id,stock`);
-    if(rows && rows.length){
-      rows.forEach(r => coinStock[r.coin_id] = r.stock);
-    }
-
-    // Check for any coins missing from the database and seed them
-    const allCoins = COIN_THEMES.flatMap(t => t.coins.map(c => ({
-      coin_id: c.id, stock: 10, theme: t.label
-    })));
-    const existingIds = new Set(Object.keys(coinStock));
-    const missingCoins = allCoins.filter(c => !existingIds.has(c.coin_id));
-
-    if(missingCoins.length > 0){
-      showInd('saving', `SEEDING ${missingCoins.length} NEW COINS...`);
-      await sb(COIN_TABLE, {method:'POST', body:JSON.stringify(missingCoins)});
-      missingCoins.forEach(c => coinStock[c.coin_id] = 10);
-      showInd('ok', `ADDED ${missingCoins.length} NEW COINS`);
-    } else {
-      showInd('ok','COINS LOADED');
-    }
-
-    renderCoinSections();
-    updateCoinStats();
-  } catch(e) {
-    showInd('error','COIN LOAD FAILED');
-    console.error(e);
-  }
-}
-
-async function saveCoinStock(coinId, newStock){
-  coinStock[coinId] = newStock;
-  updateCoinStats();
-  // Update the card appearance immediately
-  updateCoinCardAppearance(coinId, newStock);
-  showInd('saving','SAVING...');
-  try {
-    await sb(`${COIN_TABLE}?coin_id=eq.${encodeURIComponent(coinId)}`, {
-      method:'PATCH', body:JSON.stringify({stock: newStock})
-    });
-    showInd('ok','SAVED');
-  } catch(e) { showInd('error','SAVE FAILED'); }
-}
-
-function updateCoinCardAppearance(coinId, stock) {
-  const card = document.querySelector(`.coin-stock-card[data-id="${coinId}"]`);
-  if (!card) return;
-  const status = stock === 0 ? 'out' : stock <= 3 ? 'low' : 'ok';
-  card.className = `coin-stock-card${stock === 0 ? ' out' : stock <= 3 ? ' low' : ''}`;
-  const badge = card.querySelector('.coin-stock-badge');
-  if (badge) {
-    badge.className = `coin-stock-badge ${status}`;
-    badge.textContent = stock === 0 ? 'OUT' : stock <= 3 ? 'LOW' : 'OK';
-  }
-}
-
-async function setAllCoinStock(val){
-  if(!confirm(`Set ALL coins to ${val} in stock?`)) return;
-  COIN_THEMES.forEach(t => t.coins.forEach(c => coinStock[c.id] = val));
-  renderCoinSections();
-  updateCoinStats();
-  showInd('saving','SAVING...');
-  try {
-    await sb(`${COIN_TABLE}?stock=gte.0`, {method:'PATCH', body:JSON.stringify({stock: val})});
-    showInd('ok','ALL SAVED');
-  } catch(e){ showInd('error','SAVE FAILED'); }
-}
-
-function setCoinFilter(f, el){
-  coinFilter = f;
-  document.querySelectorAll('#pane-coins .fbtn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderCoinSections();
-}
-
-function filterCoins(v){ coinSearch = v.toLowerCase(); renderCoinSections(); }
-
-function renderCoinSections(){
-  const container = document.getElementById('coin-sections');
-  let html = '';
-  let totalShown = 0;
-
-  COIN_THEMES.forEach(theme => {
-    const coins = theme.coins.filter(c => {
-      const stock = coinStock[c.id] !== undefined ? coinStock[c.id] : 10;
-      if(coinFilter === 'low' && !(stock > 0 && stock <= 3)) return false;
-      if(coinFilter === 'out' && stock !== 0) return false;
-      if(coinSearch && !c.name.toLowerCase().includes(coinSearch)) return false;
-      return true;
-    });
-    if(!coins.length) return;
-    totalShown += coins.length;
-
-    html += `<div class="coin-theme-block">
-      <div class="coin-theme-head">
-        <div class="coin-theme-title">${theme.label}</div>
-        <div class="coin-theme-count">${coins.length} SHOWN</div>
-      </div>
-      <div class="coin-grid">
-        ${coins.map(c => {
-          const stock = coinStock[c.id] !== undefined ? coinStock[c.id] : 10;
-          const status = stock === 0 ? 'out' : stock <= 3 ? 'low' : 'ok';
-          const statusLabel = stock === 0 ? 'OUT' : stock <= 3 ? 'LOW' : 'OK';
-          return `<div class="coin-stock-card ${status === 'out' ? 'out' : status === 'low' ? 'low' : ''}" data-id="${c.id}">
-            <div class="coin-stock-name">${c.name}</div>
-            <div class="coin-stock-controls">
-              <input type="number" class="coin-stock-input" id="ci-${c.id}"
-                value="${stock}" min="0" max="999"
-                onchange="coinStock['${c.id}']=parseInt(this.value)||0;updateCoinStats();">
-              <button class="coin-stock-save"
-                onclick="saveCoinStock('${c.id}', parseInt(document.getElementById('ci-${c.id}').value)||0)">
-                SAVE
-              </button>
-              <span class="coin-stock-badge ${status}">${statusLabel}</span>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-  });
-
-  if(!html) html = '<p style="font-style:italic;color:var(--muted);padding:2rem 0;">No coins match your filter.</p>';
-  container.innerHTML = html;
-}
-
-function updateCoinStats(){
-  const allCoins = COIN_THEMES.flatMap(t => t.coins);
-  const total = allCoins.length;
-  const out   = allCoins.filter(c => coinStock[c.id] === 0).length;
-  const low   = allCoins.filter(c => { const s = coinStock[c.id]; return s !== undefined && s > 0 && s <= 3; }).length;
-  const inStock = total - out;
-  document.getElementById('cs-total').textContent = total;
-  document.getElementById('cs-in').textContent    = inStock;
-  document.getElementById('cs-low').textContent   = low;
-  document.getElementById('cs-out').textContent   = out;
 }
 
 // ── DASHBOARD ──
@@ -1195,55 +880,15 @@ function toggleOrderDetail(id) {
 }
 
 function populateStatAlerts() {
-  // Count alerts for stat card
-  const allCoins = typeof COIN_THEMES !== 'undefined'
-    ? COIN_THEMES.flatMap(t => t.coins)
-    : [];
-  const lowCoins = allCoins.filter(c => (coinStock[c.id] !== undefined ? coinStock[c.id] : 10) <= 3).length;
+  // Count alerts for stat card — filament only now that coins are made to order
   const outFilament = typeof BASIC !== 'undefined'
     ? [...BASIC, ...MATTE].filter(c => stock['B_'+c.name] === false || stock['M_'+c.name] === false).length
     : 0;
-  const totalAlerts = lowCoins + outFilament;
-  document.getElementById('dc-lowstock').textContent = totalAlerts;
-  document.getElementById('dc-lowstock-sub').textContent = totalAlerts > 0 ? 'needs attention' : 'all clear';
+  document.getElementById('dc-lowstock').textContent = outFilament;
+  document.getElementById('dc-lowstock-sub').textContent = outFilament > 0 ? 'needs attention' : 'all clear';
 }
 
 function populateAlerts() {
-  // Load coin stock first if not loaded yet
-  if (Object.keys(coinStock).length === 0) {
-    document.getElementById('coin-alert-list').innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">Loading coin stock...</div>';
-    loadCoinStock().then(() => populateAlerts());
-    return;
-  }
-
-  // Coins
-  const coinEl = document.getElementById('coin-alert-list');
-  const coinCountEl = document.getElementById('coin-alert-count');
-  if (coinEl) {
-    const allCoins = COIN_THEMES.flatMap(t => t.coins.map(c => ({...c, themeLabel: t.label})));
-    // Only show coins that are actually in the database and low/out
-    const alerts = allCoins
-      .filter(c => coinStock[c.id] !== undefined && coinStock[c.id] <= 3)
-      .sort((a,b) => coinStock[a.id] - coinStock[b.id]);
-    if (coinCountEl) coinCountEl.textContent = alerts.length + ' alert' + (alerts.length !== 1 ? 's' : '');
-    if (!alerts.length) {
-      coinEl.innerHTML = '<div style="font-style:italic;color:var(--green);font-size:14px;padding:6px 0;">All coins well stocked.</div>';
-    } else {
-      coinEl.innerHTML = alerts.map(c => {
-        const s = coinStock[c.id];
-        const cls = s === 0 ? 'out' : 'low';
-        const label = s === 0 ? 'OUT OF STOCK' : s + ' LEFT';
-        return `<div class="low-stock-row">
-          <div>
-            <div class="low-stock-name">${c.name}</div>
-            <div style="font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.08em;">${c.themeLabel}</div>
-          </div>
-          <div class="low-stock-badge ${cls}">${label}</div>
-        </div>`;
-      }).join('');
-    }
-  }
-
   // Filament
   const filEl = document.getElementById('filament-alert-list');
   const filCountEl = document.getElementById('filament-alert-count');
