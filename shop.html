@@ -133,6 +133,9 @@
     .tcg-sub-card-body{padding:1rem 1.1rem;}
     .tcg-sub-name{font-family:var(--serif);font-size:14px;color:var(--soft);letter-spacing:0.04em;margin-bottom:6px;}
     .tcg-sub-coming{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;}
+    .tcg-group-header{grid-column:1/-1;font-family:var(--serif);font-size:12px;color:var(--gold);letter-spacing:0.14em;padding:0.5rem 0 0.25rem;border-bottom:1px solid var(--border);margin-bottom:0.25rem;}
+    .tcg-group-header:not(:first-child){margin-top:0.75rem;}
+    .tcg-stock-mto{font-family:var(--serif);font-size:9px;color:var(--gold);letter-spacing:0.1em;}
     .tcg-sub-empty{text-align:center;padding:3rem 1rem;font-family:var(--serif);font-size:13px;color:var(--muted);font-style:italic;letter-spacing:0.05em;}
     .tcg-pager{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:1.75rem;flex-wrap:wrap;}
     .tcg-page-btn{font-family:var(--serif);font-size:11px;letter-spacing:0.1em;color:var(--gold);background:var(--surface2);border:1px solid var(--border);padding:8px 16px;border-radius:var(--radius);cursor:pointer;transition:border-color 0.15s,color 0.15s;}
@@ -206,6 +209,7 @@
     .coin-fpill.active-green{background:rgba(74,158,107,0.12);border-color:rgba(74,158,107,0.4);color:var(--green);}
     .coin-fpill.active-amber{background:rgba(212,84,26,0.1);border-color:rgba(212,84,26,0.4);color:var(--ember2);}
     .coin-fpill.active-red{background:rgba(184,64,64,0.1);border-color:rgba(184,64,64,0.4);color:var(--red);}
+    .made-to-order-note{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.1em;padding:0.6rem 0;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
     .coin-toggle-wrap{display:flex;align-items:center;gap:8px;cursor:pointer;}
     .coin-toggle{width:38px;height:20px;background:var(--green);border-radius:10px;position:relative;transition:background 0.2s;flex-shrink:0;}
     .coin-toggle.off{background:var(--border2);}
@@ -228,6 +232,7 @@
     .stock-badge.in-stock{border-color:rgba(74,158,107,0.4);color:#6abf89;}
     .stock-badge.low{border-color:rgba(212,84,26,0.5);color:var(--ember2);}
     .stock-badge.out{border-color:rgba(184,64,64,0.5);color:var(--red);}
+    .stock-badge.made-to-order{border-color:var(--border2);color:var(--gold);}
     .coin-card.out-of-stock .coin-img::after{content:'OUT OF STOCK';position:absolute;inset:0;background:rgba(13,15,20,0.6);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:11px;color:var(--red);letter-spacing:0.18em;}
     .coin-info{padding:0.85rem 1rem;flex:1;display:flex;flex-direction:column;}
     .coin-name{font-size:14px;color:var(--text);font-style:italic;margin-bottom:4px;}
@@ -266,6 +271,7 @@
     .lightbox-stock.ok{color:var(--green);}
     .lightbox-stock.low{color:var(--ember);}
     .lightbox-stock.out{color:var(--red);}
+    .lightbox-stock.made-to-order{color:var(--gold);}
 
     @media(max-width:700px){
       .coins-layout{grid-template-columns:1fr;}
@@ -584,19 +590,8 @@
               <div style="font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.12em;">BUILD A COIN PACK · MIX ANY DESIGNS</div>
               <div style="font-family:var(--body);font-size:13px;color:var(--soft);font-style:italic;">$2 each · 3 for $5 · 5 for $8 · 10 for $15</div>
             </div>
-            <!-- FILTER BAR -->
-            <div class="coin-filter-bar">
-              <div class="coin-filter-pills">
-                <button class="coin-fpill active" onclick="setCoinShopFilter('all',this)">All</button>
-                <button class="coin-fpill" onclick="setCoinShopFilter('in',this)">In stock</button>
-                <button class="coin-fpill" onclick="setCoinShopFilter('low',this)">Low stock</button>
-                <button class="coin-fpill" onclick="setCoinShopFilter('out',this)">Out of stock</button>
-              </div>
-              <div class="coin-toggle-wrap" onclick="toggleHideOut()">
-                <div class="coin-toggle" id="hide-out-toggle"><div class="coin-toggle-knob"></div></div>
-                <span class="coin-toggle-label">HIDE OUT OF STOCK</span>
-              </div>
-            </div>
+            <!-- MADE TO ORDER NOTE -->
+            <div class="made-to-order-note">MADE TO ORDER — every coin is freshly printed for your order.</div>
 
           <!-- ASSET SMITHS CREDIT -->
           <div style="font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.12em;margin-bottom:1.25rem;">
@@ -786,8 +781,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -997,90 +992,7 @@
     const parent = img.parentElement;
     if (parent) parent.innerHTML = '<div class="coin-img-placeholder">YOUR PHOTO HERE</div>';
   }
-  let coinStock = {};
   let currentLbCoin = null;
-
-  async function loadCoinStock() {
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/coin_inventory?select=coin_id,stock`, {
-        headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
-      });
-      if(res.ok){ const rows=await res.json(); rows.forEach(r=>coinStock[r.coin_id]=r.stock); }
-    } catch(e){ console.warn('Stock load failed — using defaults'); }
-    subscribeToStock();
-  }
-
-  function getStock(id){ return coinStock[id]!==undefined?coinStock[id]:10; }
-  function getStatus(s){ return s===0?'out':s<=3?'low':'in-stock'; }
-  function getLabel(s){ return s===0?'OUT OF STOCK':s<=3?`LOW — ${s} LEFT`:`${s} IN STOCK`; }
-
-  // ── REALTIME ──
-  function subscribeToStock(){
-    try {
-      const ws=new WebSocket(`${SUPABASE_URL.replace('https','wss')}/realtime/v1/websocket?apikey=${SUPABASE_KEY}&vsn=1.0.0`);
-      ws.onopen=()=>ws.send(JSON.stringify({topic:'realtime:public:coin_inventory',event:'phx_join',payload:{},ref:'1'}));
-      ws.onmessage=(e)=>{
-        try{
-          const msg=JSON.parse(e.data);
-          if(msg.event==='UPDATE'&&msg.payload?.record){
-            const{coin_id,stock}=msg.payload.record;
-            if(coin_id!==undefined&&stock!==undefined){ coinStock[coin_id]=stock; updateCardLive(coin_id,stock); }
-          }
-        }catch(err){}
-      };
-      ws.onclose=()=>setTimeout(subscribeToStock,5000);
-    }catch(e){}
-  }
-
-  function updateCardLive(coinId,stock){
-    const card=document.getElementById(`card-${coinId}`);
-    if(!card) return;
-    const status=getStatus(stock);
-    card.classList.toggle('out-of-stock',status==='out');
-    card.classList.toggle('low-stock',status==='low');
-    const badge=card.querySelector('.stock-badge');
-    if(badge){badge.className=`stock-badge ${status==='in-stock'?'in-stock':status}`;badge.textContent=getLabel(stock);}
-    const btn=document.getElementById(`btn-${coinId}`);
-    if(btn){btn.disabled=status==='out';if(status==='out')btn.textContent='OUT OF STOCK';else if(btn.textContent==='OUT OF STOCK')btn.textContent='+ CART';}
-  }
-
-  // ── COIN SHOP FILTERS ──
-  let coinShopFilter = 'all';
-  let hideOutOfStock = false;
-
-  function setCoinShopFilter(filter, btn) {
-    coinShopFilter = filter;
-    document.querySelectorAll('.coin-fpill').forEach(b => {
-      b.classList.remove('active','active-green','active-amber','active-red');
-    });
-    const classMap = {all:'active', in:'active-green', low:'active-amber', out:'active-red'};
-    btn.classList.add(classMap[filter] || 'active');
-    reRenderCurrentView();
-  }
-
-  function toggleHideOut() {
-    hideOutOfStock = !hideOutOfStock;
-    const toggle = document.getElementById('hide-out-toggle');
-    toggle.classList.toggle('off', !hideOutOfStock);
-    reRenderCurrentView();
-  }
-
-  function reRenderCurrentView() {
-    if (currentTheme) showTheme(currentTheme);
-    else showAllCoins();
-  }
-
-  function filterCoinsByShopFilter(coins) {
-    return coins.filter(c => {
-      const stock = getStock(c.id);
-      const status = getStatus(stock);
-      if (hideOutOfStock && status === 'out') return false;
-      if (coinShopFilter === 'in' && status !== 'in-stock') return false;
-      if (coinShopFilter === 'low' && status !== 'low') return false;
-      if (coinShopFilter === 'out' && status !== 'out') return false;
-      return true;
-    });
-  }
 
   // ── VIEW NAVIGATION ──
   let currentTheme = null;
@@ -1098,14 +1010,11 @@
     document.getElementById('view-coins').classList.add('active');
     document.getElementById('shop-breadcrumb').textContent = 'Shop → Coins';
     document.getElementById('shop-hero-title').textContent = 'Coin Props';
-    document.getElementById('shop-hero-desc').textContent = 'Over 159 designs across 12 themes. All resin printed — grey by default for easy painting, limited stock of other colors available.';
+    document.getElementById('shop-hero-desc').textContent = 'Over 159 designs across 12 themes — made to order, all resin printed in grey by default for easy painting.';
     document.getElementById('coins-back-btn').textContent = '← ALL CATEGORIES';
-    // Show the theme picker container right away (with its loading message)
-    // instead of waiting on the stock fetch to finish — avoids a blank gap.
     document.getElementById('view-theme-picker').style.display = 'block';
     document.getElementById('view-coin-browser').style.display = 'none';
-    if(Object.keys(coinStock).length===0) loadCoinStock().then(()=>buildThemePicker());
-    else buildThemePicker();
+    buildThemePicker();
   }
 
   function goToCategories(){
@@ -1287,7 +1196,7 @@
   // All placeholder — designs in progress, no real products/prices yet.
   const TCG_GAMES = [
     {
-      id: 'mtg', name: 'Magic: The Gathering', sub: '5 mana colors',
+      id: 'mtg', name: 'Magic: The Gathering', sub: 'Mana colors & Commander decks',
       icon: `<circle r="42" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.4"/>
         <g transform="translate(0,-26)"><circle r="11" fill="none" stroke="#c9a84c" stroke-width="2"/></g>
         <g transform="translate(22,-13)"><path d="M -9 -8 L 9 -8 L 9 8 L -9 8 Z" fill="none" stroke="#c9a84c" stroke-width="2"/></g>
@@ -1296,6 +1205,38 @@
         <g transform="translate(-22,13)"><path d="M -8 -9 L 8 -3 L 4 9 L -8 6 Z" fill="none" stroke="#c9a84c" stroke-width="2"/></g>
         <g transform="translate(-22,-13)"><path d="M -8 0 L 0 -10 L 8 0 L 0 10 Z" fill="none" stroke="#c9a84c" stroke-width="2"/></g>`,
       groupLabel: 'MANA COLOR',
+      // Deck boxes only — commander sized, fits 115 double-sleeved or 135
+      // single-sleeved cards, with a top-loader slot for your commander.
+      groups: [
+        {
+          name: 'Mana Colors',
+          items: [
+            { name: 'Forest (Green)', stock: 2 },
+            { name: 'Island (Blue)', stock: 3 },
+            { name: 'Mountain (Red)', stock: 3 },
+            { name: 'Plains (White)', stock: 2 },
+            { name: 'Swamp (Black)', stock: 3 },
+          ]
+        },
+        {
+          name: 'Commander Decks',
+          items: [
+            { name: 'Ur-Dragon', stock: 1 },
+            { name: 'Chatterfang', stock: 1 },
+            { name: 'Ninjas', stock: 2 },
+            { name: 'Merfolk', stock: 1 },
+            { name: 'Kratos', stock: 1 },
+            { name: 'Dinosaurs', stock: 1 },
+            { name: 'Samurai', stock: 1 },
+            { name: 'Eldrazi', stock: 1 },
+            { name: 'Sonic', stock: 1 },
+            { name: 'Spiderman', stock: 1 },
+            { name: 'Voja / Wolves', stock: 1 },
+          ]
+        }
+      ],
+      // Flat fallback list, kept for HueForge art and any other view that
+      // expects a single subcats array rather than grouped deck box data.
       subcats: [
         { name: 'White', color: '#f0eada' },
         { name: 'Blue', color: '#4a7fb5' },
@@ -1325,25 +1266,58 @@
       ]
     },
     {
-      id: 'onepiece', name: 'One Piece', sub: 'deck boxes',
+      id: 'onepiece', name: 'One Piece', sub: 'Character deck boxes',
       icon: `<path d="M -28 -2 Q -28 -22 0 -28 Q 28 -22 28 -2 L 24 -2 Q 24 -18 0 -22 Q -24 -18 -24 -2 Z" fill="none" stroke="#c9a84c" stroke-width="2"/>
         <line x1="0" y1="-6" x2="0" y2="34" stroke="#8a7038" stroke-width="3"/>
         <path d="M -16 34 L 16 34 L 12 42 L -12 42 Z" fill="none" stroke="#8a7038" stroke-width="2"/>
         <circle cx="0" cy="-14" r="4" fill="#c9a84c"/>`,
-      groupLabel: 'COLLECTION',
+      groupLabel: 'CHARACTER',
+      groups: [
+        {
+          name: 'Character Decks',
+          items: [
+            { name: 'Luffy', stock: 1 },
+            { name: 'Zoro', stock: 1 },
+          ]
+        }
+      ],
       subcats: [
-        { name: 'Straw Hat Crew', color: '#c0392b' },
-        { name: 'Heart Pirates', color: '#e8c93a' },
-        { name: 'Whitebeard', color: '#3a3a3a' },
-        { name: 'Red-Haired Pirates', color: '#7a1f1f' },
+        { name: 'Luffy', color: '#c0392b' },
+        { name: 'Zoro', color: '#3a3a3a' },
       ]
     },
     {
-      id: 'riftbound', name: 'Riftbound', sub: 'rune types',
+      id: 'riftbound', name: 'Riftbound', sub: 'Runes & Champion decks',
       icon: `<path d="M 0 -32 L 28 -10 L 18 28 L -18 28 L -28 -10 Z" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linejoin="round"/>
         <path d="M 0 -32 L 0 28 M -28 -10 L 28 -10" stroke="#8a7038" stroke-width="1" opacity="0.5"/>
         <circle cx="0" cy="-6" r="5" fill="none" stroke="#d4541a" stroke-width="1.5"/>`,
       groupLabel: 'RUNE',
+      groups: [
+        {
+          name: 'Rune Boxes',
+          items: [
+            { name: 'Body', stock: 1 },
+            { name: 'Calm', stock: 1 },
+            { name: 'Chaos', stock: 1 },
+            { name: 'Fury', stock: 1 },
+            { name: 'Mind', stock: 1 },
+            { name: 'Order', stock: 1 },
+          ]
+        },
+        {
+          name: 'Champion Decks',
+          items: [
+            { name: 'Poppy', stock: 1 },
+            { name: "Kai'Sa", stock: 1 },
+            { name: 'Jinx', stock: 1 },
+            { name: 'Annie', stock: 1 },
+            { name: 'Viktor', stock: 1 },
+            { name: 'Vi', stock: 1 },
+            { name: 'Ahri', stock: 1 },
+            { name: 'Sett', stock: 1 },
+          ]
+        }
+      ],
       subcats: [
         { name: 'Fury', color: '#c0392b' },
         { name: 'Calm', color: '#4a90c4' },
@@ -1455,8 +1429,22 @@
     renderTcgBanner('tcg-sub-banner');
     document.getElementById('tcg-search-input').value = '';
     tcgCurrentPage = 1;
-    buildTcgProductGrid(tcgCurrentGame.subcats);
+    buildTcgProductGrid(getTcgProductList());
     tcgShowLevel('sub');
+  }
+
+  // Returns a flat list of products for the current game + product type.
+  // Deck boxes for games with grouped data (like MTG) carry a `group` tag
+  // so the grid can render group headers; everything else is ungrouped.
+  function getTcgProductList(){
+    if(tcgCurrentType.id === 'deckbox' && tcgCurrentGame.groups){
+      const flat = [];
+      tcgCurrentGame.groups.forEach(g => {
+        g.items.forEach(item => flat.push({ ...item, group: g.name }));
+      });
+      return flat;
+    }
+    return tcgCurrentGame.subcats;
   }
 
   function buildTcgProductGrid(products){
@@ -1476,14 +1464,22 @@
     const start = (tcgCurrentPage - 1) * TCG_PAGE_SIZE;
     const pageItems = products.slice(start, start + TCG_PAGE_SIZE);
 
-    grid.innerHTML = pageItems.map(p => `
-      <div class="tcg-sub-card">
+    let html = '';
+    let lastGroup = null;
+    pageItems.forEach(p => {
+      if(p.group && p.group !== lastGroup){
+        html += `<div class="tcg-group-header">${p.group}</div>`;
+        lastGroup = p.group;
+      }
+      html += `<div class="tcg-sub-card">
         <div class="tcg-sub-card-img">PHOTO COMING SOON</div>
         <div class="tcg-sub-card-body">
           <div class="tcg-sub-name">${p.name}</div>
-          <div class="tcg-sub-coming">COMING SOON</div>
+          <div class="tcg-stock-mto">MADE TO ORDER</div>
         </div>
-      </div>`).join('');
+      </div>`;
+    });
+    grid.innerHTML = html;
 
     renderTcgPager(totalPages, products.length);
   }
@@ -1502,7 +1498,8 @@
   function tcgGoToPage(page){
     tcgCurrentPage = page;
     const q = document.getElementById('tcg-search-input').value.trim().toLowerCase();
-    const filtered = q ? tcgCurrentGame.subcats.filter(p => p.name.toLowerCase().includes(q)) : tcgCurrentGame.subcats;
+    const all = getTcgProductList();
+    const filtered = q ? all.filter(p => p.name.toLowerCase().includes(q)) : all;
     buildTcgProductGrid(filtered);
     document.getElementById('tcg-level-sub').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -1510,7 +1507,8 @@
   function filterTcgProducts(){
     tcgCurrentPage = 1;
     const q = document.getElementById('tcg-search-input').value.trim().toLowerCase();
-    const filtered = tcgCurrentGame.subcats.filter(p => p.name.toLowerCase().includes(q));
+    const all = getTcgProductList();
+    const filtered = all.filter(p => p.name.toLowerCase().includes(q));
     buildTcgProductGrid(filtered);
   }
 
@@ -1589,28 +1587,24 @@
   }
 
   function renderCoins(coins, themeLabel){
-    const filtered = filterCoinsByShopFilter(coins);
-    document.getElementById('coins-section-count').textContent = `${filtered.length} OF ${coins.length} DESIGNS`;
-    document.getElementById('coin-grid-display').innerHTML = filtered.length
-      ? filtered.map(c=>coinCardHTML(c,themeLabel)).join('')
-      : `<div style="grid-column:1/-1;text-align:center;padding:3rem;font-style:italic;color:var(--muted);font-size:16px;">No coins match this filter.</div>`;
+    document.getElementById('coins-section-count').textContent = `${coins.length} DESIGNS`;
+    document.getElementById('coin-grid-display').innerHTML = coins.length
+      ? coins.map(c=>coinCardHTML(c,themeLabel)).join('')
+      : `<div style="grid-column:1/-1;text-align:center;padding:3rem;font-style:italic;color:var(--muted);font-size:16px;">No coins in this theme yet.</div>`;
   }
 
   function renderCoinsAll(coins){
-    const filtered = filterCoinsByShopFilter(coins);
-    document.getElementById('coins-section-count').textContent = `${filtered.length} OF ${coins.length} DESIGNS`;
-    document.getElementById('coin-grid-display').innerHTML = filtered.length
-      ? filtered.map(c=>coinCardHTML(c,c.themeLabel)).join('')
-      : `<div style="grid-column:1/-1;text-align:center;padding:3rem;font-style:italic;color:var(--muted);font-size:16px;">No coins match this filter.</div>`;
+    document.getElementById('coins-section-count').textContent = `${coins.length} DESIGNS`;
+    document.getElementById('coin-grid-display').innerHTML = coins.length
+      ? coins.map(c=>coinCardHTML(c,c.themeLabel)).join('')
+      : `<div style="grid-column:1/-1;text-align:center;padding:3rem;font-style:italic;color:var(--muted);font-size:16px;">No coins yet.</div>`;
   }
 
   function coinCardHTML(coin, themeLabel){
-    const stock=getStock(coin.id), status=getStatus(stock), label=getLabel(stock);
-    const isOut=status==='out', isLow=status==='low';
-    return `<div class="${['coin-card',isOut?'out-of-stock':'',isLow?'low-stock':''].filter(Boolean).join(' ')}" id="card-${coin.id}">
+    return `<div class="coin-card" id="card-${coin.id}">
       <div class="coin-img" onclick="openLightbox('${coin.id}','${themeLabel}')">
         ${coinImgHTML(coin)}
-        <span class="stock-badge ${status==='in-stock'?'in-stock':status}">${label}</span>
+        <span class="stock-badge made-to-order">MADE TO ORDER</span>
         <div class="coin-zoom-hint">🔍 VIEW</div>
       </div>
       <div class="coin-info">
@@ -1619,9 +1613,8 @@
         <div class="coin-footer">
           <div class="coin-price">$${COIN_PRICE.toFixed(2)}</div>
           <button class="coin-add-btn" id="btn-${coin.id}"
-            onclick="addToCart('${coin.id}','${coin.name}','${themeLabel}',${COIN_PRICE},this)"
-            ${isOut?'disabled':''}>
-            ${isOut?'OUT OF STOCK':'+ CART'}
+            onclick="addToCart('${coin.id}','${coin.name}','${themeLabel}',${COIN_PRICE},this)">
+            + CART
           </button>
         </div>
       </div>
@@ -1645,16 +1638,14 @@
     const imgEl = document.getElementById('lb-img');
     imgEl.innerHTML = coinImgHTML(coin);
 
-    // Stock
-    const stock=getStock(coinId), status=getStatus(stock), label=getLabel(stock);
+    // Made to order — always available
     const stockEl = document.getElementById('lb-stock');
-    stockEl.textContent = label;
-    stockEl.className = `lightbox-stock ${status==='in-stock'?'ok':status}`;
+    if(stockEl){ stockEl.textContent = 'MADE TO ORDER'; stockEl.className = 'lightbox-stock made-to-order'; }
 
     // Button
     const btn = document.getElementById('lb-add-btn');
-    btn.disabled = status==='out';
-    btn.textContent = status==='out' ? 'OUT OF STOCK' : '+ ADD TO CART';
+    btn.disabled = false;
+    btn.textContent = '+ ADD TO CART';
     btn.classList.remove('added');
 
     // Reset material opts
