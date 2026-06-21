@@ -134,6 +134,11 @@
     .tcg-sub-name{font-family:var(--serif);font-size:14px;color:var(--soft);letter-spacing:0.04em;margin-bottom:6px;}
     .tcg-sub-coming{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;}
     .tcg-sub-empty{text-align:center;padding:3rem 1rem;font-family:var(--serif);font-size:13px;color:var(--muted);font-style:italic;letter-spacing:0.05em;}
+    .tcg-pager{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:1.75rem;flex-wrap:wrap;}
+    .tcg-page-btn{font-family:var(--serif);font-size:11px;letter-spacing:0.1em;color:var(--gold);background:var(--surface2);border:1px solid var(--border);padding:8px 16px;border-radius:var(--radius);cursor:pointer;transition:border-color 0.15s,color 0.15s;}
+    .tcg-page-btn:hover:not(:disabled){border-color:var(--border2);}
+    .tcg-page-btn:disabled{opacity:0.35;cursor:default;color:var(--muted);}
+    .tcg-page-info{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.06em;}
 
     /* ── CURRENCY LIGHTBOX ── */
     .curr-lightbox{display:none;position:fixed;inset:0;z-index:400;background:rgba(8,9,12,0.92);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:2rem;}
@@ -670,6 +675,7 @@
         </div>
         <div class="tcg-sub-grid" id="tcg-sub-grid"></div>
         <div class="tcg-sub-empty" id="tcg-sub-empty" style="display:none;">No products yet — designs are in progress for this section.</div>
+        <div class="tcg-pager" id="tcg-pager"></div>
       </div>
     </div>
     <!-- ════════════ END TCG VIEW ════════════ -->
@@ -780,8 +786,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1437,6 +1443,9 @@
     tcgShowLevel('game');
   }
 
+  const TCG_PAGE_SIZE = 15;
+  let tcgCurrentPage = 1;
+
   function pickTcgType(typeId){
     tcgCurrentType = TCG_PRODUCT_TYPES.find(t=>t.id===typeId);
     if(!tcgCurrentType) return;
@@ -1445,6 +1454,7 @@
     document.getElementById('tcg-back-btn').textContent = '← DECK BOXES / ART';
     renderTcgBanner('tcg-sub-banner');
     document.getElementById('tcg-search-input').value = '';
+    tcgCurrentPage = 1;
     buildTcgProductGrid(tcgCurrentGame.subcats);
     tcgShowLevel('sub');
   }
@@ -1452,13 +1462,21 @@
   function buildTcgProductGrid(products){
     const grid = document.getElementById('tcg-sub-grid');
     const empty = document.getElementById('tcg-sub-empty');
+    const pager = document.getElementById('tcg-pager');
     if(!products.length){
       grid.innerHTML = '';
       empty.style.display = 'block';
+      pager.innerHTML = '';
       return;
     }
     empty.style.display = 'none';
-    grid.innerHTML = products.map(p => `
+
+    const totalPages = Math.max(1, Math.ceil(products.length / TCG_PAGE_SIZE));
+    if(tcgCurrentPage > totalPages) tcgCurrentPage = totalPages;
+    const start = (tcgCurrentPage - 1) * TCG_PAGE_SIZE;
+    const pageItems = products.slice(start, start + TCG_PAGE_SIZE);
+
+    grid.innerHTML = pageItems.map(p => `
       <div class="tcg-sub-card">
         <div class="tcg-sub-card-img">PHOTO COMING SOON</div>
         <div class="tcg-sub-card-body">
@@ -1466,9 +1484,31 @@
           <div class="tcg-sub-coming">COMING SOON</div>
         </div>
       </div>`).join('');
+
+    renderTcgPager(totalPages, products.length);
+  }
+
+  function renderTcgPager(totalPages, totalCount){
+    const pager = document.getElementById('tcg-pager');
+    if(totalPages <= 1){ pager.innerHTML = ''; return; }
+    const start = (tcgCurrentPage - 1) * TCG_PAGE_SIZE + 1;
+    const end = Math.min(tcgCurrentPage * TCG_PAGE_SIZE, totalCount);
+    pager.innerHTML = `
+      <button class="tcg-page-btn" onclick="tcgGoToPage(${tcgCurrentPage - 1})" ${tcgCurrentPage===1?'disabled':''}>← PREV</button>
+      <span class="tcg-page-info">Showing ${start}–${end} of ${totalCount} · Page ${tcgCurrentPage} of ${totalPages}</span>
+      <button class="tcg-page-btn" onclick="tcgGoToPage(${tcgCurrentPage + 1})" ${tcgCurrentPage===totalPages?'disabled':''}>NEXT →</button>`;
+  }
+
+  function tcgGoToPage(page){
+    tcgCurrentPage = page;
+    const q = document.getElementById('tcg-search-input').value.trim().toLowerCase();
+    const filtered = q ? tcgCurrentGame.subcats.filter(p => p.name.toLowerCase().includes(q)) : tcgCurrentGame.subcats;
+    buildTcgProductGrid(filtered);
+    document.getElementById('tcg-level-sub').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function filterTcgProducts(){
+    tcgCurrentPage = 1;
     const q = document.getElementById('tcg-search-input').value.trim().toLowerCase();
     const filtered = tcgCurrentGame.subcats.filter(p => p.name.toLowerCase().includes(q));
     buildTcgProductGrid(filtered);
