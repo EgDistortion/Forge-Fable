@@ -116,93 +116,6 @@
       font-style: italic;
     }
 
-    /* ── GALLERY PREVIEW ── */
-    .gallery-preview { padding: 4rem 0; border-bottom: 1px solid var(--border); }
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-    .section-head-title {
-      font-family: var(--serif);
-      font-size: 17px;
-      color: var(--gold);
-      letter-spacing: 0.22em;
-    }
-    .section-head-link {
-      font-family: var(--serif);
-      font-size: 17px;
-      color: var(--muted);
-      letter-spacing: 0.12em;
-      transition: color 0.2s;
-    }
-    .section-head-link:hover { color: var(--gold); }
-
-    .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-    .preview-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      cursor: pointer;
-      transition: border-color 0.2s;
-      text-decoration: none;
-      display: block;
-    }
-    .preview-card:hover { border-color: var(--border2); }
-    .preview-img {
-      height: 180px;
-      background: var(--surface2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-    }
-    /* When real photos are added, replace background with img tag */
-    .preview-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .preview-img-placeholder {
-      opacity: 0.2;
-      font-family: var(--serif);
-      font-size: 17px;
-      color: var(--gold);
-      letter-spacing: 0.15em;
-      text-align: center;
-      padding: 1rem;
-    }
-    .preview-badge {
-      position: absolute;
-      bottom: 8px;
-      left: 8px;
-      font-family: var(--serif);
-      font-size: 17px;
-      letter-spacing: 0.1em;
-      padding: 3px 8px;
-      background: rgba(13,15,20,0.85);
-    }
-    .preview-info { padding: 0.9rem 1rem; }
-    .preview-name {
-      font-size: 17px;
-      color: var(--text);
-      font-style: italic;
-      margin-bottom: 3px;
-    }
-    .preview-meta {
-      font-family: var(--serif);
-      font-size: 17px;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-    }
-
     /* ── CTA BAND ── */
     .cta-band {
       padding: 4rem 0;
@@ -226,13 +139,11 @@
       .feature:nth-child(4) { border-top: 1px solid var(--border); }
       .feature:nth-child(4) { border-right: none; }
       .feature:nth-child(5) { border-top: 1px solid var(--border); border-right: none; }
-      .preview-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 520px) {
       .features { grid-template-columns: 1fr; }
       .feature { border-right: none; border-top: 1px solid var(--border); }
       .features .feature:first-child { border-top: none; }
-      .preview-grid { grid-template-columns: 1fr; }
     }
 
     /* ── CART NAV ICON ── */
@@ -397,66 +308,7 @@
     </div>
   </div>
 
-  <!-- GALLERY PREVIEW -->
-  <section class="gallery-preview">
-    <div class="container">
-      <div class="section-head">
-        <div class="section-head-title">FROM THE WORKSHOP</div>
-        <a href="gallery.html" class="section-head-link">VIEW FULL GALLERY →</a>
-      </div>
-      <div class="preview-grid">
-
-        <!-- CARD 1 — replace .preview-img-placeholder with <img src="images/gallery/your-photo.jpg" alt="..."> -->
-        <a href="gallery.html" class="preview-card">
-          <div class="preview-img">
-            <div class="preview-img-placeholder">YOUR PHOTO<br>HERE</div>
-            <span class="preview-badge pill pill-resin">RESIN</span>
-          </div>
-          <div class="preview-info">
-            <div class="preview-name">Half-orc barbarian</div>
-            <div class="preview-meta">32MM · 4K RESIN</div>
-          </div>
-        </a>
-
-        <!-- CARD 2 -->
-        <a href="gallery.html" class="preview-card">
-          <div class="preview-img">
-            <div class="preview-img-placeholder">YOUR PHOTO<br>HERE</div>
-            <span class="preview-badge pill pill-resin">RESIN</span>
-          </div>
-          <div class="preview-info">
-            <div class="preview-name">Dragon wyrmling</div>
-            <div class="preview-meta">54MM · 4K RESIN</div>
-          </div>
-        </a>
-
-        <!-- CARD 3 -->
-        <a href="gallery.html" class="preview-card">
-          <div class="preview-img">
-            <div class="preview-img-placeholder">YOUR PHOTO<br>HERE</div>
-            <span class="preview-badge pill pill-pla">PLA</span>
-          </div>
-          <div class="preview-info">
-            <div class="preview-name">Dungeon entrance</div>
-            <div class="preview-meta">TERRAIN · PLA BASIC</div>
-          </div>
-        </a>
-
-        <!-- CARD 4 -->
-        <a href="gallery.html" class="preview-card">
-          <div class="preview-img">
-            <div class="preview-img-placeholder">YOUR PHOTO<br>HERE</div>
-            <span class="preview-badge pill pill-resin">RESIN</span>
-          </div>
-          <div class="preview-info">
-            <div class="preview-name">Tiefling warlock, 75mm</div>
-            <div class="preview-meta">DISPLAY · ULTRA FINE</div>
-          </div>
-        </a>
-
-      </div>
-    </div>
-  </section>
+  <!-- GALLERY PREVIEW removed — full gallery already exists at gallery.html -->
 
   <!-- HOW IT WORKS -->
   <section style="padding:4rem 0;border-bottom:1px solid var(--border);">
