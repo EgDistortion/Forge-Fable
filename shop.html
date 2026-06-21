@@ -123,11 +123,17 @@
     .tcg-type-name{font-family:var(--serif);font-size:15px;color:var(--gold);letter-spacing:0.1em;margin-bottom:6px;}
     .tcg-type-desc{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;}
 
-    .tcg-sub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
-    .tcg-sub-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1rem;text-align:center;}
-    .tcg-sub-swatch{width:36px;height:36px;border-radius:50%;margin:0 auto 0.85rem;border:1.5px solid var(--border2);}
-    .tcg-sub-name{font-family:var(--serif);font-size:13px;color:var(--soft);letter-spacing:0.05em;margin-bottom:4px;}
+    .tcg-search-wrap{margin-bottom:1.5rem;}
+    .tcg-search-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:11px 16px;font-size:15px;color:var(--text);font-family:var(--body);outline:none;transition:border-color 0.15s;}
+    .tcg-search-input:focus{border-color:var(--border2);}
+    .tcg-search-input::placeholder{color:var(--muted);font-style:italic;}
+    .tcg-sub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;}
+    .tcg-sub-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+    .tcg-sub-card-img{height:140px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-align:center;padding:0 1rem;}
+    .tcg-sub-card-body{padding:1rem 1.1rem;}
+    .tcg-sub-name{font-family:var(--serif);font-size:14px;color:var(--soft);letter-spacing:0.04em;margin-bottom:6px;}
     .tcg-sub-coming{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;}
+    .tcg-sub-empty{text-align:center;padding:3rem 1rem;font-family:var(--serif);font-size:13px;color:var(--muted);font-style:italic;letter-spacing:0.05em;}
 
     /* ── CURRENCY LIGHTBOX ── */
     .curr-lightbox{display:none;position:fixed;inset:0;z-index:400;background:rgba(8,9,12,0.92);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:2rem;}
@@ -653,16 +659,18 @@
 
       <!-- LEVEL 2: DECK BOXES vs HUEFORGE -->
       <div id="tcg-level-type" style="display:none;">
-        <button class="back-btn" onclick="tcgBackToGames()" style="margin-bottom:1rem;">← ALL GAMES</button>
         <div class="tcg-game-banner" id="tcg-type-banner"></div>
         <div class="tcg-type-grid" id="tcg-type-grid"></div>
       </div>
 
-      <!-- LEVEL 3: SUBCATEGORY GRID (mana colors / energy types / runes) -->
+      <!-- LEVEL 3: PRODUCT LISTING + SEARCH -->
       <div id="tcg-level-sub" style="display:none;">
-        <button class="back-btn" onclick="tcgBackToType()" style="margin-bottom:1rem;">← DECK BOXES / ART</button>
         <div class="tcg-game-banner" id="tcg-sub-banner"></div>
+        <div class="tcg-search-wrap">
+          <input type="text" id="tcg-search-input" class="tcg-search-input" placeholder="Search products by name…" oninput="filterTcgProducts()">
+        </div>
         <div class="tcg-sub-grid" id="tcg-sub-grid"></div>
+        <div class="tcg-sub-empty" id="tcg-sub-empty" style="display:none;">No products yet — designs are in progress for this section.</div>
       </div>
     </div>
     <!-- ════════════ END TCG VIEW ════════════ -->
@@ -773,8 +781,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1437,18 +1445,34 @@
     document.getElementById('shop-hero-desc').textContent = tcgCurrentType.desc;
     document.getElementById('tcg-back-btn').textContent = '← DECK BOXES / ART';
     renderTcgBanner('tcg-sub-banner');
-    buildTcgSubGrid();
+    document.getElementById('tcg-search-input').value = '';
+    buildTcgProductGrid(tcgCurrentGame.subcats);
     tcgShowLevel('sub');
   }
 
-  function buildTcgSubGrid(){
+  function buildTcgProductGrid(products){
     const grid = document.getElementById('tcg-sub-grid');
-    grid.innerHTML = tcgCurrentGame.subcats.map(s => `
+    const empty = document.getElementById('tcg-sub-empty');
+    if(!products.length){
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    grid.innerHTML = products.map(p => `
       <div class="tcg-sub-card">
-        <div class="tcg-sub-swatch" style="background:${s.color};"></div>
-        <div class="tcg-sub-name">${s.name}</div>
-        <div class="tcg-sub-coming">COMING SOON</div>
+        <div class="tcg-sub-card-img">PHOTO COMING SOON</div>
+        <div class="tcg-sub-card-body">
+          <div class="tcg-sub-name">${p.name}</div>
+          <div class="tcg-sub-coming">COMING SOON</div>
+        </div>
       </div>`).join('');
+  }
+
+  function filterTcgProducts(){
+    const q = document.getElementById('tcg-search-input').value.trim().toLowerCase();
+    const filtered = tcgCurrentGame.subcats.filter(p => p.name.toLowerCase().includes(q));
+    buildTcgProductGrid(filtered);
   }
 
   function tcgBackToType(){
