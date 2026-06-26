@@ -137,12 +137,43 @@
     .tcg-group-header:not(:first-child){margin-top:0.75rem;}
     .tcg-stock-mto{font-family:var(--serif);font-size:9px;color:var(--gold);letter-spacing:0.1em;}
     .tcg-sub-price{font-family:var(--serif);font-size:16px;color:var(--gold2);margin-bottom:8px;}
+    .tcg-card-color-label{display:block;font-size:11px;color:var(--muted);font-style:italic;margin-bottom:4px;}
     .tcg-color-select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--body);font-size:13px;padding:6px 8px;margin-bottom:8px;outline:none;}
     .tcg-color-select:focus{border-color:var(--border2);}
     .tcg-add-btn{width:100%;padding:8px;font-family:var(--serif);font-size:11px;letter-spacing:0.1em;background:var(--gold);color:#0d0f14;border:none;cursor:pointer;border-radius:var(--radius);transition:background 0.2s;}
     .tcg-add-btn:hover{background:var(--gold2);}
     .tcg-add-btn.added{background:var(--green);}
     .tcg-sub-card-img img{width:100%;height:100%;object-fit:cover;}
+    .tcg-sub-card{cursor:pointer;}
+    .tcg-sub-card-img{position:relative;}
+
+    /* ── TCG PRODUCT LIGHTBOX ── */
+    .tcg-lightbox{display:none;position:fixed;inset:0;z-index:400;background:rgba(8,9,12,0.92);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:2rem;}
+    .tcg-lightbox.open{display:flex;}
+    .tcg-lightbox-inner{position:relative;max-width:640px;width:100%;max-height:88vh;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;}
+    .tcg-lb-close{position:absolute;top:12px;right:14px;z-index:2;background:rgba(0,0,0,0.5);border:1px solid var(--border2);color:var(--soft);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1;}
+    .tcg-lb-close:hover{color:var(--gold);border-color:var(--gold);}
+    .tcg-lb-img-wrap{position:relative;background:var(--bg);display:flex;align-items:center;justify-content:center;min-height:320px;max-height:50vh;overflow:hidden;}
+    .tcg-lb-img-wrap img{width:100%;height:100%;object-fit:contain;max-height:50vh;}
+    .tcg-lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);border:1px solid var(--border2);color:var(--soft);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;}
+    .tcg-lb-nav:hover{color:var(--gold);border-color:var(--gold);}
+    .tcg-lb-nav:disabled{opacity:0.25;cursor:default;}
+    .tcg-lb-prev{left:14px;}
+    .tcg-lb-next{right:14px;}
+    .tcg-lb-dots{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:6px;}
+    .tcg-lb-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);cursor:pointer;border:none;padding:0;transition:background 0.15s;}
+    .tcg-lb-dot.active{background:var(--gold2);}
+    .tcg-lb-info{padding:1.5rem 2rem;}
+    .tcg-lb-name{font-family:var(--serif);font-size:20px;color:var(--gold2);margin-bottom:0.5rem;}
+    .tcg-lb-price{font-family:var(--serif);font-size:24px;color:var(--gold);margin-bottom:1.1rem;}
+    .tcg-lb-color-wrap{margin-bottom:1.1rem;}
+    .tcg-lb-color-label{display:block;font-size:13px;color:var(--muted);font-style:italic;margin-bottom:6px;}
+    @media (max-width:600px){
+      .tcg-lightbox-inner{max-height:92vh;overflow-y:auto;}
+      .tcg-lb-img-wrap{min-height:240px;max-height:36vh;}
+      .tcg-lb-img-wrap img{max-height:36vh;}
+      .tcg-lb-info{padding:1.5rem;}
+    }
     .tcg-sub-empty{text-align:center;padding:3rem 1rem;font-family:var(--serif);font-size:13px;color:var(--muted);font-style:italic;letter-spacing:0.05em;}
     .tcg-pager{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:1.75rem;flex-wrap:wrap;}
     .tcg-page-btn{font-family:var(--serif);font-size:11px;letter-spacing:0.1em;color:var(--gold);background:var(--surface2);border:1px solid var(--border);padding:8px 16px;border-radius:var(--radius);cursor:pointer;transition:border-color 0.15s,color 0.15s;}
@@ -680,6 +711,28 @@
         <div class="tcg-sub-empty" id="tcg-sub-empty" style="display:none;">No products yet — designs are in progress for this section.</div>
         <div class="tcg-pager" id="tcg-pager"></div>
       </div>
+
+      <!-- TCG PRODUCT LIGHTBOX -->
+      <div class="tcg-lightbox" id="tcg-lightbox" onclick="closeTcgLightbox(event)">
+        <div class="tcg-lightbox-inner">
+          <button class="tcg-lb-close" onclick="closeTcgLightbox()">✕</button>
+          <div class="tcg-lb-img-wrap">
+            <img id="tcg-lb-img" src="" alt="">
+            <button class="tcg-lb-nav tcg-lb-prev" onclick="navTcgLightbox(-1)">‹</button>
+            <button class="tcg-lb-nav tcg-lb-next" onclick="navTcgLightbox(1)">›</button>
+            <div class="tcg-lb-dots" id="tcg-lb-dots"></div>
+          </div>
+          <div class="tcg-lb-info">
+            <div class="tcg-lb-name" id="tcg-lb-name"></div>
+            <div class="tcg-lb-price" id="tcg-lb-price"></div>
+            <div class="tcg-lb-color-wrap" id="tcg-lb-color-wrap">
+              <label class="tcg-lb-color-label" for="tcg-lb-color-select">Choose the print color for this deck box:</label>
+              <select class="tcg-color-select" id="tcg-lb-color-select"></select>
+            </div>
+            <button class="tcg-add-btn" id="tcg-lb-add-btn" onclick="addTcgLightboxToCart()">+ ADD TO CART</button>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- ════════════ END TCG VIEW ════════════ -->
 
@@ -789,8 +842,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1380,6 +1433,10 @@
 
   let tcgCurrentGame = null;
   let tcgCurrentType = null;
+  let tcgCurrentProductList = [];
+  let tcgLbProduct = null;
+  let tcgLbIndex = 0;
+  let tcgLbPhotoIndex = 0;
 
   function goToTCG(){
     document.getElementById('view-categories').classList.remove('active');
@@ -1489,6 +1546,7 @@
   }
 
   function buildTcgProductGrid(products){
+    tcgCurrentProductList = products;
     const grid = document.getElementById('tcg-sub-grid');
     const empty = document.getElementById('tcg-sub-empty');
     const pager = document.getElementById('tcg-pager');
@@ -1513,7 +1571,8 @@
         lastGroup = p.group;
       }
       const cardId = `tcg-${tcgCurrentGame.id}-${tcgCurrentType.id}-${start+idx}`;
-      const imgHTML = p.img
+      const hasPhoto = !!p.img;
+      const imgHTML = hasPhoto
         ? `<img src="images/tcg/${p.img}-1.jpg" alt="${p.name}" onerror="this.onerror=null;this.src='images/tcg/${p.img}.jpg';this.onerror=function(){this.parentElement.innerHTML='PHOTO COMING SOON';};">`
         : 'PHOTO COMING SOON';
       const priceHTML = (p.price !== undefined && p.price !== null)
@@ -1521,14 +1580,16 @@
         : p.price === null
           ? `<div class="tcg-stock-mto">PRICE COMING SOON</div>`
           : `<div class="tcg-stock-mto">MADE TO ORDER</div>`;
-      const colorPickerHTML = (p.price !== undefined && p.price !== null && tcgCurrentType.id === 'deckbox') ? `
-        <select class="tcg-color-select" id="${cardId}-color">
+      const isDeckbox = tcgCurrentType.id === 'deckbox';
+      const colorPickerHTML = (p.price !== undefined && p.price !== null && isDeckbox) ? `
+        <label class="tcg-card-color-label" for="${cardId}-color">Deck box color:</label>
+        <select class="tcg-color-select" id="${cardId}-color" onclick="event.stopPropagation()">
           ${DECKBOX_COLORS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('')}
         </select>` : '';
       const addBtnHTML = (p.price !== undefined && p.price !== null)
-        ? `<button class="tcg-add-btn" id="${cardId}-btn" onclick="addTcgToCart('${cardId}','${p.name.replace(/'/g,"\\'")}',${p.price})">+ CART</button>`
+        ? `<button class="tcg-add-btn" id="${cardId}-btn" onclick="event.stopPropagation();addTcgToCart('${cardId}','${p.name.replace(/'/g,"\\'")}',${p.price})">+ CART</button>`
         : '';
-      html += `<div class="tcg-sub-card">
+      html += `<div class="tcg-sub-card" onclick="openTcgLightbox('${cardId}', ${idx + start})">
         <div class="tcg-sub-card-img">${imgHTML}</div>
         <div class="tcg-sub-card-body">
           <div class="tcg-sub-name">${p.name}</div>
@@ -1567,6 +1628,148 @@
       setTimeout(()=>{ btn.textContent = '+ CART'; btn.classList.remove('added'); }, 1500);
     }
   }
+
+  // ── TCG PRODUCT LIGHTBOX ──
+  function openTcgLightbox(cardId, productIndex){
+    tcgLbProduct = tcgCurrentProductList[productIndex];
+    tcgLbIndex = productIndex;
+    tcgLbPhotoIndex = 0;
+    if(!tcgLbProduct) return;
+    renderTcgLightbox(cardId);
+    document.getElementById('tcg-lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function renderTcgLightbox(cardId){
+    const p = tcgLbProduct;
+    const isDeckbox = tcgCurrentType.id === 'deckbox';
+    const hasPhoto = !!p.img;
+
+    // Photos — deck boxes have up to 2 (-1, -2), HueForge has 1
+    const photos = [];
+    if(hasPhoto){
+      photos.push(`images/tcg/${p.img}-1.jpg`);
+      if(isDeckbox) photos.push(`images/tcg/${p.img}-2.jpg`);
+    }
+    tcgLbProduct._photos = photos;
+
+    const imgEl = document.getElementById('tcg-lb-img');
+    if(photos.length){
+      imgEl.style.display = 'block';
+      imgEl.src = photos[tcgLbPhotoIndex];
+      imgEl.alt = p.name;
+      imgEl.onerror = function(){
+        // Try the no-suffix single-photo fallback, then give up gracefully
+        if(!this.dataset.triedFallback){
+          this.dataset.triedFallback = '1';
+          this.src = `images/tcg/${p.img}.jpg`;
+        } else {
+          this.style.display = 'none';
+        }
+      };
+    } else {
+      imgEl.style.display = 'none';
+    }
+
+    document.getElementById('tcg-lb-name').textContent = p.name;
+    const priceEl = document.getElementById('tcg-lb-price');
+    priceEl.textContent = (p.price !== undefined && p.price !== null)
+      ? `$${p.price.toFixed(2)}`
+      : (p.price === null ? 'PRICE COMING SOON' : 'MADE TO ORDER');
+
+    // Color picker — deck boxes only
+    const colorWrap = document.getElementById('tcg-lb-color-wrap');
+    if(isDeckbox && p.price !== undefined && p.price !== null){
+      colorWrap.style.display = 'block';
+      document.getElementById('tcg-lb-color-select').innerHTML =
+        DECKBOX_COLORS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
+    } else {
+      colorWrap.style.display = 'none';
+    }
+
+    // Add to cart button
+    const addBtn = document.getElementById('tcg-lb-add-btn');
+    if(p.price !== undefined && p.price !== null){
+      addBtn.style.display = 'block';
+      addBtn.dataset.cardId = cardId;
+      addBtn.dataset.name = p.name;
+      addBtn.dataset.price = p.price;
+      addBtn.textContent = '+ ADD TO CART';
+      addBtn.classList.remove('added');
+    } else {
+      addBtn.style.display = 'none';
+    }
+
+    // Carousel dots + arrows
+    const dotsEl = document.getElementById('tcg-lb-dots');
+    if(photos.length > 1){
+      dotsEl.innerHTML = photos.map((_,i)=>
+        `<button class="tcg-lb-dot ${i===tcgLbPhotoIndex?'active':''}" onclick="goToTcgLightboxPhoto(${i})"></button>`
+      ).join('');
+    } else {
+      dotsEl.innerHTML = '';
+    }
+    document.querySelector('.tcg-lb-prev').style.display = photos.length > 1 ? 'flex' : 'none';
+    document.querySelector('.tcg-lb-next').style.display = photos.length > 1 ? 'flex' : 'none';
+  }
+
+  function navTcgLightbox(dir){
+    if(!tcgLbProduct || !tcgLbProduct._photos || tcgLbProduct._photos.length < 2) return;
+    const len = tcgLbProduct._photos.length;
+    tcgLbPhotoIndex = (tcgLbPhotoIndex + dir + len) % len;
+    renderTcgLightbox(document.getElementById('tcg-lb-add-btn').dataset.cardId);
+  }
+
+  function goToTcgLightboxPhoto(i){
+    tcgLbPhotoIndex = i;
+    renderTcgLightbox(document.getElementById('tcg-lb-add-btn').dataset.cardId);
+  }
+
+  function addTcgLightboxToCart(){
+    const btn = document.getElementById('tcg-lb-add-btn');
+    const cardId = btn.dataset.cardId;
+    const name = btn.dataset.name;
+    const price = parseFloat(btn.dataset.price);
+    const colorSelect = document.getElementById('tcg-lb-color-select');
+    const isDeckbox = tcgCurrentType.id === 'deckbox';
+    const color = (isDeckbox && colorSelect) ? colorSelect.value : '';
+    const cartId = `tcg-${cardId}-${color}`;
+    const fullName = color ? `${name} (${color})` : name;
+    const ex = cart.find(i=>i.id===cartId);
+    if(ex){ ex.qty++; }
+    else {
+      cart.push({
+        id: cartId,
+        name: fullName,
+        theme: `${tcgCurrentGame.name} — ${tcgCurrentType.name}`,
+        price: price,
+        qty: 1,
+        isCoin: false
+      });
+    }
+    saveCart(); renderCart(); updateBadge(); renderPayPalButton();
+    btn.textContent = '✓ ADDED'; btn.classList.add('added');
+    setTimeout(()=>{ btn.textContent = '+ ADD TO CART'; btn.classList.remove('added'); }, 1500);
+    // Keep the matching card's button in sync too, if visible
+    const cardBtn = document.getElementById(`${cardId}-btn`);
+    if(cardBtn){
+      cardBtn.textContent = '✓ ADDED'; cardBtn.classList.add('added');
+      setTimeout(()=>{ cardBtn.textContent = '+ CART'; cardBtn.classList.remove('added'); }, 1500);
+    }
+  }
+
+  function closeTcgLightbox(e){
+    if(e && e.target.id !== 'tcg-lightbox' && !e.target.classList.contains('tcg-lb-close')) return;
+    document.getElementById('tcg-lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    if(!document.getElementById('tcg-lightbox').classList.contains('open')) return;
+    if(e.key === 'Escape') closeTcgLightbox();
+    if(e.key === 'ArrowLeft') navTcgLightbox(-1);
+    if(e.key === 'ArrowRight') navTcgLightbox(1);
+  });
 
   function renderTcgPager(totalPages, totalCount){
     const pager = document.getElementById('tcg-pager');
