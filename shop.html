@@ -140,8 +140,8 @@
     .tcg-sub-card-body{padding:1rem 1.1rem;}
     .tcg-sub-name{font-family:var(--serif);font-size:14px;color:var(--soft);letter-spacing:0.04em;margin-bottom:6px;}
     .tcg-sub-coming{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;}
-    .tcg-group-header{grid-column:1/-1;font-family:var(--serif);font-size:12px;color:var(--gold);letter-spacing:0.14em;padding:0.5rem 0 0.25rem;border-bottom:1px solid var(--border);margin-bottom:0.25rem;}
-    .tcg-group-header:not(:first-child){margin-top:0.75rem;}
+    .tcg-group-header{grid-column:1/-1;font-family:var(--serif);font-size:13px;color:var(--gold);letter-spacing:0.18em;padding:0.75rem 0 0.5rem;border-bottom:1.5px solid var(--border2);margin-bottom:0.5rem;margin-top:0.75rem;}
+    .tcg-group-header:first-child{margin-top:0;}
     .tcg-stock-mto{font-family:var(--serif);font-size:9px;color:var(--gold);letter-spacing:0.1em;}
     .tcg-sub-price{font-family:var(--serif);font-size:16px;color:var(--gold2);margin-bottom:8px;}
     .tcg-bundle-hint{font-size:11px;color:var(--muted);font-style:italic;}
@@ -848,8 +848,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1321,7 +1321,7 @@
         { name: 'Prism Swamp', price: 35, bundlePrice: 60, img: 'mtg-deckbox-swamp-prism', style: 'Prism', category: 'land', colors: ['Swamp'] },
 
         // ── COMMANDER BOXES ──
-        { name: 'Merfolk', price: 25, img: 'mtg-deckbox-merfolk', style: 'Echo', category: 'commander', colors: ['Island','Forest'] },
+        { name: 'Merfolk — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-merfolk', style: 'Prism', category: 'commander', colors: ['Island','Forest'] },
         { name: 'Chatterfang — Accented', price: 25, img: 'mtg-deckbox-chatterfang-accented', colorPickers: 'accent', style: 'Accented', category: 'commander', colors: ['Swamp','Forest'] },
         { name: 'Dinosaurs — Accented', price: 25, img: 'mtg-deckbox-dinosaurs-accented', colorPickers: 'accent', style: 'Accented', category: 'commander', colors: ['Forest','Plains','Mountain'] },
         { name: 'Eldrazi — Accented', price: 25, img: 'mtg-deckbox-eldrazi-accented', colorPickers: 'accent', style: 'Accented', category: 'commander', colors: ['Colorless'] },
@@ -1654,10 +1654,26 @@
     }
     empty.style.display = 'none';
 
-    const totalPages = Math.max(1, Math.ceil(products.length / TCG_PAGE_SIZE));
+    // Paginate by whole groups, never splitting a style/category section
+    // across two pages — a hard item-count cutoff looked broken mid-group.
+    const groupedPages = [];
+    let currentPageItems = [];
+    let currentPageGroup = null;
+    products.forEach(p => {
+      const startsNewGroup = p.group && p.group !== currentPageGroup;
+      if(startsNewGroup && currentPageItems.length >= TCG_PAGE_SIZE){
+        groupedPages.push(currentPageItems);
+        currentPageItems = [];
+      }
+      currentPageItems.push(p);
+      if(p.group) currentPageGroup = p.group;
+    });
+    if(currentPageItems.length) groupedPages.push(currentPageItems);
+
+    const totalPages = Math.max(1, groupedPages.length);
     if(tcgCurrentPage > totalPages) tcgCurrentPage = totalPages;
-    const start = (tcgCurrentPage - 1) * TCG_PAGE_SIZE;
-    const pageItems = products.slice(start, start + TCG_PAGE_SIZE);
+    const pageItems = groupedPages[tcgCurrentPage - 1] || [];
+    const start = groupedPages.slice(0, tcgCurrentPage - 1).reduce((s,p)=>s+p.length, 0);
 
     let html = '';
     let lastGroup = null;
@@ -1711,7 +1727,7 @@
     });
     grid.innerHTML = html;
 
-    renderTcgPager(totalPages, products.length);
+    renderTcgPager(totalPages, products.length, start, pageItems.length);
   }
 
   function addTcgToCart(cardId, name, price, bundlePrice){
@@ -1921,11 +1937,11 @@
     if(e.key === 'ArrowRight') navTcgLightbox(1);
   });
 
-  function renderTcgPager(totalPages, totalCount){
+  function renderTcgPager(totalPages, totalCount, pageStart, pageLength){
     const pager = document.getElementById('tcg-pager');
     if(totalPages <= 1){ pager.innerHTML = ''; return; }
-    const start = (tcgCurrentPage - 1) * TCG_PAGE_SIZE + 1;
-    const end = Math.min(tcgCurrentPage * TCG_PAGE_SIZE, totalCount);
+    const start = pageStart + 1;
+    const end = pageStart + pageLength;
     pager.innerHTML = `
       <button class="tcg-page-btn" onclick="tcgGoToPage(${tcgCurrentPage - 1})" ${tcgCurrentPage===1?'disabled':''}>← PREV</button>
       <span class="tcg-page-info">Showing ${start}–${end} of ${totalCount} · Page ${tcgCurrentPage} of ${totalPages}</span>
