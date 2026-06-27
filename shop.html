@@ -124,6 +124,13 @@
     .tcg-type-desc{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;}
 
     .tcg-search-wrap{margin-bottom:1.5rem;}
+    .tcg-filter-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;}
+    .tcg-filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+    .tcg-filter-row:last-child{margin-bottom:0;}
+    .tcg-filter-row-label{font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.1em;min-width:50px;}
+    .tcg-fpill{font-family:var(--serif);font-size:11px;letter-spacing:0.06em;color:var(--soft);background:var(--surface2);border:1px solid var(--border);padding:5px 12px;border-radius:14px;cursor:pointer;transition:border-color 0.15s,color 0.15s,background 0.15s;}
+    .tcg-fpill:hover{border-color:var(--border2);}
+    .tcg-fpill.active{background:rgba(201,168,76,0.12);border-color:var(--gold);color:var(--gold);}
     .tcg-search-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:11px 16px;font-size:15px;color:var(--text);font-family:var(--body);outline:none;transition:border-color 0.15s;}
     .tcg-search-input:focus{border-color:var(--border2);}
     .tcg-search-input::placeholder{color:var(--muted);font-style:italic;}
@@ -705,6 +712,7 @@
       <!-- LEVEL 3: PRODUCT LISTING + SEARCH -->
       <div id="tcg-level-sub" style="display:none;">
         <div class="tcg-game-banner" id="tcg-sub-banner"></div>
+        <div class="tcg-filter-bar" id="tcg-filter-bar" style="display:none;"></div>
         <div class="tcg-search-wrap">
           <input type="text" id="tcg-search-input" class="tcg-search-input" placeholder="Search products by name…" oninput="filterTcgProducts()">
         </div>
@@ -840,8 +848,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1286,49 +1294,45 @@
       // single-sleeved cards, with a top-loader slot for your commander.
       // colorPickers controls the dropdowns shown: 'accent' = 1 dropdown,
       // 'twotone' = 2 dropdowns (box + design), none/absent = no picker.
-      groups: [
-        {
-          name: 'Mana Colors',
-          items: [
-            // FOREST
-            { name: 'Echo Forest', price: 25, img: 'mtg-deckbox-forest-echo' },
-            { name: 'Accented Forest', price: 25, img: 'mtg-deckbox-forest-accented', colorPickers: 'accent' },
-            { name: 'Two-Tone Forest', price: 35, bundlePrice: 60, img: 'mtg-deckbox-forest-twotone', colorPickers: 'twotone' },
-            // ISLAND
-            { name: 'Echo Island', price: 25, img: 'mtg-deckbox-island-echo' },
-            { name: 'Accented Island', price: 25, img: 'mtg-deckbox-island-accented', colorPickers: 'accent' },
-            { name: 'Prism Island', price: 35, bundlePrice: 60, img: 'mtg-deckbox-island-prism' },
-            // MOUNTAIN
-            { name: 'Echo Mountain', price: 25, img: 'mtg-deckbox-mountain-echo' },
-            { name: 'Accented Mountain', price: 25, img: 'mtg-deckbox-mountain-accented', colorPickers: 'accent' },
-            { name: 'Two-Tone Mountain', price: 35, bundlePrice: 60, img: 'mtg-deckbox-mountain-twotone', colorPickers: 'twotone' },
-            // PLAINS
-            { name: 'Echo Plains', price: 25, img: 'mtg-deckbox-plains-echo' },
-            { name: 'Accented Plains', price: 25, img: 'mtg-deckbox-plains-accented', colorPickers: 'accent' },
-            // SWAMP
-            { name: 'Echo Swamp', price: 25, img: 'mtg-deckbox-swamp-echo' },
-            { name: 'Accented Swamp', price: 25, img: 'mtg-deckbox-swamp-accented', colorPickers: 'accent' },
-            { name: 'Two-Tone Swamp', price: 35, bundlePrice: 60, img: 'mtg-deckbox-swamp-twotone', colorPickers: 'twotone' },
-            { name: 'Prism Swamp', price: 35, bundlePrice: 60, img: 'mtg-deckbox-swamp-prism' },
-          ]
-        },
-        {
-          name: 'Commander Decks',
-          items: [
-            { name: 'Merfolk', price: 25, img: 'mtg-deckbox-merfolk' },
-            { name: 'Chatterfang — Accented', price: 25, img: 'mtg-deckbox-chatterfang-accented', colorPickers: 'accent' },
-            { name: 'Dinosaurs — Accented', price: 25, img: 'mtg-deckbox-dinosaurs-accented', colorPickers: 'accent' },
-            { name: 'Eldrazi — Accented', price: 25, img: 'mtg-deckbox-eldrazi-accented', colorPickers: 'accent' },
-            { name: 'Samurai — Accented', price: 25, img: 'mtg-deckbox-samurai-accented', colorPickers: 'accent' },
-            { name: 'Sonic — Accented', price: 25, img: 'mtg-deckbox-sonic-accented', colorPickers: 'accent' },
-            { name: 'Spiderman — Accented', price: 25, img: 'mtg-deckbox-spiderman-accented', colorPickers: 'accent' },
-            { name: 'Kratos — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-kratos-prism' },
-            { name: 'Ur-Dragon — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-urdragon-prism' },
-            { name: 'Voja / Wolves — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-voja-prism' },
-            { name: 'Ninja — Brushstroke', price: 35, bundlePrice: 60, img: 'mtg-deckbox-ninja-brushstroke' },
-            { name: 'Ninja — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-ninja-prism' },
-          ]
-        }
+      // style = filter row 1 (Echo/Accented/Two-Tone/Prism)
+      // category = filter row 3 ('land' or 'commander')
+      // colors = array of mana colors this box belongs to, for filter row 2.
+      // Colorless commanders use colors: ['Colorless'].
+      deckboxItems: [
+        // ── MANA COLOR BOXES ──
+        { name: 'Echo Forest', price: 25, img: 'mtg-deckbox-forest-echo', style: 'Echo', category: 'land', colors: ['Forest'] },
+        { name: 'Accented Forest', price: 25, img: 'mtg-deckbox-forest-accented', colorPickers: 'accent', style: 'Accented', category: 'land', colors: ['Forest'] },
+        { name: 'Two-Tone Forest', price: 35, bundlePrice: 60, img: 'mtg-deckbox-forest-twotone', colorPickers: 'twotone', style: 'Two-Tone', category: 'land', colors: ['Forest'] },
+
+        { name: 'Echo Island', price: 25, img: 'mtg-deckbox-island-echo', style: 'Echo', category: 'land', colors: ['Island'] },
+        { name: 'Accented Island', price: 25, img: 'mtg-deckbox-island-accented', colorPickers: 'accent', style: 'Accented', category: 'land', colors: ['Island'] },
+        { name: 'Prism Island', price: 35, bundlePrice: 60, img: 'mtg-deckbox-island-prism', style: 'Prism', category: 'land', colors: ['Island'] },
+
+        { name: 'Echo Mountain', price: 25, img: 'mtg-deckbox-mountain-echo', style: 'Echo', category: 'land', colors: ['Mountain'] },
+        { name: 'Accented Mountain', price: 25, img: 'mtg-deckbox-mountain-accented', colorPickers: 'accent', style: 'Accented', category: 'land', colors: ['Mountain'] },
+        { name: 'Two-Tone Mountain', price: 35, bundlePrice: 60, img: 'mtg-deckbox-mountain-twotone', colorPickers: 'twotone', style: 'Two-Tone', category: 'land', colors: ['Mountain'] },
+
+        { name: 'Echo Plains', price: 25, img: 'mtg-deckbox-plains-echo', style: 'Echo', category: 'land', colors: ['Plains'] },
+        { name: 'Accented Plains', price: 25, img: 'mtg-deckbox-plains-accented', colorPickers: 'accent', style: 'Accented', category: 'land', colors: ['Plains'] },
+
+        { name: 'Echo Swamp', price: 25, img: 'mtg-deckbox-swamp-echo', style: 'Echo', category: 'land', colors: ['Swamp'] },
+        { name: 'Accented Swamp', price: 25, img: 'mtg-deckbox-swamp-accented', colorPickers: 'accent', style: 'Accented', category: 'land', colors: ['Swamp'] },
+        { name: 'Two-Tone Swamp', price: 35, bundlePrice: 60, img: 'mtg-deckbox-swamp-twotone', colorPickers: 'twotone', style: 'Two-Tone', category: 'land', colors: ['Swamp'] },
+        { name: 'Prism Swamp', price: 35, bundlePrice: 60, img: 'mtg-deckbox-swamp-prism', style: 'Prism', category: 'land', colors: ['Swamp'] },
+
+        // ── COMMANDER BOXES ──
+        { name: 'Merfolk', price: 25, img: 'mtg-deckbox-merfolk', style: 'Echo', category: 'commander', colors: ['Island','Forest'] },
+        { name: 'Chatterfang — Accented', price: 25, img: 'mtg-deckbox-chatterfang-accented', colorPickers: 'accent', style: 'Accented', category: 'commander', colors: ['Swamp','Forest'] },
+        { name: 'Dinosaurs — Accented', price: 25, img: 'mtg-deckbox-dinosaurs-accented', colorPickers: 'accent', style: 'Accented', category: 'commander', colors: ['Forest','Plains','Mountain'] },
+        { name: 'Eldrazi — Accented', price: 25, img: 'mtg-deckbox-eldrazi-accented', colorPickers: 'accent', style: 'Accented', category: 'commander', colors: ['Colorless'] },
+        { name: 'Samurai — Accented', price: 25, img: 'mtg-deckbox-samurai-accented', colorPickers: 'accent', style: 'Accented', category: 'commander', colors: ['Plains','Island','Swamp','Mountain'] },
+        { name: 'Sonic — Accented', price: 25, img: 'mtg-deckbox-sonic-accented', colorPickers: 'accent', style: 'Accented', category: 'commander', colors: ['Island','Mountain','Plains'] },
+        { name: 'Spiderman — Accented', price: 25, img: 'mtg-deckbox-spiderman-accented', colorPickers: 'accent', style: 'Accented', category: 'commander', colors: ['Island','Mountain'] },
+        { name: 'Kratos — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-kratos-prism', style: 'Prism', category: 'commander', colors: ['Mountain'] },
+        { name: 'Ur-Dragon — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-urdragon-prism', style: 'Prism', category: 'commander', colors: ['Forest','Island','Mountain','Plains','Swamp'] },
+        { name: 'Voja / Wolves — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-voja-prism', style: 'Prism', category: 'commander', colors: ['Mountain','Plains','Forest'] },
+        { name: 'Ninja — Brushstroke', price: 35, bundlePrice: 60, img: 'mtg-deckbox-ninja-brushstroke', style: 'Prism', category: 'commander', colors: ['Forest','Island','Mountain','Plains','Swamp'] },
+        { name: 'Ninja — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-ninja-prism', style: 'Prism', category: 'commander', colors: ['Forest','Island','Mountain','Plains','Swamp'] },
       ],
       // Flat fallback list, kept for HueForge art and any other view that
       // expects a single subcats array rather than grouped deck box data.
@@ -1539,20 +1543,97 @@
     renderTcgBanner('tcg-sub-banner');
     document.getElementById('tcg-search-input').value = '';
     tcgCurrentPage = 1;
+    tcgStyleFilter = 'All';
+    tcgColorFilter = 'All';
+    tcgCategoryFilter = 'All';
+    renderTcgFilterBar();
     buildTcgProductGrid(getTcgProductList());
     tcgShowLevel('sub');
+  }
+
+  function renderTcgFilterBar(){
+    const bar = document.getElementById('tcg-filter-bar');
+    const hasDeckboxFilters = tcgCurrentType.id === 'deckbox' && tcgCurrentGame.deckboxItems;
+    if(!hasDeckboxFilters){
+      bar.style.display = 'none';
+      bar.innerHTML = '';
+      return;
+    }
+    bar.style.display = 'block';
+
+    // Collect the set of colors actually used across this game's deck boxes,
+    // so we don't show filter pills for colors that don't apply (e.g. no
+    // Colorless pill unless something in this game actually uses it).
+    const colorsInUse = new Set();
+    tcgCurrentGame.deckboxItems.forEach(p => (p.colors||[]).forEach(c => colorsInUse.add(c)));
+    const colorOrder = ['Forest','Island','Mountain','Plains','Swamp','Colorless'];
+    const colorPills = colorOrder.filter(c => colorsInUse.has(c));
+
+    const styles = ['Echo','Accented','Two-Tone','Prism'];
+
+    bar.innerHTML = `
+      <div class="tcg-filter-row">
+        <span class="tcg-filter-row-label">Style:</span>
+        <button class="tcg-fpill ${tcgStyleFilter==='All'?'active':''}" onclick="setTcgStyleFilter('All')">All</button>
+        ${styles.map(s=>`<button class="tcg-fpill ${tcgStyleFilter===s?'active':''}" onclick="setTcgStyleFilter('${s}')">${s}</button>`).join('')}
+      </div>
+      <div class="tcg-filter-row">
+        <span class="tcg-filter-row-label">Color:</span>
+        <button class="tcg-fpill ${tcgColorFilter==='All'?'active':''}" onclick="setTcgColorFilter('All')">All</button>
+        ${colorPills.map(c=>`<button class="tcg-fpill ${tcgColorFilter===c?'active':''}" onclick="setTcgColorFilter('${c}')">${c}</button>`).join('')}
+      </div>
+      <div class="tcg-filter-row">
+        <span class="tcg-filter-row-label">Show:</span>
+        <button class="tcg-fpill ${tcgCategoryFilter==='All'?'active':''}" onclick="setTcgCategoryFilter('All')">All</button>
+        <button class="tcg-fpill ${tcgCategoryFilter==='land'?'active':''}" onclick="setTcgCategoryFilter('land')">Mana Color Boxes</button>
+        <button class="tcg-fpill ${tcgCategoryFilter==='commander'?'active':''}" onclick="setTcgCategoryFilter('commander')">Commander Boxes</button>
+      </div>`;
+  }
+
+  function setTcgStyleFilter(style){
+    tcgStyleFilter = style;
+    tcgCurrentPage = 1;
+    renderTcgFilterBar();
+    buildTcgProductGrid(getTcgProductList());
+  }
+  function setTcgColorFilter(color){
+    tcgColorFilter = color;
+    tcgCurrentPage = 1;
+    renderTcgFilterBar();
+    buildTcgProductGrid(getTcgProductList());
+  }
+  function setTcgCategoryFilter(cat){
+    tcgCategoryFilter = cat;
+    tcgCurrentPage = 1;
+    renderTcgFilterBar();
+    buildTcgProductGrid(getTcgProductList());
   }
 
   // Returns a flat list of products for the current game + product type.
   // Deck boxes for games with grouped data (like MTG) carry a `group` tag
   // so the grid can render group headers; everything else is ungrouped.
+  // ── TCG DECK BOX FILTERS ──
+  let tcgStyleFilter = 'All';
+  let tcgColorFilter = 'All';
+  let tcgCategoryFilter = 'All';
+
   function getTcgProductList(){
-    if(tcgCurrentType.id === 'deckbox' && tcgCurrentGame.groups){
-      const flat = [];
-      tcgCurrentGame.groups.forEach(g => {
-        g.items.forEach(item => flat.push({ ...item, group: g.name }));
-      });
-      return flat;
+    if(tcgCurrentType.id === 'deckbox' && tcgCurrentGame.deckboxItems){
+      let items = tcgCurrentGame.deckboxItems;
+
+      // Category filter wins outright — if set, the other category is hidden
+      // regardless of which style/color filters are active.
+      if(tcgCategoryFilter === 'land') items = items.filter(p => p.category === 'land');
+      if(tcgCategoryFilter === 'commander') items = items.filter(p => p.category === 'commander');
+
+      if(tcgStyleFilter !== 'All') items = items.filter(p => p.style === tcgStyleFilter);
+      if(tcgColorFilter !== 'All') items = items.filter(p => p.colors && p.colors.includes(tcgColorFilter));
+
+      const q = (document.getElementById('tcg-search-input')?.value || '').trim().toLowerCase();
+      if(q) items = items.filter(p => p.name.toLowerCase().includes(q));
+
+      // Group by style for section headers (Echo / Accented / Two-Tone / Prism)
+      return items.map(item => ({ ...item, group: item.style }));
     }
     if(tcgCurrentType.id === 'hueforge' && tcgCurrentGame.hueforgeItems){
       return tcgCurrentGame.hueforgeItems;
@@ -1853,19 +1934,13 @@
 
   function tcgGoToPage(page){
     tcgCurrentPage = page;
-    const q = document.getElementById('tcg-search-input').value.trim().toLowerCase();
-    const all = getTcgProductList();
-    const filtered = q ? all.filter(p => p.name.toLowerCase().includes(q)) : all;
-    buildTcgProductGrid(filtered);
+    buildTcgProductGrid(getTcgProductList());
     document.getElementById('tcg-level-sub').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function filterTcgProducts(){
     tcgCurrentPage = 1;
-    const q = document.getElementById('tcg-search-input').value.trim().toLowerCase();
-    const all = getTcgProductList();
-    const filtered = all.filter(p => p.name.toLowerCase().includes(q));
-    buildTcgProductGrid(filtered);
+    buildTcgProductGrid(getTcgProductList());
   }
 
   function tcgBackToType(){
