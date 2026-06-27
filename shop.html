@@ -137,6 +137,7 @@
     .tcg-group-header:not(:first-child){margin-top:0.75rem;}
     .tcg-stock-mto{font-family:var(--serif);font-size:9px;color:var(--gold);letter-spacing:0.1em;}
     .tcg-sub-price{font-family:var(--serif);font-size:16px;color:var(--gold2);margin-bottom:8px;}
+    .tcg-bundle-hint{font-size:11px;color:var(--muted);font-style:italic;}
     .tcg-card-color-label{display:block;font-size:11px;color:var(--muted);font-style:italic;margin-bottom:4px;}
     .tcg-color-select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--body);font-size:13px;padding:6px 8px;margin-bottom:8px;outline:none;}
     .tcg-color-select:focus{border-color:var(--border2);}
@@ -725,10 +726,7 @@
           <div class="tcg-lb-info">
             <div class="tcg-lb-name" id="tcg-lb-name"></div>
             <div class="tcg-lb-price" id="tcg-lb-price"></div>
-            <div class="tcg-lb-color-wrap" id="tcg-lb-color-wrap">
-              <label class="tcg-lb-color-label" for="tcg-lb-color-select">Choose the print color for this deck box:</label>
-              <select class="tcg-color-select" id="tcg-lb-color-select"></select>
-            </div>
+            <div class="tcg-lb-color-wrap" id="tcg-lb-color-wrap"></div>
             <button class="tcg-add-btn" id="tcg-lb-add-btn" onclick="addTcgLightboxToCart()">+ ADD TO CART</button>
           </div>
         </div>
@@ -842,8 +840,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1286,32 +1284,49 @@
       groupLabel: 'MANA COLOR',
       // Deck boxes only — commander sized, fits 115 double-sleeved or 135
       // single-sleeved cards, with a top-loader slot for your commander.
+      // colorPickers controls the dropdowns shown: 'accent' = 1 dropdown,
+      // 'twotone' = 2 dropdowns (box + design), none/absent = no picker.
       groups: [
         {
           name: 'Mana Colors',
           items: [
-            { name: 'Forest (Green) — Basic', price: 25, img: null },
-            { name: 'Island (Blue) — Basic', price: 25, img: null },
-            { name: 'Mountain (Red) — Basic', price: 25, img: null },
-            { name: 'Plains (White) — Basic', price: 25, img: null },
-            { name: 'Swamp (Black) — Basic', price: 25, img: null },
-            { name: 'Swamp (Black) — Two-Tone', price: 35, img: 'mtg-deckbox-swamp-twotone' },
+            // FOREST
+            { name: 'Echo Forest', price: 25, img: 'mtg-deckbox-forest-echo' },
+            { name: 'Accented Forest', price: 25, img: 'mtg-deckbox-forest-accented', colorPickers: 'accent' },
+            { name: 'Two-Tone Forest', price: 35, bundlePrice: 60, img: 'mtg-deckbox-forest-twotone', colorPickers: 'twotone' },
+            // ISLAND
+            { name: 'Echo Island', price: 25, img: 'mtg-deckbox-island-echo' },
+            { name: 'Accented Island', price: 25, img: 'mtg-deckbox-island-accented', colorPickers: 'accent' },
+            { name: 'Prism Island', price: 35, bundlePrice: 60, img: 'mtg-deckbox-island-prism' },
+            // MOUNTAIN
+            { name: 'Echo Mountain', price: 25, img: 'mtg-deckbox-mountain-echo' },
+            { name: 'Accented Mountain', price: 25, img: 'mtg-deckbox-mountain-accented', colorPickers: 'accent' },
+            { name: 'Two-Tone Mountain', price: 35, bundlePrice: 60, img: 'mtg-deckbox-mountain-twotone', colorPickers: 'twotone' },
+            // PLAINS
+            { name: 'Echo Plains', price: 25, img: 'mtg-deckbox-plains-echo' },
+            { name: 'Accented Plains', price: 25, img: 'mtg-deckbox-plains-accented', colorPickers: 'accent' },
+            // SWAMP
+            { name: 'Echo Swamp', price: 25, img: 'mtg-deckbox-swamp-echo' },
+            { name: 'Accented Swamp', price: 25, img: 'mtg-deckbox-swamp-accented', colorPickers: 'accent' },
+            { name: 'Two-Tone Swamp', price: 35, bundlePrice: 60, img: 'mtg-deckbox-swamp-twotone', colorPickers: 'twotone' },
+            { name: 'Prism Swamp', price: 35, bundlePrice: 60, img: 'mtg-deckbox-swamp-prism' },
           ]
         },
         {
           name: 'Commander Decks',
           items: [
-            { name: 'Ur-Dragon', price: 25, img: null },
-            { name: 'Chatterfang', price: 25, img: null },
-            { name: 'Ninjas', price: 25, img: null },
             { name: 'Merfolk', price: 25, img: 'mtg-deckbox-merfolk' },
-            { name: 'Kratos', price: 25, img: null },
-            { name: 'Dinosaurs', price: 25, img: null },
-            { name: 'Samurai', price: 25, img: null },
-            { name: 'Eldrazi', price: 25, img: null },
-            { name: 'Sonic', price: 25, img: null },
-            { name: 'Spiderman', price: 25, img: null },
-            { name: 'Voja / Wolves', price: 25, img: null },
+            { name: 'Chatterfang — Accented', price: 25, img: 'mtg-deckbox-chatterfang-accented', colorPickers: 'accent' },
+            { name: 'Dinosaurs — Accented', price: 25, img: 'mtg-deckbox-dinosaurs-accented', colorPickers: 'accent' },
+            { name: 'Eldrazi — Accented', price: 25, img: 'mtg-deckbox-eldrazi-accented', colorPickers: 'accent' },
+            { name: 'Samurai — Accented', price: 25, img: 'mtg-deckbox-samurai-accented', colorPickers: 'accent' },
+            { name: 'Sonic — Accented', price: 25, img: 'mtg-deckbox-sonic-accented', colorPickers: 'accent' },
+            { name: 'Spiderman — Accented', price: 25, img: 'mtg-deckbox-spiderman-accented', colorPickers: 'accent' },
+            { name: 'Kratos — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-kratos-prism' },
+            { name: 'Ur-Dragon — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-urdragon-prism' },
+            { name: 'Voja / Wolves — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-voja-prism' },
+            { name: 'Ninja — Brushstroke', price: 35, bundlePrice: 60, img: 'mtg-deckbox-ninja-brushstroke' },
+            { name: 'Ninja — Prism', price: 35, bundlePrice: 60, img: 'mtg-deckbox-ninja-prism' },
           ]
         }
       ],
@@ -1576,18 +1591,32 @@
         ? `<img src="images/tcg/${p.img}-1.jpg" alt="${p.name}" onerror="this.onerror=null;this.src='images/tcg/${p.img}.jpg';this.onerror=function(){this.parentElement.innerHTML='PHOTO COMING SOON';};">`
         : 'PHOTO COMING SOON';
       const priceHTML = (p.price !== undefined && p.price !== null)
-        ? `<div class="tcg-sub-price">$${p.price.toFixed(2)}</div>`
+        ? `<div class="tcg-sub-price">$${p.price.toFixed(2)}${p.bundlePrice ? ` <span class="tcg-bundle-hint">· 2 for $${p.bundlePrice}</span>` : ''}</div>`
         : p.price === null
           ? `<div class="tcg-stock-mto">PRICE COMING SOON</div>`
           : `<div class="tcg-stock-mto">MADE TO ORDER</div>`;
       const isDeckbox = tcgCurrentType.id === 'deckbox';
-      const colorPickerHTML = (p.price !== undefined && p.price !== null && isDeckbox) ? `
-        <label class="tcg-card-color-label" for="${cardId}-color">Deck box color:</label>
-        <select class="tcg-color-select" id="${cardId}-color" onclick="event.stopPropagation()">
-          ${DECKBOX_COLORS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('')}
-        </select>` : '';
-      const addBtnHTML = (p.price !== undefined && p.price !== null)
-        ? `<button class="tcg-add-btn" id="${cardId}-btn" onclick="event.stopPropagation();addTcgToCart('${cardId}','${p.name.replace(/'/g,"\\'")}',${p.price})">+ CART</button>`
+      const hasPrice = p.price !== undefined && p.price !== null;
+      let colorPickerHTML = '';
+      if(hasPrice && isDeckbox && p.colorPickers === 'twotone'){
+        colorPickerHTML = `
+          <label class="tcg-card-color-label" for="${cardId}-boxcolor">Box color:</label>
+          <select class="tcg-color-select" id="${cardId}-boxcolor" onclick="event.stopPropagation()">
+            ${DECKBOX_COLORS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('')}
+          </select>
+          <label class="tcg-card-color-label" for="${cardId}-designcolor">Design color:</label>
+          <select class="tcg-color-select" id="${cardId}-designcolor" onclick="event.stopPropagation()">
+            ${DECKBOX_COLORS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('')}
+          </select>`;
+      } else if(hasPrice && isDeckbox && p.colorPickers === 'accent'){
+        colorPickerHTML = `
+          <label class="tcg-card-color-label" for="${cardId}-accentcolor">Accent color:</label>
+          <select class="tcg-color-select" id="${cardId}-accentcolor" onclick="event.stopPropagation()">
+            ${DECKBOX_COLORS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('')}
+          </select>`;
+      }
+      const addBtnHTML = hasPrice
+        ? `<button class="tcg-add-btn" id="${cardId}-btn" onclick="event.stopPropagation();addTcgToCart('${cardId}','${p.name.replace(/'/g,"\\'")}',${p.price},${p.bundlePrice||'undefined'})">+ CART</button>`
         : '';
       html += `<div class="tcg-sub-card" onclick="openTcgLightbox('${cardId}', ${idx + start})">
         <div class="tcg-sub-card-img">${imgHTML}</div>
@@ -1604,11 +1633,21 @@
     renderTcgPager(totalPages, products.length);
   }
 
-  function addTcgToCart(cardId, name, price){
-    const colorSelect = document.getElementById(`${cardId}-color`);
-    const color = colorSelect ? colorSelect.value : '';
-    const cartId = `tcg-${cardId}-${color}`;
-    const fullName = color ? `${name} (${color})` : name;
+  function addTcgToCart(cardId, name, price, bundlePrice){
+    const accentSelect = document.getElementById(`${cardId}-accentcolor`);
+    const boxSelect = document.getElementById(`${cardId}-boxcolor`);
+    const designSelect = document.getElementById(`${cardId}-designcolor`);
+    let colorSuffix = '';
+    let cartIdColorPart = '';
+    if(boxSelect && designSelect){
+      colorSuffix = ` (${boxSelect.value} box, ${designSelect.value} design)`;
+      cartIdColorPart = `${boxSelect.value}-${designSelect.value}`;
+    } else if(accentSelect){
+      colorSuffix = ` (${accentSelect.value} accent)`;
+      cartIdColorPart = accentSelect.value;
+    }
+    const cartId = `tcg-${cardId}-${cartIdColorPart}`;
+    const fullName = `${name}${colorSuffix}`;
     const ex = cart.find(i=>i.id===cartId);
     if(ex){ ex.qty++; }
     else {
@@ -1618,7 +1657,9 @@
         theme: `${tcgCurrentGame.name} — ${tcgCurrentType.name}`,
         price: price,
         qty: 1,
-        isCoin: false
+        isCoin: false,
+        bundleKey: bundlePrice ? `${tcgCurrentGame.id}-${name}` : undefined,
+        bundlePrice: bundlePrice || undefined
       });
     }
     saveCart(); renderCart(); updateBadge(); renderPayPalButton();
@@ -1674,17 +1715,33 @@
     document.getElementById('tcg-lb-name').textContent = p.name;
     const priceEl = document.getElementById('tcg-lb-price');
     priceEl.textContent = (p.price !== undefined && p.price !== null)
-      ? `$${p.price.toFixed(2)}`
+      ? `$${p.price.toFixed(2)}${p.bundlePrice ? ` · 2 for $${p.bundlePrice}` : ''}`
       : (p.price === null ? 'PRICE COMING SOON' : 'MADE TO ORDER');
 
-    // Color picker — deck boxes only
+    // Color picker(s) — deck boxes only, mode depends on p.colorPickers
     const colorWrap = document.getElementById('tcg-lb-color-wrap');
-    if(isDeckbox && p.price !== undefined && p.price !== null){
+    const hasPriceLb = p.price !== undefined && p.price !== null;
+    if(isDeckbox && hasPriceLb && p.colorPickers === 'twotone'){
       colorWrap.style.display = 'block';
-      document.getElementById('tcg-lb-color-select').innerHTML =
-        DECKBOX_COLORS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
+      colorWrap.innerHTML = `
+        <label class="tcg-lb-color-label" for="tcg-lb-boxcolor-select">Box color:</label>
+        <select class="tcg-color-select" id="tcg-lb-boxcolor-select">
+          ${DECKBOX_COLORS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('')}
+        </select>
+        <label class="tcg-lb-color-label" for="tcg-lb-designcolor-select" style="margin-top:8px;">Design color:</label>
+        <select class="tcg-color-select" id="tcg-lb-designcolor-select">
+          ${DECKBOX_COLORS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('')}
+        </select>`;
+    } else if(isDeckbox && hasPriceLb && p.colorPickers === 'accent'){
+      colorWrap.style.display = 'block';
+      colorWrap.innerHTML = `
+        <label class="tcg-lb-color-label" for="tcg-lb-accentcolor-select">Accent color:</label>
+        <select class="tcg-color-select" id="tcg-lb-accentcolor-select">
+          ${DECKBOX_COLORS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('')}
+        </select>`;
     } else {
       colorWrap.style.display = 'none';
+      colorWrap.innerHTML = '';
     }
 
     // Add to cart button
@@ -1730,11 +1787,21 @@
     const cardId = btn.dataset.cardId;
     const name = btn.dataset.name;
     const price = parseFloat(btn.dataset.price);
-    const colorSelect = document.getElementById('tcg-lb-color-select');
-    const isDeckbox = tcgCurrentType.id === 'deckbox';
-    const color = (isDeckbox && colorSelect) ? colorSelect.value : '';
-    const cartId = `tcg-${cardId}-${color}`;
-    const fullName = color ? `${name} (${color})` : name;
+    const accentSelect = document.getElementById('tcg-lb-accentcolor-select');
+    const boxSelect = document.getElementById('tcg-lb-boxcolor-select');
+    const designSelect = document.getElementById('tcg-lb-designcolor-select');
+    let colorSuffix = '';
+    let cartIdColorPart = '';
+    if(boxSelect && designSelect){
+      colorSuffix = ` (${boxSelect.value} box, ${designSelect.value} design)`;
+      cartIdColorPart = `${boxSelect.value}-${designSelect.value}`;
+    } else if(accentSelect){
+      colorSuffix = ` (${accentSelect.value} accent)`;
+      cartIdColorPart = accentSelect.value;
+    }
+    const cartId = `tcg-${cardId}-${cartIdColorPart}`;
+    const fullName = `${name}${colorSuffix}`;
+    const bundlePrice = tcgLbProduct && tcgLbProduct.bundlePrice;
     const ex = cart.find(i=>i.id===cartId);
     if(ex){ ex.qty++; }
     else {
@@ -1744,7 +1811,9 @@
         theme: `${tcgCurrentGame.name} — ${tcgCurrentType.name}`,
         price: price,
         qty: 1,
-        isCoin: false
+        isCoin: false,
+        bundleKey: bundlePrice ? `${tcgCurrentGame.id}-${name}` : undefined,
+        bundlePrice: bundlePrice || undefined
       });
     }
     saveCart(); renderCart(); updateBadge(); renderPayPalButton();
@@ -2012,8 +2081,39 @@
     // Count total coins (items flagged isCoin) for bundle pricing
     const coinCount = cart.filter(i=>i.isCoin).reduce((s,i)=>s+i.qty,0);
     const coinTotal = coinBundlePrice(coinCount);
-    const nonCoinTotal = cart.filter(i=>!i.isCoin).reduce((s,i)=>s+i.price*i.qty,0);
-    const total = coinTotal + nonCoinTotal;
+    const nonCoinItems = cart.filter(i=>!i.isCoin);
+
+    // ── TCG DECK BOX BUNDLE PRICING ──
+    // "2 for $X" deals apply per base product, regardless of color choice —
+    // buying 2 of the same box design (even in different colors) still bundles.
+    // basePriceKey strips the cart id down to the product itself, dropping
+    // any trailing color-selection part, by matching on bundleKey we stash
+    // on the cart item when it was added.
+    const bundleGroups = {};
+    nonCoinItems.forEach(item=>{
+      if(item.bundleKey && item.bundlePrice){
+        if(!bundleGroups[item.bundleKey]) bundleGroups[item.bundleKey] = { qty:0, unitPrice:item.price, bundlePrice:item.bundlePrice, items:[] };
+        bundleGroups[item.bundleKey].qty += item.qty;
+        bundleGroups[item.bundleKey].items.push(item);
+      }
+    });
+
+    let bundleSavings = 0;
+    let bundleDiscountTotal = 0;
+    Object.entries(bundleGroups).forEach(([key,g])=>{
+      const pairs = Math.floor(g.qty/2);
+      const remainder = g.qty%2;
+      const discountedTotal = pairs*g.bundlePrice + remainder*g.unitPrice;
+      const fullPriceTotal = g.qty*g.unitPrice;
+      bundleSavings += (fullPriceTotal - discountedTotal);
+      bundleDiscountTotal += discountedTotal;
+    });
+
+    const nonBundleTotal = nonCoinItems
+      .filter(i=>!(i.bundleKey && i.bundlePrice))
+      .reduce((s,i)=>s+i.price*i.qty,0);
+
+    const total = coinTotal + nonBundleTotal + bundleDiscountTotal;
 
     // Effective per-coin price for display
     const effCoinPrice = coinCount>0 ? coinTotal/coinCount : COIN_PRICE;
@@ -2036,18 +2136,28 @@
       </div>`;
     }).join('');
 
-    // Bundle savings hint
+    // Bundle savings hints
     let savingsNote = '';
     if(coinCount>0){
       const fullPrice = coinCount*COIN_PRICE;
       const saved = fullPrice - coinTotal;
       if(saved > 0){
-        savingsNote = `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:4px;">BUNDLE SAVINGS: −$${saved.toFixed(2)}</div>`;
+        savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:4px;">COIN BUNDLE SAVINGS: −$${saved.toFixed(2)}</div>`;
       } else if(coinCount < 3){
         const need = 3 - coinCount;
-        savingsNote = `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ${need} MORE COIN${need>1?'S':''} FOR $5 BUNDLE</div>`;
+        savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ${need} MORE COIN${need>1?'S':''} FOR $5 BUNDLE</div>`;
       }
     }
+    if(bundleSavings > 0){
+      savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:4px;">DECK BOX BUNDLE SAVINGS: −$${bundleSavings.toFixed(2)}</div>`;
+    }
+    // Nudge for any bundle-eligible item sitting at an odd quantity (1, 3, 5...)
+    Object.entries(bundleGroups).forEach(([key,g])=>{
+      if(g.qty % 2 === 1){
+        const exampleName = g.items[0]?.name?.split(' (')[0] || 'this item';
+        savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD 1 MORE ${exampleName.toUpperCase()} FOR THE 2-FOR-$${g.bundlePrice} DEAL</div>`;
+      }
+    });
 
     document.getElementById('cart-total').textContent='$'+total.toFixed(2);
     const totalRow = document.getElementById('cart-total').closest('.cart-subtotal');
