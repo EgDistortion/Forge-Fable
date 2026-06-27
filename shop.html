@@ -848,8 +848,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1632,7 +1632,11 @@
       const q = (document.getElementById('tcg-search-input')?.value || '').trim().toLowerCase();
       if(q) items = items.filter(p => p.name.toLowerCase().includes(q));
 
-      // Group by style for section headers (Echo / Accented / Two-Tone / Prism)
+      // Only show style section headers (Echo / Accented / Two-Tone / Prism)
+      // once a filter has actually narrowed the list down. With everything
+      // set to "All", just show one flat, unbroken list of every product.
+      const noFiltersActive = tcgStyleFilter==='All' && tcgColorFilter==='All' && tcgCategoryFilter==='All' && !q;
+      if(noFiltersActive) return items.map(item => ({ ...item, group: undefined }));
       return items.map(item => ({ ...item, group: item.style }));
     }
     if(tcgCurrentType.id === 'hueforge' && tcgCurrentGame.hueforgeItems){
@@ -1654,21 +1658,29 @@
     }
     empty.style.display = 'none';
 
-    // Paginate by whole groups, never splitting a style/category section
-    // across two pages — a hard item-count cutoff looked broken mid-group.
+    // Paginate by whole groups when grouped (never splitting a style section
+    // across two pages), or by a flat 15-per-page cutoff when there's no
+    // grouping at all (the default "All/All/All" unfiltered view).
+    const isGrouped = products.some(p => p.group);
     const groupedPages = [];
-    let currentPageItems = [];
-    let currentPageGroup = null;
-    products.forEach(p => {
-      const startsNewGroup = p.group && p.group !== currentPageGroup;
-      if(startsNewGroup && currentPageItems.length >= TCG_PAGE_SIZE){
-        groupedPages.push(currentPageItems);
-        currentPageItems = [];
+    if(isGrouped){
+      let currentPageItems = [];
+      let currentPageGroup = null;
+      products.forEach(p => {
+        const startsNewGroup = p.group && p.group !== currentPageGroup;
+        if(startsNewGroup && currentPageItems.length >= TCG_PAGE_SIZE){
+          groupedPages.push(currentPageItems);
+          currentPageItems = [];
+        }
+        currentPageItems.push(p);
+        if(p.group) currentPageGroup = p.group;
+      });
+      if(currentPageItems.length) groupedPages.push(currentPageItems);
+    } else {
+      for(let i=0; i<products.length; i+=TCG_PAGE_SIZE){
+        groupedPages.push(products.slice(i, i+TCG_PAGE_SIZE));
       }
-      currentPageItems.push(p);
-      if(p.group) currentPageGroup = p.group;
-    });
-    if(currentPageItems.length) groupedPages.push(currentPageItems);
+    }
 
     const totalPages = Math.max(1, groupedPages.length);
     if(tcgCurrentPage > totalPages) tcgCurrentPage = totalPages;
