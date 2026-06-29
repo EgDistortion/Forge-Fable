@@ -138,7 +138,9 @@
     .tcg-sub-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
     .tcg-sub-card-img{height:190px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);font-family:var(--serif);font-size:11px;color:var(--muted);letter-spacing:0.1em;text-align:center;padding:0 1rem;}
     .tcg-sub-card-body{padding:1rem 1.1rem;}
-    .tcg-sub-name{font-family:var(--serif);font-size:14px;color:var(--soft);letter-spacing:0.04em;margin-bottom:6px;}
+    .tcg-sub-name{font-family:var(--serif);font-size:14px;color:var(--soft);letter-spacing:0.04em;margin-bottom:4px;}
+    .tcg-sub-desc{font-size:11px;color:var(--muted);font-style:italic;letter-spacing:0.03em;margin-bottom:6px;line-height:1.5;}
+    .tcg-lb-desc{font-size:13px;color:var(--muted);font-style:italic;margin-bottom:0.75rem;line-height:1.6;}
     .tcg-sub-coming{font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;}
     .tcg-group-header{grid-column:1/-1;font-family:var(--serif);font-size:13px;color:var(--gold);letter-spacing:0.18em;padding:0.75rem 0 0.5rem;border-bottom:1.5px solid var(--border2);margin-bottom:0.5rem;margin-top:0.75rem;}
     .tcg-group-header:first-child{margin-top:0;}
@@ -733,6 +735,7 @@
           </div>
           <div class="tcg-lb-info">
             <div class="tcg-lb-name" id="tcg-lb-name"></div>
+            <div class="tcg-lb-desc" id="tcg-lb-desc"></div>
             <div class="tcg-lb-price" id="tcg-lb-price"></div>
             <div class="tcg-lb-color-wrap" id="tcg-lb-color-wrap"></div>
             <button class="tcg-add-btn" id="tcg-lb-add-btn" onclick="addTcgLightboxToCart()">+ ADD TO CART</button>
@@ -848,8 +851,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1314,6 +1317,7 @@
 
         { name: 'Echo Plains', price: 25, img: 'mtg-deckbox-plains-echo', style: 'Echo', category: 'land', colors: ['Plains'] },
         { name: 'Accented Plains', price: 25, img: 'mtg-deckbox-plains-accented', colorPickers: 'accent', style: 'Accented', category: 'land', colors: ['Plains'] },
+        { name: 'Prism Plains', price: 35, bundlePrice: 60, img: 'mtg-deckbox-plains-prism', style: 'Prism', category: 'land', colors: ['Plains'] },
 
         { name: 'Echo Swamp', price: 25, img: 'mtg-deckbox-swamp-echo', style: 'Echo', category: 'land', colors: ['Swamp'] },
         { name: 'Accented Swamp', price: 25, img: 'mtg-deckbox-swamp-accented', colorPickers: 'accent', style: 'Accented', category: 'land', colors: ['Swamp'] },
@@ -1402,31 +1406,25 @@
         <path d="M 0 -32 L 0 28 M -28 -10 L 28 -10" stroke="#8a7038" stroke-width="1" opacity="0.5"/>
         <circle cx="0" cy="-6" r="5" fill="none" stroke="#d4541a" stroke-width="1.5"/>`,
       groupLabel: 'RUNE',
-      groups: [
-        {
-          name: 'Rune Boxes',
-          items: [
-            { name: 'Body', stock: 1 },
-            { name: 'Calm', stock: 1 },
-            { name: 'Chaos', stock: 1 },
-            { name: 'Fury', stock: 1 },
-            { name: 'Mind', stock: 1 },
-            { name: 'Order', stock: 1 },
-          ]
-        },
-        {
-          name: 'Champion Decks',
-          items: [
-            { name: 'Poppy', stock: 1 },
-            { name: "Kai'Sa", stock: 1 },
-            { name: 'Jinx', stock: 1 },
-            { name: 'Annie', stock: 1 },
-            { name: 'Viktor', stock: 1 },
-            { name: 'Vi', stock: 1 },
-            { name: 'Ahri', stock: 1 },
-            { name: 'Sett', stock: 1 },
-          ]
-        }
+      // Riftbound boxes are smaller than MTG Commander boxes.
+      // Capacity: 70 double-sleeved cards, divided into 3 sections (40/15/15).
+      deckboxItems: [
+        // ── RUNE BOXES ──
+        { name: 'Body', price: 35, img: 'riftbound-deckbox-body', style: 'Rune', category: 'rune', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Calm', price: 35, img: 'riftbound-deckbox-calm', style: 'Rune', category: 'rune', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Chaos', price: 35, img: 'riftbound-deckbox-chaos', style: 'Rune', category: 'rune', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Fury', price: 35, img: 'riftbound-deckbox-fury', style: 'Rune', category: 'rune', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Mind', price: 35, img: 'riftbound-deckbox-mind', style: 'Rune', category: 'rune', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Order', price: 35, img: 'riftbound-deckbox-order', style: 'Rune', category: 'rune', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        // ── CHAMPION DECKS ──
+        { name: 'Poppy', price: 35, img: 'riftbound-deckbox-poppy', style: 'Champion', category: 'champion', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: "Kai'Sa", price: 35, img: 'riftbound-deckbox-kaisa', style: 'Champion', category: 'champion', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Jinx', price: 35, img: 'riftbound-deckbox-jinx', style: 'Champion', category: 'champion', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Annie', price: 35, img: 'riftbound-deckbox-annie', style: 'Champion', category: 'champion', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Viktor', price: 35, img: 'riftbound-deckbox-viktor', style: 'Champion', category: 'champion', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Vi', price: 35, img: 'riftbound-deckbox-vi', style: 'Champion', category: 'champion', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Ahri', price: 35, img: 'riftbound-deckbox-ahri', style: 'Champion', category: 'champion', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
+        { name: 'Sett', price: 35, img: 'riftbound-deckbox-sett', style: 'Champion', category: 'champion', colors: [], desc: 'Holds 70 double-sleeved cards · 3 sections (40/15/15)' },
       ],
       subcats: [
         { name: 'Fury', color: '#c0392b' },
@@ -1561,33 +1559,46 @@
     }
     bar.style.display = 'block';
 
+    // Collect styles and categories actually used in this game's deck boxes
+    // so the filter pills always reflect the real data, not hardcoded labels.
+    const stylesInUse = [...new Set(tcgCurrentGame.deckboxItems.map(p=>p.style).filter(Boolean))];
+    const catsInUse = [...new Set(tcgCurrentGame.deckboxItems.map(p=>p.category).filter(Boolean))];
+
+    // Friendly category label map — add entries here as new games come in.
+    const catLabels = {
+      land: 'Mana Color Boxes', commander: 'Commander Boxes',
+      rune: 'Rune Boxes', champion: 'Champion Decks',
+    };
+
     // Collect the set of colors actually used across this game's deck boxes,
-    // so we don't show filter pills for colors that don't apply (e.g. no
-    // Colorless pill unless something in this game actually uses it).
+    // so we don't show filter pills for colors that don't apply.
     const colorsInUse = new Set();
     tcgCurrentGame.deckboxItems.forEach(p => (p.colors||[]).forEach(c => colorsInUse.add(c)));
     const colorOrder = ['Forest','Island','Mountain','Plains','Swamp','Colorless'];
     const colorPills = colorOrder.filter(c => colorsInUse.has(c));
 
-    const styles = ['Echo','Accented','Two-Tone','Prism'];
+    const colorRow = colorPills.length ? `
+      <div class="tcg-filter-row">
+        <span class="tcg-filter-row-label">Color:</span>
+        <button class="tcg-fpill ${tcgColorFilter==='All'?'active':''}" onclick="setTcgColorFilter('All')">All</button>
+        ${colorPills.map(c=>`<button class="tcg-fpill ${tcgColorFilter===c?'active':''}" onclick="setTcgColorFilter('${c}')">${c}</button>`).join('')}
+      </div>` : '';
+
+    const categoryRow = catsInUse.length > 1 ? `
+      <div class="tcg-filter-row">
+        <span class="tcg-filter-row-label">Show:</span>
+        <button class="tcg-fpill ${tcgCategoryFilter==='All'?'active':''}" onclick="setTcgCategoryFilter('All')">All</button>
+        ${catsInUse.map(cat=>`<button class="tcg-fpill ${tcgCategoryFilter===cat?'active':''}" onclick="setTcgCategoryFilter('${cat}')">${catLabels[cat]||cat}</button>`).join('')}
+      </div>` : '';
 
     bar.innerHTML = `
       <div class="tcg-filter-row">
         <span class="tcg-filter-row-label">Style:</span>
         <button class="tcg-fpill ${tcgStyleFilter==='All'?'active':''}" onclick="setTcgStyleFilter('All')">All</button>
-        ${styles.map(s=>`<button class="tcg-fpill ${tcgStyleFilter===s?'active':''}" onclick="setTcgStyleFilter('${s}')">${s}</button>`).join('')}
+        ${stylesInUse.map(s=>`<button class="tcg-fpill ${tcgStyleFilter===s?'active':''}" onclick="setTcgStyleFilter('${s}')">${s}</button>`).join('')}
       </div>
-      <div class="tcg-filter-row">
-        <span class="tcg-filter-row-label">Color:</span>
-        <button class="tcg-fpill ${tcgColorFilter==='All'?'active':''}" onclick="setTcgColorFilter('All')">All</button>
-        ${colorPills.map(c=>`<button class="tcg-fpill ${tcgColorFilter===c?'active':''}" onclick="setTcgColorFilter('${c}')">${c}</button>`).join('')}
-      </div>
-      <div class="tcg-filter-row">
-        <span class="tcg-filter-row-label">Show:</span>
-        <button class="tcg-fpill ${tcgCategoryFilter==='All'?'active':''}" onclick="setTcgCategoryFilter('All')">All</button>
-        <button class="tcg-fpill ${tcgCategoryFilter==='land'?'active':''}" onclick="setTcgCategoryFilter('land')">Mana Color Boxes</button>
-        <button class="tcg-fpill ${tcgCategoryFilter==='commander'?'active':''}" onclick="setTcgCategoryFilter('commander')">Commander Boxes</button>
-      </div>`;
+      ${colorRow}
+      ${categoryRow}`;
   }
 
   function setTcgStyleFilter(style){
@@ -1731,6 +1742,7 @@
         <div class="tcg-sub-card-img">${imgHTML}</div>
         <div class="tcg-sub-card-body">
           <div class="tcg-sub-name">${p.name}</div>
+          ${p.desc ? `<div class="tcg-sub-desc">${p.desc}</div>` : ''}
           ${priceHTML}
           ${colorPickerHTML}
           ${addBtnHTML}
@@ -1822,6 +1834,8 @@
     }
 
     document.getElementById('tcg-lb-name').textContent = p.name;
+    const descEl = document.getElementById('tcg-lb-desc');
+    if(descEl){ descEl.textContent = p.desc || ''; descEl.style.display = p.desc ? 'block' : 'none'; }
     const priceEl = document.getElementById('tcg-lb-price');
     priceEl.textContent = (p.price !== undefined && p.price !== null)
       ? `$${p.price.toFixed(2)}${p.bundlePrice ? ` · 2 for $${p.bundlePrice}` : ''}`
