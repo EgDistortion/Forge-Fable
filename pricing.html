@@ -267,6 +267,25 @@
   </style>
 </head>
 <body>
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-head">
+      <div class="cart-head-title">YOUR CART</div>
+      <button class="cart-close" onclick="closeCart()">✕ CLOSE</button>
+    </div>
+    <div class="cart-items" id="cart-items">
+      <div class="cart-empty">Your cart is empty — <a href="shop.html" style="color:var(--gold);">browse the shop</a> to add items.</div>
+    </div>
+    <div class="cart-foot" id="cart-foot" style="display:none;">
+      <div class="cart-subtotal">
+        <span class="cart-subtotal-label">TOTAL</span>
+        <span class="cart-subtotal-val" id="cart-total">$0.00</span>
+      </div>
+      <p class="cart-note">Orders are typically ready in 3–5 business days.</p>
+      <button class="checkout-stripe" id="stripe-btn" onclick="checkoutStripe()">💳 CHECKOUT WITH CARD</button>
+      <div id="paypal-cart-button-container" style="margin-top:8px;"></div>
+    </div>
+  </div>
 
   <nav class="site-nav">
     <a href="index.html" class="nav-logo">
@@ -541,80 +560,9 @@
 
   <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="ALZJ6EDJLKNUL"></script>
   <script>
-    const STRIPE_KEY = 'pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
-    let cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
-
-    function saveCart(){ localStorage.setItem('ff_cart', JSON.stringify(cart)); }
-
-    function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); saveCart(); renderCartDrawer(); updateBadge(); }
-    function changeQty(id,delta){ const item=cart.find(i=>i.id===id); if(!item) return; item.qty=Math.max(0,item.qty+delta); if(item.qty===0) cart=cart.filter(i=>i.id!==id); saveCart(); renderCartDrawer(); updateBadge(); }
-
-    function updateBadge(){
-      const total=cart.reduce((s,i)=>s+i.qty,0);
-      const badge=document.getElementById('cart-badge');
-      if(badge){badge.textContent=total;badge.classList.toggle('show',total>0);}
-    }
-
-    function renderCartDrawer(){
-      const container=document.getElementById('cart-items');
-      const foot=document.getElementById('cart-foot');
-      if(!container) return;
-      if(cart.length===0){
-        container.innerHTML='<div class="cart-empty">Your cart is empty — <a href="shop.html" style="color:var(--gold);">browse the shop</a> to add items.</div>';
-        if(foot) foot.style.display='none';
-        return;
-      }
-      if(foot) foot.style.display='block';
-      let total=0;
-      container.innerHTML=cart.map(item=>{
-        const line=item.price*item.qty; total+=line;
-        return `<div class="cart-item">
-          <div class="cart-item-info">
-            <div class="cart-item-name">${item.name}</div>
-            <div class="cart-item-meta">${item.theme} · $${item.price.toFixed(2)} each</div>
-            <div class="cart-item-qty">
-              <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
-              <span class="qty-num">${item.qty}</span>
-              <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
-              <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</button>
-            </div>
-          </div>
-          <div class="cart-item-price">$${line.toFixed(2)}</div>
-        </div>`;
-      }).join('');
-      const totalEl=document.getElementById('cart-total');
-      if(totalEl) totalEl.textContent='$'+total.toFixed(2);
-    }
-
-    function openCart(){
-      document.getElementById('cart-overlay').classList.add('open');
-      document.getElementById('cart-drawer').classList.add('open');
-      document.body.style.overflow='hidden';
-    }
-    function closeCart(){
-      document.getElementById('cart-overlay').classList.remove('open');
-      document.getElementById('cart-drawer').classList.remove('open');
-      document.body.style.overflow='';
-    }
-
-    async function checkoutStripe(){
-      if(!cart.length) return;
-      const btn=document.getElementById('stripe-btn');
-      btn.textContent='PREPARING...'; btn.disabled=true;
-      try {
-        const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart})});
-        const data=await res.json();
-        if(data.url){ window.location.href=data.url; }
-        else throw new Error(data.error||'No URL');
-      } catch(err){
-        btn.textContent='💳 CHECKOUT WITH CARD'; btn.disabled=false;
-        alert('Checkout failed — please try PayPal or try again.');
-      }
-    }
-
-    // Init
-    updateBadge();
-    renderCartDrawer();
+  </script>
+  <script src="cart.js"></script>
+  <script>
 
     // ── COST ESTIMATOR ──
     // Based on market research: FDM $0.10-0.50/g, Resin $0.70-3.00/g

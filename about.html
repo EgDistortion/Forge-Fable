@@ -125,10 +125,10 @@
           The Forge &amp; Fable started the way most things like this do — a <strong>dungeon master who couldn't find the minis he needed</strong> and decided to print them himself. One printer became two. Two became a small operation. And somewhere along the way, other people started asking if they could order too.
         </p>
         <p>
-          I'm based in <strong>Lima, OH</strong> and I print everything Myself — no outsourcing, no dropshipping. When you order from me with the help from my wife, a real person in a real workshop is running your file and packaging your order. We know what a bad print looks like and we don't ship them.
+          We're based in <strong>Lima, OH</strong> and we print everything ourselves — no outsourcing, no dropshipping. When you order from us, a real person in a real workshop is running your file and packaging your order. We know what a bad print looks like and we don't ship them.
         </p>
         <p>
-          We specialize in <strong>TTRPG miniatures and terrain</strong> — the stuff that makes your table look like the world you're imagining. Resin for detail minis, PLA for terrain and props. We also offer over 150 <strong>coin prop designs</strong> in resin — great for loot drops, campaign rewards, or just looking cool on the shelf.
+          We specialize in <strong>TTRPG miniatures and terrain</strong> — the stuff that makes your table look like the world you're imagining. Resin for detail minis, PLA for terrain and props. We also offer over 200 <strong>coin prop designs</strong> in resin — great for loot drops, campaign rewards, or just looking cool on the shelf.
         </p>
         <p>
           If you have an STL, we'll print it. If you don't, we can help you find one. And if you're in Lima, come pick it up — we like meeting the people who actually play these games.
@@ -151,7 +151,7 @@
     <!-- STATS -->
     <div class="about-stats">
       <div class="about-stat">
-        <div class="about-stat-val">150+</div>
+        <div class="about-stat-val">200+</div>
         <div class="about-stat-label">COIN DESIGNS</div>
       </div>
       <div class="about-stat">
@@ -251,37 +251,9 @@
 
   <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="ALZJ6EDJLKNUL"></script>
   <script>
-    const STRIPE_KEY = 'pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
-    let cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
-    function saveCart(){ localStorage.setItem('ff_cart', JSON.stringify(cart)); }
-    function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); saveCart(); renderCartDrawer(); updateBadge(); }
-    function changeQty(id,delta){ const item=cart.find(i=>i.id===id); if(!item) return; item.qty=Math.max(0,item.qty+delta); if(item.qty===0) cart=cart.filter(i=>i.id!==id); saveCart(); renderCartDrawer(); updateBadge(); }
-    function updateBadge(){
-      const total=cart.reduce((s,i)=>s+i.qty,0);
-      const badge=document.getElementById('cart-badge');
-      if(badge){badge.textContent=total;badge.classList.toggle('show',total>0);}
-    }
-    function renderCartDrawer(){
-      const container=document.getElementById('cart-items');
-      const foot=document.getElementById('cart-foot');
-      if(!container) return;
-      if(cart.length===0){ container.innerHTML='<div class="cart-empty">Your cart is empty — <a href="shop.html" style="color:var(--gold);">browse the shop</a> to add items.</div>'; if(foot) foot.style.display='none'; return; }
-      if(foot) foot.style.display='block';
-      let total=0;
-      container.innerHTML=cart.map(item=>{ const line=item.price*item.qty; total+=line; return `<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-meta">${item.theme} · $${item.price.toFixed(2)} each</div><div class="cart-item-qty"><button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button><span class="qty-num">${item.qty}</span><button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button><button class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</button></div></div><div class="cart-item-price">$${line.toFixed(2)}</div></div>`; }).join('');
-      document.getElementById('cart-total').textContent='$'+total.toFixed(2);
-    }
-    function openCart(){ document.getElementById('cart-overlay').classList.add('open'); document.getElementById('cart-drawer').classList.add('open'); document.body.style.overflow='hidden'; }
-    function closeCart(){ document.getElementById('cart-overlay').classList.remove('open'); document.getElementById('cart-drawer').classList.remove('open'); document.body.style.overflow=''; }
-    async function checkoutStripe(){
-      if(!cart.length) return;
-      const btn=document.getElementById('stripe-btn');
-      btn.textContent='PREPARING...'; btn.disabled=true;
-      try{ const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart})}); const data=await res.json(); if(data.url){ window.location.href=data.url; } else throw new Error(data.error||'No URL'); }
-      catch(err){ btn.textContent='💳 CHECKOUT WITH CARD'; btn.disabled=false; alert('Checkout failed — please try again.'); }
-    }
-    document.getElementById('hamburger').addEventListener('click',function(){ document.getElementById('nav-links').classList.toggle('open'); });
-    updateBadge(); renderCartDrawer();
+  </script>
+  <script src="cart.js"></script>
+  <script>
   </script>
 </body>
 </html>

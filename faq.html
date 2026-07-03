@@ -248,60 +248,9 @@
       ans.classList.toggle('open', !isOpen);
     }
 
-    const STRIPE_KEY = 'pk_live_51TdM3BGl0Jv4uGwwAsBquSAbFwscRRkXVEopNLNMHA4ZlKkjcxuFCUYsYc5rw7a1zS3YPpWdWZhBAUHdBBNSMe1800yodrINfi';
-    let cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
-    const COIN_PRICE = 2.00;
-    const COIN_BUNDLES = [{min:10,total:15},{min:5,total:8},{min:3,total:5}];
-    function coinBundlePrice(n){
-      if(n<=0)return 0;
-      for(const t of COIN_BUNDLES){
-        if(n>=t.min){const b=Math.floor(n/t.min),r=n%t.min;return b*t.total+coinBundlePrice(r);}
-      }
-      return n*COIN_PRICE;
-    }
-    function saveCart(){ localStorage.setItem('ff_cart', JSON.stringify(cart)); }
-    function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); saveCart(); renderCart(); updateBadge(); }
-    function changeQty(id,delta){ const item=cart.find(i=>i.id===id); if(!item)return; item.qty=Math.max(0,item.qty+delta); if(item.qty===0) cart=cart.filter(i=>i.id!==id); saveCart(); renderCart(); updateBadge(); }
-    function updateBadge(){
-      const total=cart.reduce((s,i)=>s+i.qty,0);
-      const badge=document.getElementById('cart-badge');
-      if(badge){badge.textContent=total;badge.classList.toggle('show',total>0);}
-    }
-    function renderCart(){
-      const container=document.getElementById('cart-items');
-      const foot=document.getElementById('cart-foot');
-      if(!container)return;
-      if(cart.length===0){ container.innerHTML='<div class="cart-empty">Your cart is empty — <a href="shop.html" style="color:var(--gold);">browse the shop</a> to add items.</div>'; if(foot)foot.style.display='none'; return; }
-      if(foot)foot.style.display='block';
-      const coinCount=cart.filter(i=>i.isCoin).reduce((s,i)=>s+i.qty,0);
-      const coinTotal=coinBundlePrice(coinCount);
-      const nonCoinTotal=cart.filter(i=>!i.isCoin).reduce((s,i)=>s+i.price*i.qty,0);
-      const total=coinTotal+nonCoinTotal;
-      const effCoinPrice=coinCount>0?coinTotal/coinCount:COIN_PRICE;
-      container.innerHTML=cart.map(item=>{
-        const unit=item.isCoin?effCoinPrice:item.price;
-        const line=unit*item.qty;
-        return `<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-meta">${item.theme} · $${unit.toFixed(2)} each</div><div class="cart-item-qty"><button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button><span class="qty-num">${item.qty}</span><button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button><button class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</button></div></div><div class="cart-item-price">$${line.toFixed(2)}</div></div>`;
-      }).join('');
-      document.getElementById('cart-total').textContent='$'+total.toFixed(2);
-    }
-    function openCart(){ document.getElementById('cart-overlay').classList.add('open'); document.getElementById('cart-drawer').classList.add('open'); document.body.style.overflow='hidden'; }
-    function closeCart(){ document.getElementById('cart-overlay').classList.remove('open'); document.getElementById('cart-drawer').classList.remove('open'); document.body.style.overflow=''; }
-    async function checkoutStripe(){
-      if(!cart.length)return;
-      const btn=document.getElementById('stripe-btn');
-      btn.textContent='PREPARING...'; btn.disabled=true;
-      try{
-        const coinCount=cart.filter(i=>i.isCoin).reduce((s,i)=>s+i.qty,0);
-        const effCoinPrice=coinCount>0?coinBundlePrice(coinCount)/coinCount:COIN_PRICE;
-        const items=cart.map(i=>({name:i.name,theme:i.theme,qty:i.qty,price:i.isCoin?Math.round(effCoinPrice*100)/100:i.price}));
-        const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items})});
-        const data=await res.json();
-        if(data.url){window.location.href=data.url;} else throw new Error(data.error||'No URL');
-      }catch(err){ btn.textContent='💳 CHECKOUT WITH CARD'; btn.disabled=false; alert('Checkout failed — please try again.'); }
-    }
-    document.getElementById('hamburger').addEventListener('click',function(){ document.getElementById('nav-links').classList.toggle('open'); });
-    updateBadge(); renderCart();
+  </script>
+  <script src="cart.js"></script>
+  <script>
   </script>
 </body>
 </html>
