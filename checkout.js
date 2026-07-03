@@ -88,6 +88,11 @@ module.exports = async (req, res) => {
       },
     });
 
+    // Temporary debug — remove after tax is confirmed working
+    console.log('SESSION automatic_tax:', JSON.stringify(session.automatic_tax));
+    console.log('SESSION amount_total:', session.amount_total);
+    console.log('SESSION total_details:', JSON.stringify(session.total_details));
+
     return res.status(200).json({ url: session.url });
 
   } catch (err) {
