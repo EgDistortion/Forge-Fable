@@ -38,6 +38,10 @@ module.exports = async (req, res) => {
           tax_code: 'txcd_99999999',
         },
         unit_amount: Math.round(item.price * 100), // Stripe uses cents
+        // Exclusive = tax is added on top of the listed price, shown as a
+        // separate line item at checkout. Required when using price_data
+        // with automatic_tax — without this Stripe silently skips tax.
+        tax_behavior: 'exclusive',
       },
       quantity: item.qty,
     }));
@@ -50,6 +54,9 @@ module.exports = async (req, res) => {
       automatic_tax: { enabled: true }, // Stripe Tax — calculates Ohio sales tax
                                          // (and any other state where you're registered)
                                          // automatically based on the customer's address.
+      customer_creation: 'always',       // Required for Stripe Tax — creates a Customer
+                                         // record to store the shipping address, which is
+                                         // how Stripe knows which tax rate to apply.
       success_url: 'https://theforgeandfable.com/success.html?session_id={CHECKOUT_SESSION_ID}',
       cancel_url:  'https://theforgeandfable.com/shop.html',
       shipping_address_collection: {
