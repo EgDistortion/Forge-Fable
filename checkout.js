@@ -88,14 +88,6 @@ module.exports = async (req, res) => {
       },
     });
 
-    // ── DEBUG LOGGING — remove once tax is confirmed working ──
-    console.log('Stripe session created:', {
-      id: session.id,
-      automatic_tax: session.automatic_tax,
-      customer_creation: session.customer_creation,
-      amount_total: session.amount_total,
-    });
-
     return res.status(200).json({ url: session.url });
 
   } catch (err) {
