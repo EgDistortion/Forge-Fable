@@ -324,6 +324,14 @@
       color: var(--muted);
       cursor: not-allowed;
     }
+    .submit-hint {
+      font-family: var(--serif);
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      text-align: center;
+      margin-top: 8px;
+    }
 
     /* What to expect */
     .expect-list { list-style: none; }
@@ -672,7 +680,8 @@
             <span class="val">TBD</span>
           </div>
           <div class="summary-note">Final price confirmed after file review. No charge until you approve the quote.</div>
-          <button type="submit" class="btn-submit" id="submit-btn" disabled>CONFIRM LICENSE TO CONTINUE</button>
+          <button type="submit" class="btn-submit" id="submit-btn" disabled onclick="handleSubmitClick(event)">CONFIRM LICENSE TO CONTINUE</button>
+          <div class="submit-hint" id="submit-hint">☝ Please check both license boxes above to enable submission.</div>
         </div>
 
         <div style="margin-top:2rem;">
@@ -871,8 +880,26 @@
       const c1 = document.getElementById('lic1').checked;
       const c2 = document.getElementById('lic2').checked;
       const btn = document.getElementById('submit-btn');
+      const hint = document.getElementById('submit-hint');
       btn.disabled = !(c1 && c2);
       btn.textContent = (c1 && c2) ? 'SUBMIT ORDER REQUEST' : 'CONFIRM LICENSE TO CONTINUE';
+      if(hint) hint.style.display = (c1 && c2) ? 'none' : 'block';
+    }
+
+    // Scroll to license section if customer clicks the disabled submit button
+    function handleSubmitClick(e) {
+      const btn = document.getElementById('submit-btn');
+      if(btn.disabled){
+        e.preventDefault();
+        const licenseBox = document.querySelector('.license-box');
+        if(licenseBox){
+          licenseBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Flash the license box to draw attention
+          licenseBox.style.transition = 'box-shadow 0.2s';
+          licenseBox.style.boxShadow = '0 0 0 2px var(--gold)';
+          setTimeout(() => { licenseBox.style.boxShadow = ''; }, 1500);
+        }
+      }
     }
 
     // ── LIVE SUMMARY ──
