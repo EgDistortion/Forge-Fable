@@ -654,8 +654,6 @@
           <!-- Hidden spam protection -->
           <input type="text" name="_gotcha" style="display:none">
           <input type="hidden" name="_subject" value="New print request — The Forge &amp; Fable">
-          <!-- Redirects back to your site after submission. Update once live. -->
-          <input type="hidden" name="_next" value="https://theforgeandfable.com/order.html?submitted=true">
 
         </form><!-- /form -->
 
@@ -680,7 +678,7 @@
             <span class="val">TBD</span>
           </div>
           <div class="summary-note">Final price confirmed after file review. No charge until you approve the quote.</div>
-          <button type="submit" class="btn-submit" id="submit-btn" disabled onclick="handleSubmitClick(event)">CONFIRM LICENSE TO CONTINUE</button>
+          <button type="button" class="btn-submit" id="submit-btn" disabled onclick="handleSubmitClick(event)">CONFIRM LICENSE TO CONTINUE</button>
           <div class="submit-hint" id="submit-hint">☝ Please check both license boxes above to enable submission.</div>
         </div>
 
@@ -894,11 +892,55 @@
         const licenseBox = document.querySelector('.license-box');
         if(licenseBox){
           licenseBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          // Flash the license box to draw attention
           licenseBox.style.transition = 'box-shadow 0.2s';
           licenseBox.style.boxShadow = '0 0 0 2px var(--gold)';
           setTimeout(() => { licenseBox.style.boxShadow = ''; }, 1500);
         }
+        return;
+      }
+      // Submit the form via AJAX so we can show a nice success message
+      submitOrderForm();
+    }
+
+    async function submitOrderForm(){
+      const form = document.getElementById('order-form');
+      const btn = document.getElementById('submit-btn');
+
+      // Validate required fields
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(field => {
+        if(!field.value.trim()){ field.style.borderColor = 'var(--red)'; valid = false; }
+        else field.style.borderColor = '';
+      });
+      if(!valid){
+        form.querySelector('[required]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      btn.textContent = 'SENDING...';
+      btn.disabled = true;
+
+      try {
+        const data = new FormData(form);
+        const res = await fetch('https://formspree.io/f/xnjryqen', {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if(res.ok){
+          // Show success overlay
+          document.getElementById('order-success-overlay').style.display = 'flex';
+          form.reset();
+          checkLicense();
+        } else {
+          throw new Error('Form submission failed');
+        }
+      } catch(err){
+        btn.textContent = 'SUBMIT ORDER REQUEST';
+        btn.disabled = false;
+        alert('Something went wrong sending your request. Please email us directly at forgeandfable3d@gmail.com');
       }
     }
 
@@ -915,12 +957,6 @@
       renderColors(mat);
     }
 
-    // ── SUCCESS REDIRECT ──
-    if (window.location.search.includes('submitted=true')) {
-      document.getElementById('order-form').style.display = 'none';
-      document.getElementById('success-msg').style.display = 'block';
-    }
-
     // ── LOAD LIVE FILAMENT STOCK ──
     fetchFilamentStock();
   </script>
@@ -931,6 +967,17 @@
   <script src="cart.js"></script>
   <script>
   </script>
+
+  <!-- ORDER SUCCESS OVERLAY -->
+  <div id="order-success-overlay" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(8,9,12,0.92);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:2rem;">
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:2.5rem 2rem;max-width:480px;width:100%;text-align:center;">
+      <div style="font-size:48px;margin-bottom:1rem;">⚒️</div>
+      <div style="font-family:var(--serif);font-size:20px;color:var(--gold2);letter-spacing:0.12em;margin-bottom:1rem;">REQUEST RECEIVED</div>
+      <p style="font-size:15px;color:var(--soft);line-height:1.7;margin-bottom:1.5rem;font-style:italic;">Thank you! We'll review your request and get back to you within 24 hours with a quote. No payment is due until you approve.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:1.75rem;">Don't forget to email your STL file to <strong style="color:var(--soft);">forgeandfable3d@gmail.com</strong></p>
+      <button onclick="document.getElementById('order-success-overlay').style.display='none';" style="font-family:var(--serif);font-size:12px;letter-spacing:0.1em;background:var(--gold);color:#0d0f14;border:none;padding:10px 24px;border-radius:var(--radius);cursor:pointer;">CLOSE</button>
+    </div>
+  </div>
 
 </body>
 </html>
