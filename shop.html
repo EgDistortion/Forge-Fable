@@ -145,6 +145,7 @@
     .tcg-group-header{grid-column:1/-1;font-family:var(--serif);font-size:13px;color:var(--gold);letter-spacing:0.18em;padding:0.75rem 0 0.5rem;border-bottom:1.5px solid var(--border2);margin-bottom:0.5rem;margin-top:0.75rem;}
     .tcg-group-header:first-child{margin-top:0;}
     .tcg-stock-mto{font-family:var(--serif);font-size:9px;color:var(--gold);letter-spacing:0.1em;}
+    .tcg-stock-in{font-family:var(--serif);font-size:9px;color:var(--green);letter-spacing:0.1em;}
     .tcg-sub-price{font-family:var(--serif);font-size:16px;color:var(--gold2);margin-bottom:8px;}
     .tcg-bundle-hint{font-size:11px;color:var(--muted);font-style:italic;}
     .tcg-card-color-label{display:block;font-size:11px;color:var(--muted);font-style:italic;margin-bottom:4px;}
@@ -851,8 +852,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1346,6 +1347,13 @@
         { name: 'Black', color: '#2b2b2b' },
         { name: 'Red', color: '#c0392b' },
         { name: 'Green', color: '#3d7a4a' },
+      ],
+      // MTG Tokens — $5 each. inStock: true = ready to ship, false = made to order.
+      // Add/update names and inStock status as your catalog grows.
+      tokenItems: [
+        // Add your token names here — examples below, replace with your real ones
+        // { name: 'Goblin 1/1', price: 5, img: 'mtg-token-goblin', inStock: true },
+        // { name: 'Zombie 2/2', price: 5, img: 'mtg-token-zombie', inStock: false },
       ]
     },
     {
@@ -1371,7 +1379,7 @@
       hueforgeItems: [
         { name: 'Arcanine' },
         { name: 'Espeon' },
-        { name: 'Gengar', price: null, img: 'pokemon-hueforge-gengar' },
+        { name: 'Gengar', price: 30, img: 'pokemon-hueforge-gengar' },
         { name: 'Lugia' },
         { name: 'Lucario (close-up)' },
         { name: 'Luxray' },
@@ -1445,6 +1453,10 @@
     {
       id: 'hueforge', name: 'HueForge Art', desc: 'Multicolor HueForge prints — layered art pieces printed flat or for display.',
       icon: `<rect x="6" y="6" width="36" height="28" rx="2" fill="none" stroke="#c9a84c" stroke-width="2"/><circle cx="16" cy="18" r="4" fill="none" stroke="#8a7038" stroke-width="1.5"/><path d="M 6 28 L 18 18 L 26 24 L 42 12" fill="none" stroke="#8a7038" stroke-width="1.5"/>`
+    },
+    {
+      id: 'tokens', name: 'Tokens', desc: 'FDM-printed MTG tokens at actual card size — fits standard sleeves and card slots. $5 each. Stock varies by design; made to order for others.',
+      icon: `<circle cx="24" cy="24" r="18" fill="none" stroke="#c9a84c" stroke-width="2"/><circle cx="24" cy="24" r="12" fill="none" stroke="#8a7038" stroke-width="1"/><text x="24" y="29" text-anchor="middle" font-size="11" fill="#c9a84c" font-family="serif">5/5</text>`
     },
   ];
 
@@ -1653,6 +1665,12 @@
     if(tcgCurrentType.id === 'hueforge' && tcgCurrentGame.hueforgeItems){
       return tcgCurrentGame.hueforgeItems;
     }
+    if(tcgCurrentType.id === 'tokens' && tcgCurrentGame.tokenItems){
+      let items = tcgCurrentGame.tokenItems;
+      const q = (document.getElementById('tcg-search-input')?.value || '').trim().toLowerCase();
+      if(q) items = items.filter(p => p.name.toLowerCase().includes(q));
+      return items;
+    }
     return tcgCurrentGame.subcats;
   }
 
@@ -1663,6 +1681,10 @@
     const pager = document.getElementById('tcg-pager');
     if(!products.length){
       grid.innerHTML = '';
+      const isToken = tcgCurrentType && tcgCurrentType.id === 'tokens';
+      empty.textContent = isToken
+        ? 'Token catalog coming soon — check back as new designs are added.'
+        : 'No products yet — designs are in progress for this section.';
       empty.style.display = 'block';
       pager.innerHTML = '';
       return;
@@ -1710,6 +1732,12 @@
       const imgHTML = hasPhoto
         ? `<img src="images/tcg/${p.img}-1.jpg" alt="${p.name}" onerror="this.onerror=null;this.src='images/tcg/${p.img}.jpg';this.onerror=function(){this.parentElement.innerHTML='PHOTO COMING SOON';};">`
         : 'PHOTO COMING SOON';
+      const isToken = tcgCurrentType.id === 'tokens';
+      const stockBadgeHTML = isToken
+        ? (p.inStock
+            ? `<div class="tcg-stock-in">IN STOCK</div>`
+            : `<div class="tcg-stock-mto">MADE TO ORDER</div>`)
+        : '';
       const priceHTML = (p.price !== undefined && p.price !== null)
         ? `<div class="tcg-sub-price">$${p.price.toFixed(2)}${p.bundlePrice ? ` <span class="tcg-bundle-hint">· 2 for $${p.bundlePrice}</span>` : ''}</div>`
         : p.price === null
@@ -1744,6 +1772,7 @@
           <div class="tcg-sub-name">${p.name}</div>
           ${p.desc ? `<div class="tcg-sub-desc">${p.desc}</div>` : ''}
           ${priceHTML}
+          ${stockBadgeHTML}
           ${colorPickerHTML}
           ${addBtnHTML}
         </div>
