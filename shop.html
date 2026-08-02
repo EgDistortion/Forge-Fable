@@ -852,8 +852,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1397,6 +1397,8 @@
         { name: 'Luxray' },
         { name: 'Mew' },
         { name: 'Halloween Pikachu' },
+        { name: 'Umbreon', price: 30, img: 'pokemon-hueforge-umbreon' },
+        { name: 'Umbreon & Eevee', price: 30, img: 'pokemon-hueforge-umbreon-eevee' },
       ],
       // Eeveelution bookmarks — $7 each, 2 for $10.
       bookmarkItems: [
@@ -1550,7 +1552,16 @@
 
   function buildTcgTypeGrid(){
     const grid = document.getElementById('tcg-type-grid');
-    grid.innerHTML = TCG_PRODUCT_TYPES.map(t => `
+    // Only show product types this game actually has. Deck boxes are assumed
+    // for every game; tokens/bookmarks/hueforge only appear if data exists.
+    const availableTypes = TCG_PRODUCT_TYPES.filter(t => {
+      if(t.id === 'deckbox')   return !!(tcgCurrentGame.deckboxItems || tcgCurrentGame.groups || tcgCurrentGame.subcats);
+      if(t.id === 'hueforge')  return !!tcgCurrentGame.hueforgeItems;
+      if(t.id === 'tokens')    return !!tcgCurrentGame.tokenItems;
+      if(t.id === 'bookmarks') return !!tcgCurrentGame.bookmarkItems;
+      return false;
+    });
+    grid.innerHTML = availableTypes.map(t => `
       <div class="tcg-type-card" onclick="pickTcgType('${t.id}')">
         <svg class="tcg-type-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">${t.icon}</svg>
         <div class="tcg-type-name">${t.name}</div>
