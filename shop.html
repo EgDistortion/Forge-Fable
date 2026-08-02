@@ -852,8 +852,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1351,13 +1351,25 @@
       // MTG Tokens — $5 each. inStock: true = ready to ship, false = made to order.
       // Add/update names and inStock status as your catalog grows.
       tokenItems: [
-        // Add your token names here — examples below, replace with your real ones
-        // { name: 'Goblin 1/1', price: 5, img: 'mtg-token-goblin', inStock: true },
-        // { name: 'Zombie 2/2', price: 5, img: 'mtg-token-zombie', inStock: false },
+        { name: 'Ally', price: 5, img: 'mtg-token-ally', inStock: false },
+        { name: 'Knight', price: 5, img: 'mtg-token-knight', inStock: false },
+        { name: 'Treasure Token', price: 5, img: 'mtg-token-treasure', inStock: false },
+        { name: 'Squirrel', price: 5, img: 'mtg-token-squirrel', inStock: false },
+        { name: 'Wolf', price: 5, img: 'mtg-token-wolf', inStock: false },
+        { name: 'Saproling', price: 5, img: 'mtg-token-saproling', inStock: false },
+        { name: 'Spider', price: 5, img: 'mtg-token-spider', inStock: false },
+        { name: 'Faerie', price: 5, img: 'mtg-token-faerie', inStock: false },
+        { name: 'Faerie Rogue', price: 5, img: 'mtg-token-faerie-rogue', inStock: false },
+        { name: 'Clue', price: 5, img: 'mtg-token-clue', inStock: false },
+        { name: 'Myr', price: 5, img: 'mtg-token-myr', inStock: false },
+        { name: 'Food Token', price: 5, img: 'mtg-token-food', inStock: false },
+        { name: 'Dragon 4/4', price: 5, img: 'mtg-token-dragon-4', inStock: false },
+        { name: 'Dragon 5/5', price: 5, img: 'mtg-token-dragon-5', inStock: false },
+        { name: 'Dragon 6/6', price: 5, img: 'mtg-token-dragon-6', inStock: false },
       ]
     },
     {
-      id: 'pokemon', name: 'Pokémon', sub: 'Energy types & HueForge art',
+      id: 'pokemon', name: 'Pokémon', sub: 'Energy types, HueForge art & bookmarks',
       icon: `<circle r="34" fill="none" stroke="#c9a84c" stroke-width="2.5"/>
         <line x1="-34" y1="0" x2="34" y2="0" stroke="#c9a84c" stroke-width="2.5"/>
         <circle r="9" fill="none" stroke="#c9a84c" stroke-width="2.5"/>`,
@@ -1385,6 +1397,14 @@
         { name: 'Luxray' },
         { name: 'Mew' },
         { name: 'Halloween Pikachu' },
+      ],
+      // Eeveelution bookmarks — $7 each, 2 for $10.
+      bookmarkItems: [
+        { name: 'Eevee', price: 7, bundlePrice: 10, img: 'pokemon-bookmark-eevee' },
+        { name: 'Flareon', price: 7, bundlePrice: 10, img: 'pokemon-bookmark-flareon' },
+        { name: 'Jolteon', price: 7, bundlePrice: 10, img: 'pokemon-bookmark-jolteon' },
+        { name: 'Umbreon', price: 7, bundlePrice: 10, img: 'pokemon-bookmark-umbreon' },
+        { name: 'Espeon', price: 7, bundlePrice: 10, img: 'pokemon-bookmark-espeon' },
       ]
     },
     {
@@ -1455,8 +1475,12 @@
       icon: `<rect x="6" y="6" width="36" height="28" rx="2" fill="none" stroke="#c9a84c" stroke-width="2"/><circle cx="16" cy="18" r="4" fill="none" stroke="#8a7038" stroke-width="1.5"/><path d="M 6 28 L 18 18 L 26 24 L 42 12" fill="none" stroke="#8a7038" stroke-width="1.5"/>`
     },
     {
-      id: 'tokens', name: 'Tokens', desc: 'FDM-printed MTG tokens at actual card size — fits standard sleeves and card slots. $5 each. Stock varies by design; made to order for others.',
+      id: 'tokens', name: 'Tokens', desc: 'FDM-printed MTG tokens at actual card size — solid, durable, and ready for the table. $5 each. Stock varies by design; made to order for others.',
       icon: `<circle cx="24" cy="24" r="18" fill="none" stroke="#c9a84c" stroke-width="2"/><circle cx="24" cy="24" r="12" fill="none" stroke="#8a7038" stroke-width="1"/><text x="24" y="29" text-anchor="middle" font-size="11" fill="#c9a84c" font-family="serif">5/5</text>`
+    },
+    {
+      id: 'bookmarks', name: 'Bookmarks', desc: 'HueForge multicolor bookmarks — $7 each or 2 for $10.',
+      icon: `<rect x="18" y="4" width="12" height="40" rx="2" fill="none" stroke="#c9a84c" stroke-width="2"/><path d="M 18 44 L 24 38 L 30 44" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linejoin="round"/><line x1="21" y1="12" x2="27" y2="12" stroke="#8a7038" stroke-width="1.5"/><line x1="21" y1="18" x2="27" y2="18" stroke="#8a7038" stroke-width="1.5"/>`
     },
   ];
 
@@ -1671,6 +1695,13 @@
       if(q) items = items.filter(p => p.name.toLowerCase().includes(q));
       return items;
     }
+    if(tcgCurrentType.id === 'bookmarks' && tcgCurrentGame.bookmarkItems){
+      let items = tcgCurrentGame.bookmarkItems;
+      const q = (document.getElementById('tcg-search-input')?.value || '').trim().toLowerCase();
+      if(q) items = items.filter(p => p.name.toLowerCase().includes(q));
+      // Stamp a shared bundleKey so ANY two bookmarks trigger the 2-for-$10 deal
+      return items.map(p => ({ ...p, bundleKey: `${tcgCurrentGame.id}-bookmarks`, bundlePrice: 10 }));
+    }
     return tcgCurrentGame.subcats;
   }
 
@@ -1682,9 +1713,12 @@
     if(!products.length){
       grid.innerHTML = '';
       const isToken = tcgCurrentType && tcgCurrentType.id === 'tokens';
+      const isBookmark = tcgCurrentType && tcgCurrentType.id === 'bookmarks';
       empty.textContent = isToken
         ? 'Token catalog coming soon — check back as new designs are added.'
-        : 'No products yet — designs are in progress for this section.';
+        : isBookmark
+          ? 'Bookmark catalog coming soon — check back as new designs are added.'
+          : 'No products yet — designs are in progress for this section.';
       empty.style.display = 'block';
       pager.innerHTML = '';
       return;
