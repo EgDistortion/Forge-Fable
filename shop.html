@@ -852,8 +852,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1774,8 +1774,13 @@
       }
       const cardId = `tcg-${tcgCurrentGame.id}-${tcgCurrentType.id}-${start+idx}`;
       const hasPhoto = !!p.img;
+      // Deck boxes use -1/-2 suffixes; tokens, bookmarks and HueForge use a
+      // plain filename. Try the expected one first, fall back to the other.
+      const isDeckboxType = tcgCurrentType.id === 'deckbox';
+      const primarySrc  = isDeckboxType ? `images/tcg/${p.img}-1.jpg` : `images/tcg/${p.img}.jpg`;
+      const fallbackSrc = isDeckboxType ? `images/tcg/${p.img}.jpg`   : `images/tcg/${p.img}-1.jpg`;
       const imgHTML = hasPhoto
-        ? `<img src="images/tcg/${p.img}-1.jpg" alt="${p.name}" onerror="this.onerror=null;this.src='images/tcg/${p.img}.jpg';this.onerror=function(){this.parentElement.innerHTML='PHOTO COMING SOON';};">`
+        ? `<img src="${primarySrc}" alt="${p.name}" onerror="this.onerror=null;this.src='${fallbackSrc}';this.onerror=function(){this.parentElement.innerHTML='PHOTO COMING SOON';};">`
         : 'PHOTO COMING SOON';
       const isToken = tcgCurrentType.id === 'tokens';
       const stockBadgeHTML = isToken
@@ -1881,24 +1886,34 @@
     const isDeckbox = tcgCurrentType.id === 'deckbox';
     const hasPhoto = !!p.img;
 
-    // Photos — deck boxes have up to 2 (-1, -2), HueForge has 1
+    // Photos — deck boxes have up to 2 (-1, -2); tokens, bookmarks and
+    // HueForge use a single plain filename with no numeric suffix.
     const photos = [];
     if(hasPhoto){
-      photos.push(`images/tcg/${p.img}-1.jpg`);
-      if(isDeckbox) photos.push(`images/tcg/${p.img}-2.jpg`);
+      if(isDeckbox){
+        photos.push(`images/tcg/${p.img}-1.jpg`);
+        photos.push(`images/tcg/${p.img}-2.jpg`);
+      } else {
+        photos.push(`images/tcg/${p.img}.jpg`);
+      }
     }
     tcgLbProduct._photos = photos;
 
     const imgEl = document.getElementById('tcg-lb-img');
     if(photos.length){
       imgEl.style.display = 'block';
+      // Reset the fallback flag for each render, otherwise a single failed
+      // image permanently blocks every later lightbox from loading.
+      delete imgEl.dataset.triedFallback;
       imgEl.src = photos[tcgLbPhotoIndex];
       imgEl.alt = p.name;
       imgEl.onerror = function(){
-        // Try the no-suffix single-photo fallback, then give up gracefully
+        // Try the opposite naming convention once, then give up gracefully
         if(!this.dataset.triedFallback){
           this.dataset.triedFallback = '1';
-          this.src = `images/tcg/${p.img}.jpg`;
+          this.src = isDeckbox
+            ? `images/tcg/${p.img}.jpg`
+            : `images/tcg/${p.img}-1.jpg`;
         } else {
           this.style.display = 'none';
         }
