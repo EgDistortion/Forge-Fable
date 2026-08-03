@@ -11,6 +11,57 @@ let cart = JSON.parse(localStorage.getItem('ff_cart') || '[]');
 
 function saveCart() { localStorage.setItem('ff_cart', JSON.stringify(cart)); }
 
+// Returns Stripe-ready line items whose cent amounts sum EXACTLY to the cart
+// total shown to the customer. Bundle groups (coins, and TCG "2 for $X" deals)
+// are split into two line items when the discount doesn't divide evenly, so
+// there's never a penny of drift between the cart and the charge.
+function getEffectivePricedItems() {
+  const out = [];
+
+  // Group cart lines into pricing groups: coins share one group, each TCG
+  // bundleKey is its own group, everything else is priced individually.
+  const groups = new Map();
+  const singles = [];
+  cart.forEach(item => {
+    const key = item.isCoin ? '__coins__' : (item.bundleKey && item.bundlePrice ? item.bundleKey : null);
+    if(!key){ singles.push(item); return; }
+    if(!groups.has(key)) groups.set(key, { items: [], qty: 0, unitPrice: item.price, bundlePrice: item.bundlePrice, isCoin: !!item.isCoin });
+    const g = groups.get(key);
+    g.items.push(item);
+    g.qty += item.qty;
+  });
+
+  // Non-bundled items bill at their listed price
+  singles.forEach(i => out.push({ name: i.name, theme: i.theme, qty: i.qty, price: i.price }));
+
+  groups.forEach(g => {
+    // Total the group should cost, in whole cents
+    const totalCents = g.isCoin
+      ? Math.round(coinBundlePrice(g.qty) * 100)
+      : Math.round((Math.floor(g.qty / 2) * g.bundlePrice + (g.qty % 2) * g.unitPrice) * 100);
+
+    // Split evenly, then hand the leftover cents to the first N units so the
+    // sum lands exactly on totalCents.
+    const base = Math.floor(totalCents / g.qty);
+    let extra = totalCents - base * g.qty;
+
+    g.items.forEach(item => {
+      let remaining = item.qty;
+      if(extra > 0){
+        const hi = Math.min(extra, remaining);
+        out.push({ name: item.name, theme: item.theme, qty: hi, price: (base + 1) / 100 });
+        extra -= hi;
+        remaining -= hi;
+      }
+      if(remaining > 0){
+        out.push({ name: item.name, theme: item.theme, qty: remaining, price: base / 100 });
+      }
+    });
+  });
+
+  return out;
+}
+
 function coinBundlePrice(n) {
   if(n <= 0) return 0;
   const tiers = [{min:10,price:15},{min:5,price:8},{min:3,price:5}];
@@ -166,12 +217,7 @@ async function checkoutStripe() {
   const btn = document.getElementById('stripe-btn');
   btn.textContent = 'PREPARING...'; btn.disabled = true;
   try {
-    const coinCount = cart.filter(i => i.isCoin).reduce((s, i) => s + i.qty, 0);
-    const effCoinPrice = coinCount > 0 ? coinBundlePrice(coinCount) / coinCount : COIN_PRICE;
-    const items = cart.map(i => ({
-      name: i.name, theme: i.theme, qty: i.qty,
-      price: i.isCoin ? Math.round(effCoinPrice * 100) / 100 : i.price
-    }));
+    const items = getEffectivePricedItems();
     const res = await fetch('/api/checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({items}) });
     const data = await res.json();
     if(data.url){ window.location.href = data.url; }
@@ -185,10 +231,9 @@ async function checkoutStripe() {
 function renderPayPalButton() {
   const container = document.getElementById('paypal-cart-button-container');
   if(!container || !cart.length){ if(container) container.innerHTML = ''; return; }
-  const coinCount = cart.filter(i => i.isCoin).reduce((s, i) => s + i.qty, 0);
-  const effCoinPrice = coinCount > 0 ? coinBundlePrice(coinCount) / coinCount : COIN_PRICE;
-  const total = cart.reduce((s, i) => s + (i.isCoin ? effCoinPrice : i.price) * i.qty, 0);
-  const items = cart.map(i => ({ name: i.name, quantity: i.qty, unitPrice: (i.isCoin ? effCoinPrice : i.price).toFixed(2), currency:'USD' }));
+  const priced = getEffectivePricedItems();
+  const total = priced.reduce((s, i) => s + i.price * i.qty, 0);
+  const items = priced.map(i => ({ name: i.name, quantity: i.qty, unitPrice: i.price.toFixed(2), currency:'USD' }));
   try {
     if(window.paypal && window.paypal.CartButton){
       container.innerHTML = '';
