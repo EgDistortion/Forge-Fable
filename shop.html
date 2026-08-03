@@ -855,8 +855,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1836,6 +1836,21 @@
     renderTcgPager(totalPages, products.length, start, pageItems.length);
   }
 
+  // Bundle grouping key — items bundle with ANY other item of the same type,
+  // not just an identical one. Two-Tone Forest + Two-Tone Swamp bundle
+  // together; Eevee bookmark + Umbreon bookmark bundle together.
+  function tcgBundleKeyFor(product){
+    if(!product || !product.bundlePrice) return undefined;
+    if(product.bundleKey) return product.bundleKey; // already stamped (bookmarks)
+    if(product.style)     return `${tcgCurrentGame.id}-${tcgCurrentType.id}-${product.style}`;
+    return `${tcgCurrentGame.id}-${tcgCurrentType.id}`;
+  }
+
+  // Look a product up in the current listing by its base name
+  function tcgFindProduct(name){
+    return (tcgCurrentProductList || []).find(p => p.name === name);
+  }
+
   function addTcgToCart(cardId, name, price, bundlePrice){
     const accentSelect = document.getElementById(`${cardId}-accentcolor`);
     const boxSelect = document.getElementById(`${cardId}-boxcolor`);
@@ -1861,7 +1876,7 @@
         price: price,
         qty: 1,
         isCoin: false,
-        bundleKey: bundlePrice ? `${tcgCurrentGame.id}-${name}` : undefined,
+        bundleKey: tcgBundleKeyFor(tcgFindProduct(name)),
         bundlePrice: bundlePrice || undefined
       });
     }
@@ -2027,7 +2042,7 @@
         price: price,
         qty: 1,
         isCoin: false,
-        bundleKey: bundlePrice ? `${tcgCurrentGame.id}-${name}` : undefined,
+        bundleKey: tcgBundleKeyFor(tcgFindProduct(name)),
         bundlePrice: bundlePrice || undefined
       });
     }
@@ -2417,8 +2432,11 @@
     // Nudge for any bundle-eligible item sitting at an odd quantity (1, 3, 5...)
     Object.entries(bundleGroups).forEach(([key,g])=>{
       if(g.qty % 2 === 1){
-        const exampleName = g.items[0]?.name?.split(' (')[0] || 'this item';
-        savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD 1 MORE ${exampleName.toUpperCase()} FOR THE 2-FOR-$${g.bundlePrice} DEAL</div>`;
+        // Key format: game-type-style (or game-bookmarks). Describe the group
+        // so the customer knows ANY item of that type completes the bundle.
+        const parts = key.split('-');
+        const label = parts.length >= 3 ? `${parts[2]} DECK BOX` : 'BOOKMARK';
+        savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ANY 1 MORE ${label.toUpperCase()} FOR THE 2-FOR-$${g.bundlePrice} DEAL</div>`;
       }
     });
 

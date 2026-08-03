@@ -189,8 +189,11 @@ function renderCart() {
   }
   Object.entries(bundleGroups).forEach(([key, g]) => {
     if(g.qty % 2 === 1){
-      const name = g.items[0]?.name?.split(' (')[0] || 'this item';
-      savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD 1 MORE ${name.toUpperCase()} FOR THE 2-FOR-$${g.bundlePrice} DEAL</div>`;
+      // Key format: game-type-style (or game-bookmarks). Describe the group
+      // so the customer knows ANY item of that type completes the bundle.
+      const parts = key.split('-');
+      const label = parts.length >= 3 ? `${parts[2]} DECK BOX` : 'BOOKMARK';
+      savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ANY 1 MORE ${label.toUpperCase()} FOR THE 2-FOR-$${g.bundlePrice} DEAL</div>`;
     }
   });
 
