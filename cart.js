@@ -143,8 +143,20 @@ function renderCart() {
   const total = coinTotal + nonBundleTotal + bundleDiscountTotal;
   const effCoinPrice = coinCount > 0 ? coinTotal / coinCount : COIN_PRICE;
 
+  // Effective per-unit price for each TCG bundle group, so line items show
+  // the discounted price rather than the full list price.
+  const effBundleUnit = {};
+  Object.entries(bundleGroups).forEach(([key, g]) => {
+    const pairs = Math.floor(g.qty / 2);
+    const remainder = g.qty % 2;
+    const discountedTotal = pairs * g.bundlePrice + remainder * g.unitPrice;
+    effBundleUnit[key] = discountedTotal / g.qty;
+  });
+
   container.innerHTML = cart.map(item => {
-    const unit = item.isCoin ? effCoinPrice : item.price;
+    let unit = item.price;
+    if(item.isCoin) unit = effCoinPrice;
+    else if(item.bundleKey && effBundleUnit[item.bundleKey] !== undefined) unit = effBundleUnit[item.bundleKey];
     const line = unit * item.qty;
     return `<div class="cart-item">
       <div class="cart-item-info">

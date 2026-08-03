@@ -855,8 +855,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -2369,8 +2369,20 @@
     // Effective per-coin price for display
     const effCoinPrice = coinCount>0 ? coinTotal/coinCount : COIN_PRICE;
 
+    // Effective per-unit price for each TCG bundle group, so line items
+    // show the discounted price rather than the full list price.
+    const effBundleUnit = {};
+    Object.entries(bundleGroups).forEach(([key,g])=>{
+      const pairs = Math.floor(g.qty/2);
+      const remainder = g.qty%2;
+      const discountedTotal = pairs*g.bundlePrice + remainder*g.unitPrice;
+      effBundleUnit[key] = discountedTotal/g.qty;
+    });
+
     container.innerHTML=cart.map(item=>{
-      const unit = item.isCoin ? effCoinPrice : item.price;
+      let unit = item.price;
+      if(item.isCoin) unit = effCoinPrice;
+      else if(item.bundleKey && effBundleUnit[item.bundleKey] !== undefined) unit = effBundleUnit[item.bundleKey];
       const line = unit*item.qty;
       return `<div class="cart-item">
         <div class="cart-item-info">
