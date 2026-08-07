@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Quote — The Forge &amp; Fable</title>
+  <meta name="description" content="Review and approve your custom print quote from The Forge & Fable.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .q-wrap{max-width:720px;margin:0 auto;padding:2.5rem 1.25rem 4rem;}
+
+    .q-state{text-align:center;padding:5rem 1rem;font-family:var(--serif);font-size:14px;color:var(--muted);letter-spacing:0.1em;font-style:italic;}
+
+    .q-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;}
+    .q-head{padding:2rem 2rem 1.5rem;border-bottom:1px solid var(--border);}
+    .q-title{font-family:var(--serif);font-size:30px;color:var(--gold2);letter-spacing:0.04em;margin-bottom:8px;}
+    .q-meta{font-size:13px;color:var(--muted);font-style:italic;}
+    .q-ref{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.14em;margin-top:10px;}
+    .q-badge{display:inline-block;font-family:var(--serif);font-size:9px;letter-spacing:0.14em;padding:4px 10px;border-radius:12px;border:1px solid var(--border2);color:var(--gold);margin-left:8px;vertical-align:middle;}
+    .q-badge.paid{color:var(--green);border-color:rgba(74,158,107,0.5);}
+    .q-badge.expired{color:var(--red);border-color:rgba(184,64,64,0.5);}
+
+    .q-section{padding:1.5rem 2rem;border-bottom:1px solid var(--border);}
+    .q-section:last-child{border-bottom:none;}
+    .q-section-label{font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.16em;margin-bottom:1rem;}
+
+    .q-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+    .q-photo{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:var(--serif);font-size:9px;color:var(--muted);letter-spacing:0.1em;text-align:center;padding:1rem;}
+    .q-photo img{width:100%;height:100%;object-fit:cover;}
+
+    .q-specs{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+    .q-spec{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;}
+    .q-spec:nth-last-child(-n+2){border-bottom:none;}
+    .q-spec-k{color:var(--muted);font-style:italic;}
+    .q-spec-v{color:var(--text);}
+
+    .q-notes{font-size:15px;color:var(--soft);line-height:1.75;font-style:italic;}
+
+    .q-line{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding:12px 0;border-bottom:1px solid var(--border);}
+    .q-line:last-of-type{border-bottom:none;}
+    .q-line-desc{font-size:14px;color:var(--text);line-height:1.6;}
+    .q-line-sub{font-size:12px;color:var(--muted);font-style:italic;margin-top:3px;}
+    .q-line-amt{font-family:var(--serif);font-size:15px;color:var(--text);white-space:nowrap;}
+
+    .q-opt{display:flex;align-items:flex-start;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color 0.15s,background 0.15s;}
+    .q-opt:hover{border-color:var(--border2);}
+    .q-opt.on{border-color:var(--gold);background:rgba(201,168,76,0.06);}
+    .q-opt input{margin-top:3px;accent-color:var(--gold);width:16px;height:16px;cursor:pointer;flex-shrink:0;}
+    .q-opt-body{flex:1;}
+    .q-opt-name{font-size:14px;color:var(--text);margin-bottom:3px;}
+    .q-opt-sub{font-size:12px;color:var(--muted);font-style:italic;}
+    .q-opt-amt{font-family:var(--serif);font-size:14px;color:var(--gold2);white-space:nowrap;}
+
+    .q-totals{background:var(--surface2);border-top:1px solid var(--border);padding:1.5rem 2rem;}
+    .q-total-row{display:flex;justify-content:space-between;font-size:14px;color:var(--soft);padding:6px 0;}
+    .q-total-row.grand{border-top:1px solid var(--border2);margin-top:10px;padding-top:14px;font-family:var(--serif);font-size:20px;color:var(--gold2);}
+
+    .q-pay{padding:1.5rem 2rem 2rem;}
+    .q-pay-btn{width:100%;padding:15px;font-family:var(--serif);font-size:13px;letter-spacing:0.14em;background:var(--gold);color:#0d0f14;border:none;border-radius:var(--radius);cursor:pointer;transition:background 0.2s;}
+    .q-pay-btn:hover:not(:disabled){background:var(--gold2);}
+    .q-pay-btn:disabled{background:var(--surface3);color:var(--muted);cursor:not-allowed;}
+    .q-pay-note{font-size:12px;color:var(--muted);font-style:italic;text-align:center;margin-top:10px;line-height:1.6;}
+
+    .q-expired-msg{background:rgba(184,64,64,0.08);border:1px solid rgba(184,64,64,0.3);border-radius:var(--radius);padding:1rem 1.25rem;font-size:14px;color:var(--soft);font-style:italic;line-height:1.6;}
+    .q-paid-msg{background:rgba(74,158,107,0.08);border:1px solid rgba(74,158,107,0.3);border-radius:var(--radius);padding:1rem 1.25rem;font-size:14px;color:var(--soft);font-style:italic;line-height:1.6;}
+
+    @media (max-width:600px){
+      .q-head,.q-section,.q-totals,.q-pay{padding-left:1.25rem;padding-right:1.25rem;}
+      .q-title{font-size:24px;}
+      .q-specs{grid-template-columns:1fr;}
+      .q-spec{border-bottom:1px solid var(--border);}
+      .q-spec:last-child{border-bottom:none;}
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-main">THE FORGE &amp; FABLE</span>
+      <span class="nav-logo-sub">MINIATURE PRINTING · LIMA, OH</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="order.html">Order</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="stl-sources.html">STL Guide</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <a href="order.html" class="nav-cta">REQUEST A PRINT</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="q-wrap">
+    <div class="q-state" id="q-loading">Loading your quote…</div>
+    <div class="q-state" id="q-error" style="display:none;"></div>
+    <div id="q-content" style="display:none;"></div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-brand">THE FORGE &amp; FABLE · EST. 2025</div>
+      <ul class="footer-links">
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="stl-sources.html">STL Guide</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="order.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+<script>
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+  const hamburger = document.getElementById('hamburger');
+  if(hamburger) hamburger.addEventListener('click', () => {
+    document.getElementById('nav-links').classList.toggle('open');
+  });
+
+  let QUOTE = null;
+  const selected = { addons: {}, fulfillment: 0 };
+
+  function money(n){ return '$' + Number(n).toFixed(2); }
+
+  function getQuoteId(){
+    const p = new URLSearchParams(window.location.search);
+    return p.get('id') || p.get('ref') || '';
+  }
+
+  async function loadQuote(){
+    const id = getQuoteId();
+    if(!id){ showError('No quote reference was provided. Please use the link from your email.'); return; }
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/quotes?ref=eq.${encodeURIComponent(id)}&select=*`,
+        { headers:{ 'apikey':SUPABASE_KEY, 'Authorization':`Bearer ${SUPABASE_KEY}` }, cache:'no-store' }
+      );
+      if(!res.ok) throw new Error(res.status);
+      const rows = await res.json();
+      if(!rows.length){ showError('We couldn\'t find that quote. Double-check the link, or reply to your quote email and we\'ll resend it.'); return; }
+
+      QUOTE = rows[0];
+      // Default add-on selections
+      (QUOTE.addons || []).forEach((a, i) => { selected.addons[i] = a.checked !== false; });
+      renderQuote();
+    } catch(e){
+      showError('Something went wrong loading your quote. Please try again, or email forgeandfable3d@gmail.com and we\'ll help.');
+    }
+  }
+
+  function showError(msg){
+    document.getElementById('q-loading').style.display = 'none';
+    const el = document.getElementById('q-error');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function renderQuote(){
+    const q = QUOTE;
+    const isPaid    = q.status === 'paid';
+    const isExpired = q.status === 'expired' || (q.expires_at && new Date(q.expires_at) < new Date());
+
+    const photos = (q.images || []).length
+      ? `<div class="q-section">
+           <div class="q-section-label">YOUR PARTS</div>
+           <div class="q-photos">
+             ${q.images.map(src => `<div class="q-photo"><img src="${src}" alt="Model preview" onerror="this.parentElement.textContent='PREVIEW UNAVAILABLE'"></div>`).join('')}
+           </div>
+         </div>`
+      : '';
+
+    const specPairs = [
+      ['Material', q.material], ['Color', q.color],
+      ['Finish', q.finish],     ['Process', q.process],
+    ].filter(([,v]) => v);
+    const specs = specPairs.length
+      ? `<div class="q-section">
+           <div class="q-specs">
+             ${specPairs.map(([k,v]) => `<div class="q-spec"><span class="q-spec-k">${k}</span><span class="q-spec-v">${v}</span></div>`).join('')}
+           </div>
+         </div>`
+      : '';
+
+    const notes = q.notes
+      ? `<div class="q-section"><div class="q-notes">${q.notes}</div></div>`
+      : '';
+
+    const baseItems = (q.base_items || []);
+    const lines = baseItems.length
+      ? `<div class="q-section">
+           <div class="q-section-label">DESCRIPTION</div>
+           ${baseItems.map(it => `
+             <div class="q-line">
+               <div>
+                 <div class="q-line-desc">${it.desc}</div>
+                 ${it.sub ? `<div class="q-line-sub">${it.sub}</div>` : ''}
+               </div>
+               <div class="q-line-amt">${money(it.amount)}${it.qty && it.qty > 1 ? ` <span style="color:var(--muted);font-size:12px;">×${it.qty}</span>` : ''}</div>
+             </div>`).join('')}
+         </div>`
+      : '';
+
+    const addons = (q.addons || []);
+    const addonBlock = addons.length
+      ? `<div class="q-section">
+           <div class="q-section-label">OPTIONAL ADD-ONS</div>
+           ${addons.map((a,i) => `
+             <label class="q-opt ${selected.addons[i] ? 'on' : ''}" id="addon-${i}">
+               <input type="checkbox" ${selected.addons[i] ? 'checked' : ''} ${isPaid||isExpired ? 'disabled' : ''} onchange="toggleAddon(${i}, this.checked)">
+               <div class="q-opt-body">
+                 <div class="q-opt-name">${a.name}</div>
+                 ${a.sub ? `<div class="q-opt-sub">${a.sub}</div>` : ''}
+               </div>
+               <div class="q-opt-amt">+${money(a.amount)}</div>
+             </label>`).join('')}
+         </div>`
+      : '';
+
+    const fulfillment = (q.fulfillment || []);
+    const fulfillBlock = fulfillment.length
+      ? `<div class="q-section">
+           <div class="q-section-label">CHOOSE AN OPTION</div>
+           ${fulfillment.map((f,i) => `
+             <label class="q-opt ${selected.fulfillment === i ? 'on' : ''}" id="fulfill-${i}">
+               <input type="radio" name="fulfillment" ${selected.fulfillment === i ? 'checked' : ''} ${isPaid||isExpired ? 'disabled' : ''} onchange="selectFulfillment(${i})">
+               <div class="q-opt-body">
+                 <div class="q-opt-name">${f.label}</div>
+                 ${f.sub ? `<div class="q-opt-sub">${f.sub}</div>` : ''}
+               </div>
+               <div class="q-opt-amt">${f.amount > 0 ? '+' + money(f.amount) : 'FREE'}</div>
+             </label>`).join('')}
+         </div>`
+      : '';
+
+    let statusBadge = '';
+    if(isPaid)         statusBadge = '<span class="q-badge paid">PAID</span>';
+    else if(isExpired) statusBadge = '<span class="q-badge expired">EXPIRED</span>';
+    else               statusBadge = '<span class="q-badge">QUOTE</span>';
+
+    let payBlock = '';
+    if(isPaid){
+      payBlock = `<div class="q-pay"><div class="q-paid-msg">This quote has been paid — thank you! We'll email you when your print is on the way. Questions? Just reply to your confirmation email.</div></div>`;
+    } else if(isExpired){
+      payBlock = `<div class="q-pay"><div class="q-expired-msg">This quote has expired. Email <strong>forgeandfable3d@gmail.com</strong> and we'll put together a fresh one for you.</div></div>`;
+    } else {
+      payBlock = `<div class="q-pay">
+          <button class="q-pay-btn" id="q-pay-btn" onclick="payQuote()">APPROVE &amp; PAY</button>
+          <div class="q-pay-note">Secure checkout through Stripe. Sales tax and any shipping are calculated at checkout.</div>
+        </div>`;
+    }
+
+    document.getElementById('q-content').innerHTML = `
+      <div class="q-card">
+        <div class="q-head">
+          <div class="q-title">Your quote${statusBadge}</div>
+          <div class="q-meta">Prepared${q.customer_name ? ' for ' + q.customer_name : ''}${q.title ? ' · ' + q.title : ''}</div>
+          <div class="q-ref">REF ${q.ref}</div>
+        </div>
+        ${photos}${specs}${notes}${lines}${addonBlock}${fulfillBlock}
+        <div class="q-totals" id="q-totals"></div>
+        ${payBlock}
+      </div>`;
+
+    document.getElementById('q-loading').style.display = 'none';
+    document.getElementById('q-content').style.display = 'block';
+    renderTotals();
+  }
+
+  function toggleAddon(i, on){
+    selected.addons[i] = on;
+    const el = document.getElementById('addon-' + i);
+    if(el) el.classList.toggle('on', on);
+    renderTotals();
+  }
+
+  function selectFulfillment(i){
+    selected.fulfillment = i;
+    (QUOTE.fulfillment || []).forEach((_, idx) => {
+      const el = document.getElementById('fulfill-' + idx);
+      if(el) el.classList.toggle('on', idx === i);
+    });
+    renderTotals();
+  }
+
+  // Build the exact line items that get charged — single source of truth
+  // for both the on-page total and what gets sent to Stripe.
+  function buildLineItems(){
+    const items = [];
+    (QUOTE.base_items || []).forEach(it => {
+      items.push({ name: it.desc, theme: QUOTE.title || 'Custom Print', qty: it.qty || 1, price: Number(it.amount) });
+    });
+    (QUOTE.addons || []).forEach((a, i) => {
+      if(selected.addons[i]) items.push({ name: a.name, theme: QUOTE.title || 'Custom Print', qty: 1, price: Number(a.amount) });
+    });
+    const f = (QUOTE.fulfillment || [])[selected.fulfillment];
+    if(f && Number(f.amount) > 0){
+      items.push({ name: f.label, theme: 'Fulfillment', qty: 1, price: Number(f.amount) });
+    }
+    return items;
+  }
+
+  function renderTotals(){
+    const items = buildLineItems();
+    const subtotal = items.reduce((s,i) => s + i.price * i.qty, 0);
+    const rows = items.map(i =>
+      `<div class="q-total-row"><span>${i.name}${i.qty > 1 ? ` ×${i.qty}` : ''}</span><span>${money(i.price * i.qty)}</span></div>`
+    ).join('');
+    document.getElementById('q-totals').innerHTML =
+      rows + `<div class="q-total-row grand"><span>TOTAL</span><span>${money(subtotal)}</span></div>`;
+  }
+
+  async function payQuote(){
+    const btn = document.getElementById('q-pay-btn');
+    const items = buildLineItems();
+    if(!items.length){ alert('Please select at least one item before checking out.'); return; }
+
+    btn.textContent = 'PREPARING…';
+    btn.disabled = true;
+    try {
+      const res = await fetch('/api/checkout', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ items, quoteRef: QUOTE.ref })
+      });
+      const data = await res.json();
+      if(data.url){ window.location.href = data.url; }
+      else throw new Error(data.error || 'No URL returned');
+    } catch(e){
+      btn.textContent = 'APPROVE & PAY';
+      btn.disabled = false;
+      alert('Checkout failed. Please try again, or email forgeandfable3d@gmail.com and we\'ll sort it out.');
+    }
+  }
+
+  loadQuote();
+</script>
+</body>
+</html>
