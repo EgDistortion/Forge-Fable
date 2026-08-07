@@ -193,7 +193,7 @@ function renderCart() {
       // so the customer knows ANY item of that type completes the bundle.
       const parts = key.split('-');
       const label = parts.length >= 3 ? `${parts[2]} DECK BOX` : 'BOOKMARK';
-      savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ANY 1 MORE ${label.toUpperCase()} FOR THE 2-FOR-$${g.bundlePrice} DEAL</div>`;
+      savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ANY 1 MORE ${label.toUpperCase()} FOR THE 2-FOR-$${g.bundlePrice.toFixed(2)} DEAL</div>`;
     }
   });
 

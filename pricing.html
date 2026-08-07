@@ -333,7 +333,7 @@
         <div class="p-card">
           <div class="p-name">RESIN — STANDARD</div>
           <div class="p-sub">Hero minis, 28–32mm</div>
-          <div class="p-price">from $8</div>
+          <div class="p-price">from $8.00</div>
           <div class="p-unit">per miniature</div>
           <ul class="p-features">
             <li>4K LCD resin printer</li>
@@ -347,7 +347,7 @@
         <div class="p-card featured">
           <div class="p-name">RESIN — DISPLAY</div>
           <div class="p-sub">Character pieces, 54–75mm</div>
-          <div class="p-price">from $22</div>
+          <div class="p-price">from $22.00</div>
           <div class="p-unit">per piece</div>
           <ul class="p-features">
             <li>4K LCD resin printer</li>
@@ -361,7 +361,7 @@
         <div class="p-card">
           <div class="p-name">PLA — TERRAIN</div>
           <div class="p-sub">Tiles, scatter, large builds</div>
-          <div class="p-price">from $5</div>
+          <div class="p-price">from $5.00</div>
           <div class="p-unit">per piece or set</div>
           <ul class="p-features">
             <li>FDM PLA Basic or PLA Matte</li>
@@ -375,7 +375,7 @@
         <div class="p-card">
           <div class="p-name">MULTICOLOR TERRAIN</div>
           <div class="p-sub">AMS multicolor FDM builds</div>
-          <div class="p-price">from $8</div>
+          <div class="p-price">from $8.00</div>
           <div class="p-unit">per piece or set</div>
           <ul class="p-features">
             <li>Up to 4 colors in one print</li>
@@ -390,8 +390,8 @@
 
       <div class="pricing-note">
         <strong>How pricing is calculated:</strong> Final quotes factor in material weight, print time, post-processing, and complexity.
-        A simple 28mm mini in resin typically runs $8–15. A large 75mm display piece runs $22–45.
-        PLA terrain is priced by material used and print time — small scatter pieces start around $5, full dungeon tile sets $20–60+.
+        A simple 28mm mini in resin typically runs $8.00–$15.00. A large 75mm display piece runs $22.00–$45.00.
+        PLA terrain is priced by material used and print time — small scatter pieces start around $5.00, full dungeon tile sets $20.00–$60.00+.
         <br><br>
         <strong>Rush orders</strong> (1–2 business day turnaround) are available at a +50% surcharge when the print schedule allows.
         <br><br>
@@ -452,7 +452,7 @@
 
         <div class="estimator-result" id="est-result">
           <div class="est-result-label">ESTIMATED RANGE</div>
-          <div class="est-result-val" id="est-val">$8 – $15</div>
+          <div class="est-result-val" id="est-val">$8.00 – $15.00</div>
           <div class="est-result-sub" id="est-sub">per miniature · resin · standard scale</div>
           <div class="est-result-note">This is a ballpark only. Send your STL for a free exact quote within 24 hours.</div>
           <a href="order.html" class="btn-primary" style="display:inline-block;margin-top:1.5rem;font-size:11px;">GET A FREE QUOTE →</a>
@@ -615,7 +615,7 @@
       const rushNote = rush === 'rush' ? ' · rush +50%' : '';
       const discNote = discount < 1 ? ` · ${Math.round((1-discount)*100)}% vol. discount` : '';
 
-      document.getElementById('est-val').textContent = `$${low} – $${high}`;
+      document.getElementById('est-val').textContent = `$${low.toFixed(2)} – $${high.toFixed(2)}`;
       document.getElementById('est-sub').textContent =
         `${qtyNum > 1 ? qtyNum + '× ' : ''}${sizeLabel} · ${EST[type].desc}${rushNote}${discNote}`;
     }
