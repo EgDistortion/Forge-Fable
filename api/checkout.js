@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   try {
-    const { items } = req.body;
+    const { items, quoteRef } = req.body;
 
     if (!items || !items.length) {
       return res.status(400).json({ error: 'No items in cart' });
@@ -84,7 +84,8 @@ module.exports = async (req, res) => {
         },
       },
       metadata: {
-        source: 'forge_and_fable_shop',
+        source: quoteRef ? 'forge_and_fable_quote' : 'forge_and_fable_shop',
+        ...(quoteRef ? { quote_ref: quoteRef } : {}),
       },
     });
 
