@@ -55,6 +55,39 @@
     .inv-pane{display:none;}
     .inv-pane.active{display:block;}
 
+    /* ── QUOTE BUILDER ── */
+    .q-fl{display:block;font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.12em;margin-bottom:1rem;}
+    .q-fi{display:block;width:100%;margin-top:5px;background:var(--surface3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--body);font-size:14px;padding:9px 11px;outline:none;}
+    .q-fi:focus{border-color:var(--border2);}
+    .q-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .q-form-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .q-rep-head{display:flex;justify-content:space-between;align-items:center;font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.14em;margin:1.5rem 0 0.75rem;padding-top:1rem;border-top:1px solid var(--border);}
+    .q-rep-add{font-family:var(--serif);font-size:10px;letter-spacing:0.1em;background:var(--surface3);border:1px solid var(--border2);color:var(--gold);padding:5px 12px;border-radius:4px;cursor:pointer;}
+    .q-rep-add:hover{background:var(--surface2);}
+    .q-row{display:grid;gap:8px;background:var(--surface3);border:1px solid var(--border);border-radius:4px;padding:10px;margin-bottom:8px;}
+    .q-row.base{grid-template-columns:2fr 2fr 60px 90px 34px;}
+    .q-row.addon{grid-template-columns:2fr 2fr 90px 60px 34px;}
+    .q-row.fulfill{grid-template-columns:2fr 2fr 90px 34px;}
+    .q-row input{background:var(--surface2);border:1px solid var(--border);border-radius:3px;color:var(--text);font-family:var(--body);font-size:13px;padding:7px 9px;outline:none;min-width:0;}
+    .q-row input:focus{border-color:var(--border2);}
+    .q-row-del{background:none;border:1px solid var(--border);color:var(--red);border-radius:3px;cursor:pointer;font-size:13px;}
+    .q-row-del:hover{border-color:var(--red);}
+    .q-chk{display:flex;align-items:center;justify-content:center;gap:4px;font-size:10px;color:var(--muted);}
+    .q-chk input{width:15px;height:15px;accent-color:var(--gold);}
+    .q-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;}
+    .q-item-ref{font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.1em;}
+    .q-item-sub{font-size:13px;color:var(--muted);font-style:italic;margin-top:3px;}
+    .q-item-actions{display:flex;gap:6px;flex-wrap:wrap;}
+    .q-mini{font-family:var(--serif);font-size:9px;letter-spacing:0.1em;background:var(--surface3);border:1px solid var(--border);color:var(--soft);padding:5px 10px;border-radius:3px;cursor:pointer;}
+    .q-mini:hover{border-color:var(--border2);color:var(--gold);}
+    .q-stat{font-family:var(--serif);font-size:9px;letter-spacing:0.1em;padding:3px 9px;border-radius:10px;border:1px solid var(--border2);color:var(--gold);}
+    .q-stat.paid{color:var(--green);border-color:rgba(74,158,107,0.5);}
+    .q-stat.expired{color:var(--red);border-color:rgba(184,64,64,0.5);}
+    @media (max-width:820px){
+      .q-form-grid,.q-form-grid4{grid-template-columns:1fr;}
+      .q-row.base,.q-row.addon,.q-row.fulfill{grid-template-columns:1fr;}
+    }
+
     /* ── COIN STOCK ── */
     .coin-theme-block{margin-bottom:2rem;}
     .coin-theme-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;padding-bottom:6px;border-bottom:1px solid var(--border2);}
@@ -220,6 +253,7 @@
         <button class="inv-tab" onclick="switchInvTab('dashboard',this)">DASHBOARD</button>
         <button class="inv-tab" onclick="switchInvTab('calculator',this)">COST CALC</button>
         <button class="inv-tab" onclick="switchInvTab('printstatus',this)">PRINT STATUS</button>
+        <button class="inv-tab" onclick="switchInvTab('quotes',this)">QUOTES</button>
       </div>
 
       <!-- FILAMENT PANE -->
@@ -494,6 +528,77 @@
         </div>
       </div>
 
+      <!-- ════════════ QUOTES PANE ════════════ -->
+      <div class="inv-pane" id="pane-quotes">
+
+        <div class="toolbar" style="margin-bottom:1.25rem;">
+          <button class="mark-all-btn" onclick="newQuote()">+ NEW QUOTE</button>
+          <button class="mark-all-btn" onclick="loadQuotes()" style="background:var(--surface2);color:var(--gold);">↻ REFRESH</button>
+        </div>
+
+        <!-- EXISTING QUOTES LIST -->
+        <div id="quotes-list" style="margin-bottom:2rem;">
+          <div style="font-style:italic;color:var(--muted);font-size:14px;">Loading quotes…</div>
+        </div>
+
+        <!-- QUOTE BUILDER FORM -->
+        <div id="quote-form" style="display:none;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:1.5rem;">
+          <div style="font-family:var(--serif);font-size:13px;color:var(--gold);letter-spacing:0.14em;margin-bottom:1.25rem;" id="qf-heading">NEW QUOTE</div>
+          <input type="hidden" id="qf-ref">
+
+          <div class="q-form-grid">
+            <label class="q-fl">Customer name
+              <input class="q-fi" id="qf-name" placeholder="Jane Smith"></label>
+            <label class="q-fl">Customer email
+              <input class="q-fi" id="qf-email" type="email" placeholder="jane@example.com"></label>
+          </div>
+
+          <label class="q-fl">Quote title
+            <input class="q-fi" id="qf-title" placeholder="Custom Dragon Print"></label>
+
+          <label class="q-fl">Notes shown to customer
+            <textarea class="q-fi" id="qf-notes" rows="4" placeholder="Explain what's included, how the add-ons work, turnaround expectations…"></textarea></label>
+
+          <div class="q-form-grid4">
+            <label class="q-fl">Material<input class="q-fi" id="qf-material" placeholder="PLA"></label>
+            <label class="q-fl">Color<input class="q-fi" id="qf-color" placeholder="Grey"></label>
+            <label class="q-fl">Finish<input class="q-fi" id="qf-finish" placeholder="Standard"></label>
+            <label class="q-fl">Process<input class="q-fi" id="qf-process" placeholder="FDM"></label>
+          </div>
+
+          <label class="q-fl">Image paths (one per line, optional)
+            <textarea class="q-fi" id="qf-images" rows="2" placeholder="images/quotes/dragon-1.jpg"></textarea></label>
+
+          <!-- BASE ITEMS -->
+          <div class="q-rep-head">
+            <span>LINE ITEMS <span style="color:var(--muted);font-size:10px;">(always charged)</span></span>
+            <button type="button" class="q-rep-add" onclick="addRow('base')">+ ADD</button>
+          </div>
+          <div id="qf-base"></div>
+
+          <!-- ADD-ONS -->
+          <div class="q-rep-head">
+            <span>OPTIONAL ADD-ONS <span style="color:var(--muted);font-size:10px;">(customer ticks these)</span></span>
+            <button type="button" class="q-rep-add" onclick="addRow('addon')">+ ADD</button>
+          </div>
+          <div id="qf-addons"></div>
+
+          <!-- FULFILLMENT -->
+          <div class="q-rep-head">
+            <span>FULFILLMENT OPTIONS <span style="color:var(--muted);font-size:10px;">(customer picks one)</span></span>
+            <button type="button" class="q-rep-add" onclick="addRow('fulfill')">+ ADD</button>
+          </div>
+          <div id="qf-fulfill"></div>
+
+          <div style="display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap;">
+            <button class="mark-all-btn" onclick="saveQuote()">SAVE QUOTE</button>
+            <button class="mark-all-btn" onclick="cancelQuote()" style="background:var(--surface3);color:var(--muted);">CANCEL</button>
+          </div>
+        </div>
+
+      </div>
+      <!-- ════════════ END QUOTES PANE ════════════ -->
+
     </div>
   </div>
 </div>
@@ -506,8 +611,8 @@
 // ════════════════════════════════════════════
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -767,6 +872,7 @@ function switchInvTab(tab, el){
   if(tab==='dashboard') loadDashboard();
   if(tab==='calculator') initCalc();
   if(tab==='printstatus') initPrintStatus();
+  if(tab==='quotes') loadQuotes();
 }
 
 // ── DASHBOARD ──
@@ -1142,6 +1248,220 @@ async function initPrintStatus() {
 
     updatePsPreview();
   }
+}
+
+// ════════════════════════════════════════════
+//  QUOTES — build and send customer quotes
+// ════════════════════════════════════════════
+const QUOTES_TABLE = 'quotes';
+let quotesCache = [];
+
+async function loadQuotes(){
+  const list = document.getElementById('quotes-list');
+  if(!list) return;
+  list.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;">Loading quotes…</div>';
+  try {
+    const rows = await sb(`${QUOTES_TABLE}?select=*&order=created_at.desc`);
+    quotesCache = rows || [];
+    renderQuotesList();
+  } catch(e){
+    list.innerHTML = '<div style="font-style:italic;color:var(--red);font-size:14px;">Could not load quotes. Check that the quotes table exists in Supabase.</div>';
+  }
+}
+
+function renderQuotesList(){
+  const list = document.getElementById('quotes-list');
+  if(!quotesCache.length){
+    list.innerHTML = '<div style="font-style:italic;color:var(--muted);font-size:14px;padding:1rem 0;">No quotes yet. Click + NEW QUOTE to build your first one.</div>';
+    return;
+  }
+  list.innerHTML = quotesCache.map(q => {
+    const total = quoteTotal(q);
+    const cls = q.status === 'paid' ? 'paid' : (q.status === 'expired' ? 'expired' : '');
+    return `<div class="q-item">
+      <div style="flex:1;min-width:220px;">
+        <div class="q-item-ref">${q.ref} <span class="q-stat ${cls}">${(q.status||'open').toUpperCase()}</span></div>
+        <div class="q-item-sub">${q.customer_name || 'No name'}${q.title ? ' · ' + q.title : ''} · up to $${total.toFixed(2)}</div>
+      </div>
+      <div class="q-item-actions">
+        <button class="q-mini" onclick="copyQuoteLink('${q.ref}')">COPY LINK</button>
+        <button class="q-mini" onclick="editQuote('${q.ref}')">EDIT</button>
+        <button class="q-mini" onclick="setQuoteStatus('${q.ref}','paid')">MARK PAID</button>
+        <button class="q-mini" onclick="setQuoteStatus('${q.ref}','expired')">EXPIRE</button>
+        <button class="q-mini" onclick="deleteQuote('${q.ref}')" style="color:var(--red);">DELETE</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Max possible total (all add-ons on, priciest fulfillment)
+function quoteTotal(q){
+  let t = (q.base_items||[]).reduce((s,i)=> s + Number(i.amount||0) * (i.qty||1), 0);
+  t += (q.addons||[]).reduce((s,a)=> s + Number(a.amount||0), 0);
+  const f = (q.fulfillment||[]).map(x=>Number(x.amount||0));
+  if(f.length) t += Math.max(...f);
+  return t;
+}
+
+function copyQuoteLink(ref){
+  const url = `https://theforgeandfable.com/quote.html?id=${encodeURIComponent(ref)}`;
+  navigator.clipboard.writeText(url)
+    .then(()=> showInd('ok','LINK COPIED'))
+    .catch(()=> prompt('Copy this link:', url));
+}
+
+// ── Repeatable rows ──
+function addRow(kind, data){
+  data = data || {};
+  const host = document.getElementById(kind==='base' ? 'qf-base' : kind==='addon' ? 'qf-addons' : 'qf-fulfill');
+  const row = document.createElement('div');
+  row.className = 'q-row ' + kind;
+  if(kind === 'base'){
+    row.innerHTML = `
+      <input placeholder="Description" data-f="desc" value="${esc(data.desc)}">
+      <input placeholder="Sub-detail (optional)" data-f="sub" value="${esc(data.sub)}">
+      <input placeholder="Qty" type="number" min="1" data-f="qty" value="${data.qty||1}">
+      <input placeholder="Amount" type="number" step="0.01" data-f="amount" value="${data.amount!==undefined?data.amount:''}">
+      <button type="button" class="q-row-del" onclick="this.parentElement.remove()">✕</button>`;
+  } else if(kind === 'addon'){
+    row.innerHTML = `
+      <input placeholder="Add-on name" data-f="name" value="${esc(data.name)}">
+      <input placeholder="Sub-detail (optional)" data-f="sub" value="${esc(data.sub)}">
+      <input placeholder="Amount" type="number" step="0.01" data-f="amount" value="${data.amount!==undefined?data.amount:''}">
+      <label class="q-chk"><input type="checkbox" data-f="checked" ${data.checked!==false?'checked':''}>on</label>
+      <button type="button" class="q-row-del" onclick="this.parentElement.remove()">✕</button>`;
+  } else {
+    row.innerHTML = `
+      <input placeholder="Option label" data-f="label" value="${esc(data.label)}">
+      <input placeholder="Sub-detail (optional)" data-f="sub" value="${esc(data.sub)}">
+      <input placeholder="Amount (0 = free)" type="number" step="0.01" data-f="amount" value="${data.amount!==undefined?data.amount:''}">
+      <button type="button" class="q-row-del" onclick="this.parentElement.remove()">✕</button>`;
+  }
+  host.appendChild(row);
+}
+
+function esc(v){ return v ? String(v).replace(/"/g,'&quot;') : ''; }
+
+function readRows(kind){
+  const host = document.getElementById(kind==='base' ? 'qf-base' : kind==='addon' ? 'qf-addons' : 'qf-fulfill');
+  return [...host.querySelectorAll('.q-row')].map(row => {
+    const o = {};
+    row.querySelectorAll('[data-f]').forEach(inp => {
+      const f = inp.dataset.f;
+      if(inp.type === 'checkbox')      o[f] = inp.checked;
+      else if(inp.type === 'number')   o[f] = inp.value === '' ? 0 : Number(inp.value);
+      else                             o[f] = inp.value.trim();
+    });
+    return o;
+  }).filter(o => (o.desc || o.name || o.label));
+}
+
+function newQuote(){
+  document.getElementById('qf-heading').textContent = 'NEW QUOTE';
+  document.getElementById('qf-ref').value = '';
+  ['name','email','title','notes','material','color','finish','process','images']
+    .forEach(f => document.getElementById('qf-'+f).value = '');
+  document.getElementById('qf-material').value = 'PLA';
+  document.getElementById('qf-color').value    = 'Grey';
+  document.getElementById('qf-finish').value   = 'Standard';
+  document.getElementById('qf-process').value  = 'FDM';
+  ['qf-base','qf-addons','qf-fulfill'].forEach(id => document.getElementById(id).innerHTML = '');
+  addRow('base', { desc:'File prep & setup', sub:'Mesh repair (watertight fix, duplicate-shell cleanup), orientation, supports, slicing & QC', qty:1, amount:5 });
+  addRow('addon');
+  addRow('fulfill', { label:'Local pickup (Lima, OH)', amount:0 });
+  addRow('fulfill', { label:'Ship to me (USPS)', amount:6 });
+  document.getElementById('quote-form').style.display = 'block';
+  document.getElementById('quote-form').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function editQuote(ref){
+  const q = quotesCache.find(x => x.ref === ref);
+  if(!q) return;
+  document.getElementById('qf-heading').textContent = 'EDITING ' + q.ref;
+  document.getElementById('qf-ref').value      = q.ref;
+  document.getElementById('qf-name').value     = q.customer_name || '';
+  document.getElementById('qf-email').value    = q.customer_email || '';
+  document.getElementById('qf-title').value    = q.title || '';
+  document.getElementById('qf-notes').value    = q.notes || '';
+  document.getElementById('qf-material').value = q.material || '';
+  document.getElementById('qf-color').value    = q.color || '';
+  document.getElementById('qf-finish').value   = q.finish || '';
+  document.getElementById('qf-process').value  = q.process || '';
+  document.getElementById('qf-images').value   = (q.images||[]).join('\n');
+  ['qf-base','qf-addons','qf-fulfill'].forEach(id => document.getElementById(id).innerHTML = '');
+  (q.base_items||[]).forEach(r => addRow('base', r));
+  (q.addons||[]).forEach(r => addRow('addon', r));
+  (q.fulfillment||[]).forEach(r => addRow('fulfill', r));
+  document.getElementById('quote-form').style.display = 'block';
+  document.getElementById('quote-form').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function cancelQuote(){ document.getElementById('quote-form').style.display = 'none'; }
+
+async function saveQuote(){
+  const existingRef = document.getElementById('qf-ref').value;
+  const ref = existingRef || ('INV-' + Date.now());
+  const images = document.getElementById('qf-images').value
+    .split('\n').map(s => s.trim()).filter(Boolean);
+
+  const payload = {
+    ref,
+    customer_name:  document.getElementById('qf-name').value.trim(),
+    customer_email: document.getElementById('qf-email').value.trim(),
+    title:          document.getElementById('qf-title').value.trim(),
+    notes:          document.getElementById('qf-notes').value.trim(),
+    material:       document.getElementById('qf-material').value.trim(),
+    color:          document.getElementById('qf-color').value.trim(),
+    finish:         document.getElementById('qf-finish').value.trim(),
+    process:        document.getElementById('qf-process').value.trim(),
+    images,
+    base_items:  readRows('base'),
+    addons:      readRows('addon'),
+    fulfillment: readRows('fulfill'),
+  };
+
+  if(!payload.base_items.length && !payload.addons.length){
+    showInd('error','ADD AT LEAST ONE ITEM'); return;
+  }
+
+  showInd('saving','SAVING...');
+  try {
+    if(existingRef){
+      await sb(`${QUOTES_TABLE}?ref=eq.${encodeURIComponent(existingRef)}`, {
+        method:'PATCH', body: JSON.stringify(payload)
+      });
+    } else {
+      payload.status = 'open';
+      await sb(QUOTES_TABLE, { method:'POST', body: JSON.stringify(payload) });
+    }
+    showInd('ok','QUOTE SAVED');
+    document.getElementById('quote-form').style.display = 'none';
+    await loadQuotes();
+    copyQuoteLink(ref);
+  } catch(e){
+    showInd('error','SAVE FAILED');
+  }
+}
+
+async function setQuoteStatus(ref, status){
+  showInd('saving','SAVING...');
+  try {
+    await sb(`${QUOTES_TABLE}?ref=eq.${encodeURIComponent(ref)}`, {
+      method:'PATCH', body: JSON.stringify({ status })
+    });
+    showInd('ok','STATUS UPDATED');
+    loadQuotes();
+  } catch(e){ showInd('error','UPDATE FAILED'); }
+}
+
+async function deleteQuote(ref){
+  if(!confirm(`Delete quote ${ref}? This can't be undone.`)) return;
+  showInd('saving','DELETING...');
+  try {
+    await sb(`${QUOTES_TABLE}?ref=eq.${encodeURIComponent(ref)}`, { method:'DELETE' });
+    showInd('ok','QUOTE DELETED');
+    loadQuotes();
+  } catch(e){ showInd('error','DELETE FAILED'); }
 }
 </script>
 </body>
