@@ -78,6 +78,16 @@
     .q-item-ref{font-family:var(--serif);font-size:11px;color:var(--gold);letter-spacing:0.1em;}
     .q-item-sub{font-size:13px;color:var(--muted);font-style:italic;margin-top:3px;}
     .q-item-actions{display:flex;gap:6px;flex-wrap:wrap;}
+    /* drag & drop photo upload */
+    .q-drop{margin-top:5px;background:var(--surface3);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:border-color 0.15s,background 0.15s;min-height:80px;}
+    .q-drop:hover{border-color:var(--gold);}
+    .q-drop.over{border-color:var(--gold);background:rgba(201,168,76,0.08);}
+    .q-drop-hint{font-family:var(--serif);font-size:10px;color:var(--muted);letter-spacing:0.12em;text-align:center;padding:1.25rem 0;}
+    .q-thumbs{display:flex;flex-wrap:wrap;gap:8px;}
+    .q-thumb{position:relative;width:72px;height:72px;border-radius:4px;overflow:hidden;border:1px solid var(--border2);background:var(--surface2);}
+    .q-thumb img{width:100%;height:100%;object-fit:cover;}
+    .q-thumb-x{position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.75);border:none;color:var(--red);width:18px;height:18px;border-radius:50%;cursor:pointer;font-size:11px;line-height:1;padding:0;}
+    .q-thumb.up{display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:8px;color:var(--muted);letter-spacing:0.1em;}
     .q-mini{font-family:var(--serif);font-size:9px;letter-spacing:0.1em;background:var(--surface3);border:1px solid var(--border);color:var(--soft);padding:5px 10px;border-radius:3px;cursor:pointer;}
     .q-mini:hover{border-color:var(--border2);color:var(--gold);}
     .q-stat{font-family:var(--serif);font-size:9px;letter-spacing:0.1em;padding:3px 9px;border-radius:10px;border:1px solid var(--border2);color:var(--gold);}
@@ -566,8 +576,13 @@
             <label class="q-fl">Process<input class="q-fi" id="qf-process" placeholder="FDM"></label>
           </div>
 
-          <label class="q-fl">Image paths (one per line, optional)
-            <textarea class="q-fi" id="qf-images" rows="2" placeholder="images/quotes/dragon-1.jpg"></textarea></label>
+          <div class="q-fl">Photos <span style="color:var(--muted);text-transform:none;letter-spacing:0;font-size:11px;">— drag images here, or click to browse</span>
+            <div class="q-drop" id="qf-drop">
+              <input type="file" id="qf-file" accept="image/*" multiple hidden>
+              <div class="q-drop-hint" id="qf-drop-hint">Drop images here</div>
+              <div class="q-thumbs" id="qf-thumbs"></div>
+            </div>
+          </div>
 
           <!-- BASE ITEMS -->
           <div class="q-rep-head">
@@ -611,8 +626,8 @@
 // ════════════════════════════════════════════
 //  YOUR SETTINGS — fill these in after setup
 // ════════════════════════════════════════════
-const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';    // from supabase.com project settings
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4'; // from supabase.com project settings
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';    // from supabase.com project settings
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from supabase.com project settings
 // ════════════════════════════════════════════
 
 const TABLE = 'inventory';
@@ -1359,8 +1374,9 @@ function readRows(kind){
 function newQuote(){
   document.getElementById('qf-heading').textContent = 'NEW QUOTE';
   document.getElementById('qf-ref').value = '';
-  ['name','email','title','notes','material','color','finish','process','images']
+  ['name','email','title','notes','material','color','finish','process']
     .forEach(f => document.getElementById('qf-'+f).value = '');
+  quoteImages = []; renderThumbs();
   document.getElementById('qf-material').value = 'PLA';
   document.getElementById('qf-color').value    = 'Grey';
   document.getElementById('qf-finish').value   = 'Standard';
@@ -1370,6 +1386,7 @@ function newQuote(){
   addRow('addon');
   addRow('fulfill', { label:'Local pickup (Lima, OH)', amount:0 });
   addRow('fulfill', { label:'Ship to me (USPS)', amount:6 });
+  initQuoteDrop();
   document.getElementById('quote-form').style.display = 'block';
   document.getElementById('quote-form').scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -1387,11 +1404,12 @@ function editQuote(ref){
   document.getElementById('qf-color').value    = q.color || '';
   document.getElementById('qf-finish').value   = q.finish || '';
   document.getElementById('qf-process').value  = q.process || '';
-  document.getElementById('qf-images').value   = (q.images||[]).join('\n');
+  quoteImages = (q.images||[]).slice(); renderThumbs();
   ['qf-base','qf-addons','qf-fulfill'].forEach(id => document.getElementById(id).innerHTML = '');
   (q.base_items||[]).forEach(r => addRow('base', r));
   (q.addons||[]).forEach(r => addRow('addon', r));
   (q.fulfillment||[]).forEach(r => addRow('fulfill', r));
+  initQuoteDrop();
   document.getElementById('quote-form').style.display = 'block';
   document.getElementById('quote-form').scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -1401,8 +1419,7 @@ function cancelQuote(){ document.getElementById('quote-form').style.display = 'n
 async function saveQuote(){
   const existingRef = document.getElementById('qf-ref').value;
   const ref = existingRef || ('INV-' + Date.now());
-  const images = document.getElementById('qf-images').value
-    .split('\n').map(s => s.trim()).filter(Boolean);
+  const images = quoteImages.slice();
 
   const payload = {
     ref,
@@ -1462,6 +1479,85 @@ async function deleteQuote(ref){
     showInd('ok','QUOTE DELETED');
     loadQuotes();
   } catch(e){ showInd('error','DELETE FAILED'); }
+}
+
+// ── QUOTE PHOTO UPLOAD (Supabase Storage) ──
+const QUOTE_BUCKET = 'quote-images';
+let quoteImages = [];
+
+function initQuoteDrop(){
+  const drop = document.getElementById('qf-drop');
+  const file = document.getElementById('qf-file');
+  if(!drop || drop.dataset.wired) return;
+  drop.dataset.wired = '1';
+
+  drop.addEventListener('click', e => {
+    if(e.target.closest('.q-thumb')) return;   // don't reopen when removing a thumb
+    file.click();
+  });
+  file.addEventListener('change', () => { uploadQuoteFiles(file.files); file.value = ''; });
+
+  ['dragenter','dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e => {
+    if(e.dataTransfer && e.dataTransfer.files) uploadQuoteFiles(e.dataTransfer.files);
+  });
+}
+
+async function uploadQuoteFiles(fileList){
+  const files = [...fileList].filter(f => f.type.startsWith('image/'));
+  if(!files.length) return;
+
+  for(const f of files){
+    if(f.size > 5 * 1024 * 1024){
+      showInd('error', 'IMAGE OVER 5MB — SKIPPED');
+      continue;
+    }
+    // Placeholder tile while the upload runs
+    const tempId = 'up-' + Math.random().toString(36).slice(2);
+    quoteImages.push({ uploading: true, tempId });
+    renderThumbs();
+
+    try {
+      const ext  = (f.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+      const { error } = await supabaseClient.storage
+        .from(QUOTE_BUCKET)
+        .upload(path, f, { cacheControl: '3600', upsert: false });
+      if(error) throw error;
+
+      const { data } = supabaseClient.storage.from(QUOTE_BUCKET).getPublicUrl(path);
+      const i = quoteImages.findIndex(x => x && x.tempId === tempId);
+      if(i > -1) quoteImages[i] = data.publicUrl;
+      renderThumbs();
+      showInd('ok', 'PHOTO UPLOADED');
+    } catch(err){
+      quoteImages = quoteImages.filter(x => !(x && x.tempId === tempId));
+      renderThumbs();
+      showInd('error', 'UPLOAD FAILED — CHECK BUCKET');
+    }
+  }
+}
+
+function renderThumbs(){
+  const wrap = document.getElementById('qf-thumbs');
+  const hint = document.getElementById('qf-drop-hint');
+  if(!wrap) return;
+  wrap.innerHTML = quoteImages.map((src, i) => {
+    if(src && src.uploading) return `<div class="q-thumb up">UPLOADING…</div>`;
+    return `<div class="q-thumb">
+      <img src="${src}" alt="">
+      <button type="button" class="q-thumb-x" onclick="removeThumb(${i})" title="Remove">✕</button>
+    </div>`;
+  }).join('');
+  if(hint) hint.style.display = quoteImages.length ? 'none' : 'block';
+}
+
+function removeThumb(i){
+  quoteImages.splice(i, 1);
+  renderThumbs();
 }
 </script>
 </body>
