@@ -855,8 +855,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -1846,6 +1846,19 @@
     return `${tcgCurrentGame.id}-${tcgCurrentType.id}`;
   }
 
+  // Human-readable name for a bundle group, stored on the cart item so the
+  // cart can label savings correctly without parsing the key (styles like
+  // "Two-Tone" contain hyphens, which made key-parsing unreliable).
+  function tcgBundleLabelFor(product){
+    if(!product || !product.bundlePrice) return undefined;
+    const type = tcgCurrentType.id;
+    if(type === 'bookmarks') return 'bookmark';
+    if(type === 'tokens')    return 'token';
+    if(type === 'deckbox')   return product.style ? `${product.style} deck box` : 'deck box';
+    if(type === 'hueforge')  return 'HueForge print';
+    return 'item';
+  }
+
   // Look a product up in the current listing by its base name
   function tcgFindProduct(name){
     return (tcgCurrentProductList || []).find(p => p.name === name);
@@ -1877,6 +1890,7 @@
         qty: 1,
         isCoin: false,
         bundleKey: tcgBundleKeyFor(tcgFindProduct(name)),
+        bundleLabel: tcgBundleLabelFor(tcgFindProduct(name)),
         bundlePrice: bundlePrice || undefined
       });
     }
@@ -2043,6 +2057,7 @@
         qty: 1,
         isCoin: false,
         bundleKey: tcgBundleKeyFor(tcgFindProduct(name)),
+        bundleLabel: tcgBundleLabelFor(tcgFindProduct(name)),
         bundlePrice: bundlePrice || undefined
       });
     }
@@ -2426,16 +2441,17 @@
         savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ${need} MORE COIN${need>1?'S':''} FOR $5 BUNDLE</div>`;
       }
     }
-    if(bundleSavings > 0){
-      savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:4px;">DECK BOX BUNDLE SAVINGS: −$${bundleSavings.toFixed(2)}</div>`;
-    }
-    // Nudge for any bundle-eligible item sitting at an odd quantity (1, 3, 5...)
+    // Per-group savings and nudges, labelled by what's actually bundled
     Object.entries(bundleGroups).forEach(([key,g])=>{
-      if(g.qty % 2 === 1){
-        // Key format: game-type-style (or game-bookmarks). Describe the group
-        // so the customer knows ANY item of that type completes the bundle.
-        const parts = key.split('-');
-        const label = parts.length >= 3 ? `${parts[2]} DECK BOX` : 'BOOKMARK';
+      const label = (g.items[0] && g.items[0].bundleLabel) || 'item';
+      const pairs = Math.floor(g.qty/2);
+      const remainder = g.qty%2;
+      const discounted = pairs*g.bundlePrice + remainder*g.unitPrice;
+      const saved = (g.qty*g.unitPrice) - discounted;
+      if(saved > 0){
+        savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:4px;">${label.toUpperCase()} BUNDLE SAVINGS: −$${saved.toFixed(2)}</div>`;
+      }
+      if(remainder === 1){
         savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ANY 1 MORE ${label.toUpperCase()} FOR THE 2-FOR-$${g.bundlePrice.toFixed(2)} DEAL</div>`;
       }
     });

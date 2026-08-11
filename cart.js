@@ -120,7 +120,7 @@ function renderCart() {
   const coinTotal = coinBundlePrice(coinCount);
   const nonCoinItems = cart.filter(i => !i.isCoin);
 
-  // TCG deck box bundle pricing (2 for $60)
+  // TCG bundle groups (deck boxes, bookmarks — any "2 for $X" deal)
   const bundleGroups = {};
   nonCoinItems.forEach(item => {
     if(item.bundleKey && item.bundlePrice){
@@ -130,28 +130,19 @@ function renderCart() {
     }
   });
 
-  let bundleSavings = 0, bundleDiscountTotal = 0;
+  let bundleDiscountTotal = 0;
+  const effBundleUnit = {};
   Object.entries(bundleGroups).forEach(([key, g]) => {
     const pairs = Math.floor(g.qty / 2);
     const remainder = g.qty % 2;
     const discounted = pairs * g.bundlePrice + remainder * g.unitPrice;
-    bundleSavings += (g.qty * g.unitPrice) - discounted;
     bundleDiscountTotal += discounted;
+    effBundleUnit[key] = discounted / g.qty;
   });
 
   const nonBundleTotal = nonCoinItems.filter(i => !(i.bundleKey && i.bundlePrice)).reduce((s, i) => s + i.price * i.qty, 0);
   const total = coinTotal + nonBundleTotal + bundleDiscountTotal;
   const effCoinPrice = coinCount > 0 ? coinTotal / coinCount : COIN_PRICE;
-
-  // Effective per-unit price for each TCG bundle group, so line items show
-  // the discounted price rather than the full list price.
-  const effBundleUnit = {};
-  Object.entries(bundleGroups).forEach(([key, g]) => {
-    const pairs = Math.floor(g.qty / 2);
-    const remainder = g.qty % 2;
-    const discountedTotal = pairs * g.bundlePrice + remainder * g.unitPrice;
-    effBundleUnit[key] = discountedTotal / g.qty;
-  });
 
   container.innerHTML = cart.map(item => {
     let unit = item.price;
@@ -173,26 +164,28 @@ function renderCart() {
     </div>`;
   }).join('');
 
-  // Bundle savings hints
+  // ── Savings hints ──
   let savingsNote = '';
   if(coinCount > 0){
     const saved = coinCount * COIN_PRICE - coinTotal;
     if(saved > 0){
-      savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:4px;">COIN BUNDLE SAVINGS: −$${saved.toFixed(2)}</div>`;
+      savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:4px;">COIN BUNDLE SAVINGS: \u2212$${saved.toFixed(2)}</div>`;
     } else if(coinCount < 3){
       const need = 3 - coinCount;
       savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ${need} MORE COIN${need > 1 ? 'S' : ''} FOR $5 BUNDLE</div>`;
     }
   }
-  if(bundleSavings > 0){
-    savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:4px;">DECK BOX BUNDLE SAVINGS: −$${bundleSavings.toFixed(2)}</div>`;
-  }
+  // Per-group, labelled by what's actually bundled
   Object.entries(bundleGroups).forEach(([key, g]) => {
-    if(g.qty % 2 === 1){
-      // Key format: game-type-style (or game-bookmarks). Describe the group
-      // so the customer knows ANY item of that type completes the bundle.
-      const parts = key.split('-');
-      const label = parts.length >= 3 ? `${parts[2]} DECK BOX` : 'BOOKMARK';
+    const label = (g.items[0] && g.items[0].bundleLabel) || 'item';
+    const pairs = Math.floor(g.qty / 2);
+    const remainder = g.qty % 2;
+    const discounted = pairs * g.bundlePrice + remainder * g.unitPrice;
+    const saved = (g.qty * g.unitPrice) - discounted;
+    if(saved > 0){
+      savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:4px;">${label.toUpperCase()} BUNDLE SAVINGS: \u2212$${saved.toFixed(2)}</div>`;
+    }
+    if(remainder === 1){
       savingsNote += `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:4px;">ADD ANY 1 MORE ${label.toUpperCase()} FOR THE 2-FOR-$${g.bundlePrice.toFixed(2)} DEAL</div>`;
     }
   });
@@ -217,13 +210,12 @@ function renderCart() {
   }
   if(shipEl){
     if(total >= FREE_SHIP_AT){
-      shipEl.innerHTML = `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:6px;">✓ FREE SHIPPING UNLOCKED</div>`;
+      shipEl.innerHTML = `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:6px;">\u2713 FREE SHIPPING UNLOCKED</div>`;
     } else {
       const away = (FREE_SHIP_AT - total).toFixed(2);
       shipEl.innerHTML = `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:6px;">ADD $${away} MORE FOR FREE SHIPPING</div>`;
     }
   }
-
 
   renderPayPalButton();
 }
