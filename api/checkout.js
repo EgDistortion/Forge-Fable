@@ -8,6 +8,83 @@
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  SHIPPING                                                    ║
+// ║  Free over $50. Otherwise weight-based brackets, priced      ║
+// ║  against USPS Ground Advantage commercial rates (2026).      ║
+// ║  Note: USPS consolidated all sub-1lb packages into one rate  ║
+// ║  in July 2026, so there's no point splitting below a pound.  ║
+// ╚══════════════════════════════════════════════════════════════╝
+const FREE_SHIPPING_OVER = 50.00;
+
+// Per-item weight estimates in ounces. Tune these against real
+// postage receipts as you ship more — they only affect which
+// bracket an order lands in, not the product prices.
+const OZ = {
+  currencyCoin: 0.046,  // 1.3 g each, measured
+  resinCoin:    0.25,   // themed resin coin
+  token:        0.50,   // MTG token, card-sized
+  bookmark:     0.70,
+  hueforge:     3.00,
+  deckBox:      4.00,   // commander-sized FDM box
+  packaging:    2.00,   // box + bubble wrap, added once per order
+};
+
+function estimateWeightOz(item){
+  const name  = (item.name  || '').toLowerCase();
+  const theme = (item.theme || '').toLowerCase();
+
+  // Currency bags carry their count in the name, e.g. "(100-count bag)"
+  const bag = name.match(/(\d+)\s*-?\s*count/);
+  if(bag) return parseInt(bag[1], 10) * OZ.currencyCoin;
+
+  if(theme.includes('deck box'))  return OZ.deckBox;
+  if(theme.includes('bookmark'))  return OZ.bookmark;
+  if(theme.includes('token'))     return OZ.token;
+  if(theme.includes('hueforge'))  return OZ.hueforge;
+  if(theme.includes('fulfillment')) return 0;   // shipping line from a quote
+  return OZ.resinCoin;                          // coins are the default
+}
+
+function shippingOptionFor(items){
+  const subtotal = items.reduce((s,i) => s + Number(i.price) * (i.qty || 1), 0);
+
+  if(subtotal >= FREE_SHIPPING_OVER){
+    return {
+      shipping_rate_data: {
+        type: 'fixed_amount',
+        fixed_amount: { amount: 0, currency: 'usd' },
+        display_name: 'Free Shipping (3–5 business days)',
+        delivery_estimate: {
+          minimum: { unit: 'business_day', value: 3 },
+          maximum: { unit: 'business_day', value: 5 },
+        },
+      },
+    };
+  }
+
+  const oz = items.reduce((s,i) => s + estimateWeightOz(i) * (i.qty || 1), 0) + OZ.packaging;
+
+  let cents, label;
+  if(oz <= 16)      { cents = 600;  label = 'Standard Shipping (3–5 business days)'; }
+  else if(oz <= 32) { cents = 850;  label = 'Standard Shipping (3–5 business days)'; }
+  else if(oz <= 64) { cents = 1100; label = 'Standard Shipping (3–5 business days)'; }
+  else              { cents = 1350; label = 'Standard Shipping (3–5 business days)'; }
+
+  return {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: cents, currency: 'usd' },
+      display_name: label,
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 3 },
+        maximum: { unit: 'business_day', value: 5 },
+      },
+    },
+  };
+}
+
+
 module.exports = async (req, res) => {
   // Only allow POST
   if (req.method !== 'POST') {
@@ -62,22 +139,7 @@ module.exports = async (req, res) => {
       shipping_address_collection: {
         allowed_countries: ['US'], // add more if you ship internationally
       },
-      // ── FLAT-RATE SHIPPING ──
-      // Simple flat rate for now — revisit once you have real postage data
-      // from actual orders (weight varies a lot between coin bags and minis).
-      shipping_options: [
-        {
-          shipping_rate_data: {
-            type: 'fixed_amount',
-            fixed_amount: { amount: 600, currency: 'usd' }, // $6.00 flat
-            display_name: 'Standard Shipping (3–5 business days)',
-            delivery_estimate: {
-              minimum: { unit: 'business_day', value: 3 },
-              maximum: { unit: 'business_day', value: 5 },
-            },
-          },
-        },
-      ],
+      shipping_options: [ shippingOptionFor(items) ],
       custom_text: {
         submit: {
           message: 'Orders are typically ready in 3–5 business days. We\'ll email you when your print is complete.',
