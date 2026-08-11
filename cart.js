@@ -207,6 +207,24 @@ function renderCart() {
   }
   if(noteEl) noteEl.innerHTML = savingsNote;
 
+  // Free-shipping progress nudge
+  const FREE_SHIP_AT = 50.00;
+  let shipEl = document.getElementById('cart-ship-note');
+  if(!shipEl && totalRow){
+    shipEl = document.createElement('div');
+    shipEl.id = 'cart-ship-note';
+    totalRow.parentNode.insertBefore(shipEl, totalRow.nextSibling);
+  }
+  if(shipEl){
+    if(total >= FREE_SHIP_AT){
+      shipEl.innerHTML = `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:6px;">✓ FREE SHIPPING UNLOCKED</div>`;
+    } else {
+      const away = (FREE_SHIP_AT - total).toFixed(2);
+      shipEl.innerHTML = `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:6px;">ADD $${away} MORE FOR FREE SHIPPING</div>`;
+    }
+  }
+
+
   renderPayPalButton();
 }
 

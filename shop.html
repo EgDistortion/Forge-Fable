@@ -427,7 +427,7 @@
         <span class="cart-subtotal-label">TOTAL</span>
         <span class="cart-subtotal-val" id="cart-total">$0.00</span>
       </div>
-      <p class="cart-note">We'll confirm your order within 24 hours. No payment until you approve.</p>
+      <p class="cart-note">Free shipping on orders over $50.00 · We'll confirm your order within 24 hours.</p>
       <button class="checkout-stripe" id="stripe-btn" onclick="checkoutStripe()">💳 CHECKOUT WITH CARD</button>
       <div id="paypal-cart-button-container" style="margin-top:8px;"></div>
     </div>
@@ -855,8 +855,8 @@
   // ════════════════════════════════════════════════════════════
   //  SUPABASE CONFIG
   // ════════════════════════════════════════════════════════════
-  const SUPABASE_URL = 'https://jjbgrwdcknbeaonpbraa.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqYmdyd2Rja25iZWFvbnBicmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTAyMDYsImV4cCI6MjA5NTgyNjIwNn0.dhgH1Y0VPIzbqfV2YAeLX4hgYdyuTO2VuFYNv8j2X_4';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   // ════════════════════════════════════════════════════════════
   //  COIN CATALOG
@@ -2450,6 +2450,24 @@
       totalRow.parentNode.insertBefore(noteEl, totalRow.nextSibling);
     }
     if(noteEl) noteEl.innerHTML = savingsNote;
+
+    // Free-shipping progress nudge
+    const FREE_SHIP_AT = 50.00;
+    let shipEl = document.getElementById('cart-ship-note');
+    if(!shipEl && totalRow){
+      shipEl = document.createElement('div');
+      shipEl.id = 'cart-ship-note';
+      totalRow.parentNode.insertBefore(shipEl, totalRow.nextSibling);
+    }
+    if(shipEl){
+      if(total >= FREE_SHIP_AT){
+        shipEl.innerHTML = `<div style="font-family:var(--serif);font-size:10px;color:var(--green);letter-spacing:0.08em;text-align:right;margin-top:6px;">✓ FREE SHIPPING UNLOCKED</div>`;
+      } else {
+        const away = (FREE_SHIP_AT - total).toFixed(2);
+        shipEl.innerHTML = `<div style="font-family:var(--serif);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-align:right;margin-top:6px;">ADD $${away} MORE FOR FREE SHIPPING</div>`;
+      }
+    }
+
 
     renderPayPalButton();
   }
