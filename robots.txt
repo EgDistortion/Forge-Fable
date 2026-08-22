@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Admin and transactional pages — not for search results
+Disallow: /inventory.html
+Disallow: /quote.html
+Disallow: /success.html
+Disallow: /maptest.html
+Disallow: /api/
+
+Sitemap: https://theforgeandfable.com/sitemap.xml
